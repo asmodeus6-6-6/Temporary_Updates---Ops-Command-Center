@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<!-- Static GitHub Pages build. Updates are stored in browser localStorage; shared multi-user sync requires a backend. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadblock & Weather Disruption Ops Command</title>
+<style>
+:root{--ink:#252622;--muted:#77776f;--paper:#f4f3f0;--white:#fff;--line:#e3e0da;--orange:#c66b32;--orange2:#a95121;--peach:#fae9dc;--green:#24795b;--shadow:0 16px 42px rgba(42,38,30,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.app{min-height:100vh}.topbar{height:74px;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;position:sticky;top:0;z-index:20;backdrop-filter:blur(16px)}.brand{display:flex;align-items:center;gap:12px}.brandmark{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#e9a36f,#b85a28);display:grid;place-items:center;color:white;font-size:20px;box-shadow:0 7px 18px #c66b3233}.brandname{font-weight:850;letter-spacing:-.04em;font-size:20px}.brandname span{color:var(--orange)}.brandsub{font-size:10px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}.topactions{display:flex;align-items:center;gap:10px}.status{display:flex;align-items:center;gap:7px;color:#387b5e;font-size:12px;font-weight:700;margin-right:10px}.pulse{width:8px;height:8px;border-radius:50%;background:#36a776;box-shadow:0 0 0 5px #36a77620;animation:pulse 2s infinite}@keyframes pulse{50%{box-shadow:0 0 0 9px #36a77600}}.btn{border:1px solid var(--line);background:white;color:var(--ink);border-radius:11px;padding:10px 14px;font-weight:700;font-size:12px;transition:.2s}.btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px #29262212}.btn.primary{background:var(--orange);border-color:var(--orange);color:white}.btn.primary:hover{background:var(--orange2)}.btn.dark{background:#292a26;color:white;border-color:#292a26}.btn.small{padding:7px 10px}.layout{width:min(1800px,100%);max-width:none;margin:0 auto;padding:24px clamp(16px,2.3vw,40px) 56px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:stretch}.hero-main{padding:35px;border-radius:25px;background:linear-gradient(120deg,#292b27 0%,#3b3b34 64%,#55402f 100%);color:white;position:relative;overflow:hidden;min-height:260px}.hero-main:before{content:"";position:absolute;width:340px;height:340px;border:1px solid #ffffff1b;border-radius:50%;right:-70px;top:-120px;box-shadow:0 0 0 35px #ffffff08,0 0 0 75px #ffffff05}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#e7a16f}.hero h1{font-size:clamp(27px,3vw,42px);line-height:1.12;letter-spacing:-.05em;margin:14px 0 12px;max-width:620px;position:relative}.hero p{color:#d0d0c8;max-width:560px;margin:0;position:relative}.hero-quick{display:flex;gap:10px;margin-top:24px;position:relative}.hero-quick .btn{border-color:#ffffff26;background:#ffffff12;color:white}.hero-quick .btn.primary{background:#d77d43;border-color:#d77d43}.map-card{border:1px solid var(--line);border-radius:25px;background:#fff;padding:22px;position:relative;overflow:hidden;min-height:260px}.map-title{display:flex;justify-content:space-between;align-items:center}.map-title h3{margin:0;font-size:14px}.map-title span{font-size:10px;color:var(--muted)}.india-map{width:100%;height:190px;margin-top:5px}.map-land{fill:#e8e6df;stroke:#d3d0c8;stroke-width:1.5}.map-pin{fill:var(--orange);stroke:#fff;stroke-width:3;cursor:pointer;filter:drop-shadow(0 3px 4px #b95d3033);transition:.2s}.map-pin:hover{r:7;fill:#91451e}.map-label{font-size:9px;fill:#5c5a54;font-weight:700}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}.stat{background:white;border:1px solid var(--line);border-radius:17px;padding:18px 20px;position:relative;overflow:hidden}.stat:after{content:"";position:absolute;right:-20px;bottom:-35px;width:90px;height:90px;border-radius:50%;background:var(--peach);opacity:.65}.stat-label{font-size:11px;color:var(--muted);font-weight:650}.stat-value{font-size:29px;font-weight:850;letter-spacing:-.05em;margin-top:5px}.stat-note{font-size:10px;color:var(--muted);margin-top:3px}.stat-icon{position:absolute;right:18px;top:18px;width:32px;height:32px;border-radius:10px;background:#f8e8dc;color:#ad5c2b;display:grid;place-items:center;font-weight:900}.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:28px 0 15px}.section-head h2{font-size:21px;letter-spacing:-.04em;margin:0}.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.filters{display:flex;gap:8px;flex-wrap:wrap}.field{border:1px solid #dedbd4;background:white;border-radius:10px;padding:10px 12px;color:var(--ink);outline:none;min-width:145px}.field:focus{border-color:#d38a5a;box-shadow:0 0 0 3px #c66b3214}.city-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.city-card{background:white;border:1px solid var(--line);border-radius:19px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}.city-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#d9a17c}.city-photo{height:118px;position:relative;overflow:hidden;background:linear-gradient(135deg,#e7c7ad,#f5e8dd)}.city-photo{height:92px;background:linear-gradient(115deg,#343630 0%,#4b4b42 60%,#bd6a35 100%);display:flex;align-items:flex-end;padding:0 15px 14px}.city-photo img{display:none}.city-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#24231f18,transparent)}.city-photo .city-name-overlay{position:relative;bottom:auto;left:auto;color:white;font-size:19px;font-weight:850;z-index:1;letter-spacing:-.035em}.city-content{padding:15px}.city-topline{display:flex;align-items:center;justify-content:space-between;gap:8px}.pill{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:5px 8px;border-radius:99px;background:#f6e8dc;color:#a35325}.pill.green{background:#e1f2e9;color:#267451}.pill.grey{background:#efeee9;color:#6b6a62}.city-count{font-size:11px;color:var(--muted)}.city-summary{font-size:12px;color:#5f5e58;min-height:36px;margin:10px 0}.city-footer{border-top:1px solid #f0eee9;padding-top:11px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted)}.arrow{color:var(--orange);font-weight:900}.empty{grid-column:1/-1;text-align:center;padding:45px 20px;background:white;border:1px dashed #d5d1c8;border-radius:18px;color:var(--muted)}.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}.panel{background:white;border:1px solid var(--line);border-radius:19px;padding:21px}.panel h3{margin:0;font-size:15px}.panel-sub{font-size:11px;color:var(--muted);margin-top:4px}.recent-list{margin-top:15px;display:grid;gap:9px}.recent-item{display:flex;gap:12px;padding:11px;border-radius:12px;background:#f8f7f4;align-items:start}.recent-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);margin-top:5px;flex-shrink:0}.recent-item strong{font-size:12px;display:block}.recent-item p{font-size:11px;color:var(--muted);margin:3px 0 0}.recent-item time{margin-left:auto;white-space:nowrap;color:var(--muted);font-size:10px}.modal-backdrop{position:fixed;inset:0;background:#24231fc2;backdrop-filter:blur(5px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}.modal-backdrop.open{display:flex;animation:fade .18s ease}@keyframes fade{from{opacity:0}to{opacity:1}}.modal{width:min(780px,100%);max-height:90vh;overflow:auto;background:#fbfaf8;border-radius:23px;box-shadow:0 30px 100px #0004;animation:rise .22s ease}@keyframes rise{from{transform:translateY(12px);opacity:.7}to{transform:translateY(0);opacity:1}}.modal-head{padding:23px 25px;background:#2d2e29;color:white;display:flex;align-items:start;justify-content:space-between;gap:15px}.modal-head h2{margin:0;font-size:25px;letter-spacing:-.04em}.modal-head p{color:#d0cfc7;font-size:12px;margin:5px 0 0}.close{border:1px solid #ffffff30;background:#ffffff12;color:white;border-radius:10px;width:34px;height:34px;font-size:19px}.modal-body{padding:23px 25px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail{padding:13px 14px;background:white;border:1px solid var(--line);border-radius:12px}.detail.full{grid-column:1/-1}.detail label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;display:block;margin-bottom:5px}.detail div{font-size:13px;font-weight:600;white-space:pre-wrap}.sop-list{padding-left:20px;margin:7px 0 0}.sop-list li{padding:0 0 8px 4px;font-size:13px}.warning{background:#fff3e9;border:1px solid #f0d1b9;color:#8d4b24;padding:13px;border-radius:12px;font-size:12px;margin-top:13px}.admin-shell{display:none}.admin-shell.active{display:block}.agent-shell.hidden{display:none}.admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.admin-head h1{font-size:27px;letter-spacing:-.04em;margin:0}.admin-grid{display:grid;grid-template-columns:1fr .8fr;gap:18px}.form-card{background:white;border:1px solid var(--line);border-radius:19px;padding:23px}.form-card h3{margin:0 0 5px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-group{display:flex;flex-direction:column;gap:6px}.form-group.full{grid-column:1/-1}.form-group label{font-size:11px;font-weight:750;color:#55534c}.form-group input,.form-group textarea,.form-group select{width:100%;border:1px solid #dedbd4;background:#fbfaf8;border-radius:10px;padding:11px 12px;outline:none}.form-group textarea{min-height:85px;resize:vertical}.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#d38a5a;box-shadow:0 0 0 3px #c66b3214}.admin-note{font-size:11px;color:var(--muted);margin-top:10px}.manage-list{display:grid;gap:9px;margin-top:14px}.manage-item{padding:12px;border:1px solid var(--line);border-radius:12px;display:flex;align-items:start;gap:10px;background:#fbfaf8}.manage-item .mi-text{flex:1;min-width:0}.manage-item strong{font-size:12px;display:block}.manage-item small{font-size:10px;color:var(--muted)}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#292a26;color:white;padding:12px 17px;border-radius:12px;font-size:12px;z-index:100;opacity:0;pointer-events:none;transition:.25s;box-shadow:var(--shadow)}.toast.show{opacity:1;transform:translate(-50%,0)}.footer{padding:28px 0 0;text-align:center;color:#97948b;font-size:10px}.admin-lock{max-width:410px;margin:8vh auto;background:white;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:var(--shadow)}.admin-lock .lockicon{width:48px;height:48px;border-radius:15px;background:var(--peach);color:var(--orange2);display:grid;place-items:center;font-size:20px}.admin-lock h2{margin:15px 0 5px;font-size:23px}.admin-lock p{color:var(--muted);font-size:12px;margin:0 0 18px}.admin-lock input{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 10px}.demo-warning{background:#fff3e9;border-radius:10px;padding:10px;font-size:10px;color:#8d4b24;margin-top:12px}
+@media(max-width:1050px){.city-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{grid-template-columns:1fr}.map-card{min-height:220px}.india-map{height:155px}.admin-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.topbar{padding:0 16px;height:65px}.brandsub,.status{display:none}.layout{padding:18px 14px 40px}.hero-main{padding:25px;min-height:250px}.hero-quick{flex-wrap:wrap}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:14px}.stat-value{font-size:25px}.section-head{align-items:start;flex-direction:column}.filters{width:100%}.filters .field{flex:1;min-width:120px}.city-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.city-photo{height:100px}.city-content{padding:11px}.city-summary{font-size:11px}.lower-grid{grid-template-columns:1fr}.detail-grid,.form-grid{grid-template-columns:1fr}.detail.full,.form-group.full{grid-column:auto}.modal-body,.modal-head{padding:18px}.admin-head{align-items:start;flex-direction:column}}
+
+/* Always-visible map labels: district names at regional zoom; city labels at closer zoom. */
+.india-district-label{background:rgba(255,255,255,.72);border:0;box-shadow:none;color:#66594f;font:500 9px/1.1 Arial,sans-serif;text-align:center;padding:1px 2px;white-space:nowrap}
+.india-district-label:before{display:none}
+.india-city-label{background:rgba(255,255,255,.9);border:1px solid #f2c7a9;border-radius:4px;box-shadow:0 1px 4px #35241622;color:#252b33;font:600 10px/1.2 Arial,sans-serif;padding:2px 4px;white-space:nowrap}
+.india-city-label:before{display:none}
+.india-state-label{background:transparent;border:0;box-shadow:none;color:#81756a;font:700 11px/1 Arial,sans-serif;letter-spacing:.4px;text-transform:uppercase}
+
+.creator-hover-sensor{position:fixed;right:0;bottom:0;width:340px;height:150px;z-index:9999;opacity:0.001;pointer-events:auto;background:transparent;cursor:default}
+@media(max-width:650px){.creator-hover-sensor{width:280px;height:125px}}
+
+.creator-hover-sensor{position:fixed;right:0;bottom:0;width:360px;height:170px;z-index:99999;opacity:0.01;pointer-events:auto;background:transparent;cursor:default}
+.creator-floater{z-index:100001;pointer-events:auto;cursor:default}
+.creator-hover-card{z-index:100002}
+.creator-butterfly-layer{z-index:100003}
+@media(max-width:650px){.creator-hover-sensor{width:290px;height:140px}.creator-floater{right:10px;bottom:12px}}
+
+
+/* Published-update map indicators: high contrast and always above district layers */
+.ops-city-icon{background:transparent!important;border:0!important;overflow:visible!important;z-index:1200!important}
+.ops-city-icon .ops-city-pulse{display:block!important;position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#f36b21;border:3px solid #fff;box-shadow:0 0 0 3px #f36b2180,0 0 18px #f36b21;animation:opsUpdatePulse 1.5s ease-out infinite;z-index:2}
+.ops-city-icon .ops-city-label{position:absolute;left:27px;top:2px;white-space:nowrap;background:#fffaf3;color:#7c3510;border:1px solid #f3a36e;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:800;box-shadow:0 2px 9px #3c261533;z-index:3}
+@keyframes opsUpdatePulse{0%{box-shadow:0 0 0 0 #f36b21a8,0 0 10px #f36b21}75%{box-shadow:0 0 0 10px #f36b2100,0 0 18px #f36b21}100%{box-shadow:0 0 0 0 #f36b2100,0 0 10px #f36b21}}
+
+
+/* Guaranteed visible published-update markers */
+.ops-update-marker-icon{background:transparent!important;border:0!important;overflow:visible!important;z-index:10000!important}
+.ops-update-marker-pulse{position:absolute;left:0;top:0;display:block;width:20px;height:20px;border-radius:50%;background:#f26722;border:3px solid #fff;box-shadow:0 0 0 4px rgba(242,103,34,.28),0 0 22px rgba(242,103,34,.9);animation:opsMarkerPulse 1.25s ease-out infinite;box-sizing:border-box}
+.ops-update-marker-label{position:absolute;left:27px;top:-2px;display:block;white-space:nowrap;background:#fff;color:#7b3108;border:2px solid #f26722;border-radius:8px;padding:4px 8px;font:800 12px/1.2 Arial,sans-serif;box-shadow:0 3px 12px rgba(0,0,0,.22)}
+.ops-update-tooltip{font-weight:700}
+@keyframes opsMarkerPulse{0%{box-shadow:0 0 0 0 rgba(242,103,34,.65),0 0 10px rgba(242,103,34,.7)}75%{box-shadow:0 0 0 13px rgba(242,103,34,0),0 0 20px rgba(242,103,34,.9)}100%{box-shadow:0 0 0 0 rgba(242,103,34,0),0 0 10px rgba(242,103,34,.7)}}
+
+</style>
+
+<style>
+.hero{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(0,2fr);align-items:stretch;gap:18px;width:100%}
+.hero-main{padding:clamp(22px,2.2vw,36px);min-width:0}.hero h1{font-size:clamp(30px,3vw,54px);line-height:1.02;overflow-wrap:anywhere}
+.map-card{padding:14px;min-width:0;min-height:600px;background:#fffdfa;box-shadow:0 16px 40px #51432b0d}
+.map-title{gap:12px;padding:2px 4px 12px}.map-title h3{font-size:16px}
+#indiaMap{width:100%;height:540px;min-height:340px;border-radius:17px;background:#d9ecf5;z-index:1;overflow:hidden}
+.map-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.map-toolbar input,.map-toolbar select{min-width:130px;flex:1;border:1px solid #e3ded6;border-radius:10px;padding:10px;background:white;color:#30343a}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 4px 0;font-size:11px;color:#5f6267}
+.legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#f36a21;margin-right:5px}
+.legend-line{display:inline-block;width:18px;border-top:2px solid #f36a21;margin:0 5px 3px 0}
+@media(max-width:1050px){.hero{grid-template-columns:minmax(0,1fr)}.hero-main{min-height:220px}.map-card{min-height:440px}#indiaMap{height:420px}}
+@media(max-width:600px){.map-card{padding:10px;min-height:360px}#indiaMap{height:340px}}
+</style>
+
+
+<style>
+.map-card{position:relative;overflow:hidden;background:#fffdfa;border:1px solid #e9e1d7;border-radius:18px}
+.map-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.reference-map-stage{position:relative;width:100%;height:clamp(470px,58vw,680px);overflow:hidden;border-radius:14px;background:#d9edf6;cursor:grab;touch-action:none;isolation:isolate}
+.reference-map-stage:active{cursor:grabbing}
+.reference-map-canvas{position:absolute;left:0;top:0;width:960px;height:708px;transform-origin:0 0;will-change:transform}
+.reference-map-canvas img{display:block;width:960px;height:708px;max-width:none;user-select:none;pointer-events:none}
+.reference-map-markers{position:absolute;inset:0}
+.ref-map-marker{position:absolute;transform:translate(-50%,-50%);border:0;background:transparent;padding:4px;min-width:16px;min-height:16px;cursor:pointer;z-index:3}
+.ref-marker-dot{display:block;width:9px;height:9px;background:#f36a21;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 5px #783e1d80}
+.ref-map-marker.has-update .ref-marker-dot{width:15px;height:15px;background:#e64016;box-shadow:0 0 0 4px #ff6b2144,0 0 14px #ff6815aa;animation:refPulse 1.8s infinite}
+.ref-marker-dot.active{background:#17a34a}
+.ref-marker-badge{position:absolute;top:-7px;right:-7px;background:#d94316;color:#fff;border-radius:9px;min-width:15px;height:15px;padding:0 3px;font:700 9px/15px system-ui;text-align:center}
+@keyframes refPulse{0%,100%{box-shadow:0 0 0 3px #ff6b2133,0 0 10px #ff681577}50%{box-shadow:0 0 0 7px #ff6b2110,0 0 16px #ff6815aa}}
+.reference-zoom-controls{display:flex;gap:4px;margin-left:auto}
+.reference-zoom-controls button{height:35px;min-width:36px;background:#fff;border:1px solid #e6ddd2;border-radius:9px;color:#252525;font-size:17px;font-weight:700;cursor:pointer}
+.ref-city-popup{position:absolute;z-index:20;width:min(285px,calc(100% - 16px));max-height:75%;overflow:auto;padding:16px;background:#fff;border:1px solid #e8d7c6;border-radius:14px;box-shadow:0 16px 40px #2a20172b;color:#252525;touch-action:pan-y}
+.ref-city-popup h3{font-size:16px;margin:0 25px 12px 0;color:#151515}
+.ref-popup-close{position:absolute;right:9px;top:6px;border:0;background:transparent;font-size:23px;cursor:pointer;color:#666}
+.ref-update-item{padding:10px 0;border-top:1px solid #eee4da}.ref-update-item strong{font-size:13px}.ref-update-item div{font-size:11px;color:#777;margin-top:5px}.ref-update-item p{font-size:12px;line-height:1.45}
+@media(max-width:900px){.reference-map-stage{height:480px}.reference-map-canvas{transform-origin:0 0}}
+@media(max-width:560px){.reference-map-stage{height:390px}.map-toolbar input{min-width:100%;width:100%}.reference-zoom-controls{margin-left:0}}
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><style>
+.vector-india-map{width:100%;height:clamp(500px,58vw,720px);min-height:420px;border-radius:14px;overflow:hidden;background:#dceef7;border:1px solid #e5e4df}
+.vector-india-map .leaflet-popup-content-wrapper{border-radius:13px;box-shadow:0 12px 34px #2920162b}.vector-india-map .leaflet-popup-content{margin:14px 16px;line-height:1.45}
+.ops-city-popup h3{margin:0 0 10px;font-size:15px;color:#e95719}.ops-popup-update{border-top:1px solid #eee3d8;padding:10px 0}.ops-popup-update h4{margin:5px 0;font-size:13px;color:#20242b}.ops-popup-update p{font-size:12px;margin:5px 0;white-space:pre-line}.ops-popup-meta{font-size:10px;color:#777}.ops-popup-update details{font-size:12px;margin-top:8px}.ops-popup-update summary{cursor:pointer;color:#e95719;font-weight:700}
+.ops-city-icon{background:transparent;border:0}.ops-city-pulse{display:block;width:15px;height:15px;border-radius:50%;background:#f04e16;border:3px solid #fff;box-shadow:0 0 0 4px #ff762f4d,0 0 15px #ff5a19b8;animation:opsPulse 1.8s infinite}.ops-city-count{position:absolute;top:-5px;right:-7px;min-width:16px;height:16px;border-radius:10px;background:#242a34;color:#fff;border:1px solid #fff;text-align:center;font:700 10px/14px system-ui;padding:0 2px}
+@keyframes opsPulse{0%,100%{box-shadow:0 0 0 3px #ff762f30,0 0 12px #ff5a1980}50%{box-shadow:0 0 0 8px #ff762f10,0 0 17px #ff5a19bb}}.map-load-error{padding:28px;color:#343434;font:14px/1.6 system-ui}
+@media(max-width:700px){.vector-india-map{height:480px;min-height:380px}}
+</style>
+<style>
+:root{--ink:#22221f;--muted:#77746c;--paper:#f6f4ef;--white:#fffefa;--line:#e7dfd1;--orange:#bd7a25;--orange2:#8e5a16;--peach:#f8e9ce;--gold:#d9ad57;--shadow:0 18px 50px rgba(58,42,17,.12)}
+.btn.primary{background:linear-gradient(135deg,#e9bd68,#b97822);border-color:#c28b36;color:#241a0b}.btn.primary:hover{background:linear-gradient(135deg,#f3ce7e,#a86719)}
+.topbar{gap:16px;padding-inline:clamp(12px,3vw,48px)}.topactions{flex-wrap:wrap;justify-content:flex-end}.brand{flex-shrink:0}.status{white-space:nowrap}
+.hero-main{background:radial-gradient(circle at 84% 16%,#d7a84d2a 0 7%,transparent 7.3%),radial-gradient(circle at 84% 16%,transparent 0 22%,#f2dca40d 22.2% 29%,transparent 29.2%),linear-gradient(125deg,#242723 0%,#34342d 55%,#4b3926 100%);box-shadow:inset 0 1px #ffffff18;isolation:isolate}
+.hero-main:after{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent 0 70%,#e8bc6230 78%,transparent 84%);animation:heroSweep 18s linear infinite;z-index:-1;pointer-events:none}.hero-main:before{animation:heroOrbit 10s ease-in-out infinite}.hero h1{animation:heroTextIn .8s both}.hero .eyebrow{color:#f1c879}.hero-quick .btn.primary{color:#241a0b;background:linear-gradient(135deg,#efc56f,#bd7626);border-color:#d49b43}
+@keyframes heroSweep{to{transform:rotate(360deg)}}@keyframes heroOrbit{50%{transform:translate(-14px,10px) scale(1.04);opacity:.9}}@keyframes heroTextIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.map-card{background:linear-gradient(145deg,#fffefa,#f5f0e6);box-shadow:0 14px 36px #7051240b}.vector-india-map{background:#d5e9ef!important;box-shadow:inset 0 0 0 1px #fff9}.leaflet-container{font-family:Inter,system-ui,sans-serif}.india-state-label{font-size:11px;color:#63523b;text-shadow:0 1px 0 #fff,1px 0 #fff,-1px 0 #fff,0 -1px #fff;font-weight:800;letter-spacing:.3px}.india-district-label{background:#fff9f0d9;color:#4b4135;font-size:9px;border-radius:3px;padding:1px 3px;box-shadow:0 1px 3px #30200d20}.india-city-label{background:#fffefaee;border:1px solid #d8b574;border-radius:5px;color:#3a2c17;padding:3px 5px;box-shadow:0 2px 7px #35241622;font-size:10px}
+.map-legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:11px;color:#716b60;padding:10px 5px}.legend-dot{background:#dc8f29;box-shadow:0 0 0 4px #dc8f2924}
+.creator-toast{position:fixed;right:22px;bottom:22px;z-index:90;display:flex;align-items:center;gap:12px;max-width:min(390px,calc(100vw - 28px));padding:14px 18px;border-radius:17px;background:linear-gradient(125deg,#2a2923,#47351e);border:1px solid #d7b15c;box-shadow:0 18px 50px #21170e44;color:#fff5d7;opacity:0;transform:translateY(30px) scale(.94);pointer-events:none;animation:creatorIn .85s cubic-bezier(.2,.8,.2,1) 1.1s forwards,creatorGlow 3s ease-in-out 2s infinite}.creator-seal{width:38px;height:38px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:linear-gradient(145deg,#f6d98b,#b77a23);color:#33220a;font-size:20px;box-shadow:0 0 0 3px #e6c56d22}.creator-copy small{display:block;color:#e9c979;text-transform:uppercase;font-size:9px;letter-spacing:.15em;font-weight:800}.creator-copy strong{display:block;font-size:13px;margin-top:2px}.creator-close{pointer-events:auto;border:0;background:#ffffff12;color:#fff4d1;border-radius:8px;width:25px;height:25px;cursor:pointer;margin-left:auto}@keyframes creatorIn{to{opacity:1;transform:translateY(0) scale(1)}}@keyframes creatorGlow{50%{box-shadow:0 18px 54px #21170e55,0 0 0 4px #d7b15c12}}
+.btn,.city-card,.stat,.panel,.form-card{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}.stat:hover,.panel:hover,.form-card:hover{box-shadow:0 16px 35px #392b1610}.stat-value{background:linear-gradient(90deg,#292a26,#b7792c);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+@media(max-width:1050px){.topbar{height:auto;min-height:72px;padding:12px 18px;align-items:flex-start;flex-wrap:wrap}.topactions{margin-left:auto}.status{display:none}.hero{grid-template-columns:1fr}.map-card{min-height:0}.admin-head{align-items:flex-start;flex-wrap:wrap}.admin-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.topbar{position:relative;gap:10px}.brandname{font-size:14px!important}.brandsub{font-size:8px}.topactions{width:100%;justify-content:stretch}.topactions .btn{flex:1;padding:9px 7px;font-size:11px}.layout{padding:16px 12px 36px}.hero-main{padding:24px 21px;min-height:260px}.hero h1{font-size:clamp(30px,9vw,42px)}.hero-quick{flex-wrap:wrap}.hero-quick .btn{flex:1}.map-card{padding:13px}.map-title{align-items:flex-start;gap:10px}.map-title h3{max-width:65%}.map-title span{text-align:right;font-size:8px}.map-toolbar{display:grid;grid-template-columns:1fr 1fr}.map-toolbar input{grid-column:1/-1;width:100%;min-width:0}.map-toolbar select{min-width:0;width:100%}.map-toolbar button{width:100%}.vector-india-map{height:460px;min-height:400px}.city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lower-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px}.stat-value{font-size:24px}.detail-grid,.form-grid{grid-template-columns:1fr}.detail.full,.form-group.full{grid-column:auto}.creator-toast{right:12px;bottom:12px;padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+/* Hero live pulse + compact decorative map */
+.hero-main{padding-bottom:25px}
+.hero-live-widget{position:relative;margin-top:25px;padding:13px 15px 12px;border:1px solid #e9c77738;border-radius:16px;background:linear-gradient(115deg,#ffffff0d,#e8b65c12);backdrop-filter:blur(5px);max-width:600px;overflow:hidden;animation:widgetRise .75s .25s both}
+.hero-live-widget:after{content:"";position:absolute;left:-30%;top:0;width:28%;height:100%;background:linear-gradient(90deg,transparent,#f4d48b16,transparent);transform:skewX(-18deg);animation:widgetShimmer 7s ease-in-out infinite;pointer-events:none}
+.hero-live-head{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#f0ce83;font-size:9px;font-weight:800;letter-spacing:.12em}.hero-live-head b{font-size:10px;color:#fff9e8;letter-spacing:0;font-weight:600}
+.live-signal{display:inline-block;width:6px;height:6px;border-radius:50%;background:#85e1a5;margin-right:7px;box-shadow:0 0 0 4px #85e1a51a;animation:signalBlink 1.5s infinite}
+.hero-live-content{display:flex;align-items:center;gap:17px;margin-top:8px}.hero-mini-map{width:76px;height:80px;flex-shrink:0;overflow:visible;filter:drop-shadow(0 5px 8px #0002)}
+.mini-india-land{fill:url(#miniLand);stroke:#ffe9b5;stroke-width:1.6;stroke-linejoin:round}.mini-india-line{fill:none;stroke:#fff3d2;stroke-width:.7;opacity:.65}
+.mini-pin{fill:#fff7df;stroke:#e9a93e;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:miniPinPulse 2s infinite}.mini-pin:nth-child(2){animation-delay:.35s}.mini-pin:nth-child(3){animation-delay:.7s}
+.hero-live-side{display:grid;grid-template-columns:repeat(2,minmax(75px,1fr));gap:6px 16px;flex:1;min-width:0}.live-stat small{display:block;font-size:9px;color:#c9c8be}.live-stat strong{display:block;color:#fff;font-size:18px;line-height:1.3}
+.live-ticker{grid-column:1/-1;display:flex;align-items:center;gap:7px;min-width:0;color:#e2dfd4;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ticker-orb{width:5px;height:5px;flex-shrink:0;background:#e8b75d;border-radius:50%;box-shadow:0 0 0 4px #e8b75d20}
+.hero-mini-action{grid-column:1/-1;justify-self:start;padding:0;border:0;background:none;color:#f3cb77;font-size:10px;font-weight:800;cursor:pointer}.hero-mini-action span{display:inline-block;margin-left:5px;transition:transform .2s}.hero-mini-action:hover span{transform:translate(3px,-2px)}
+@keyframes widgetRise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}@keyframes widgetShimmer{0%,65%,100%{left:-30%}35%{left:115%}}@keyframes signalBlink{50%{box-shadow:0 0 0 7px #85e1a500;opacity:.65}}@keyframes miniPinPulse{0%,100%{transform:scale(.85);opacity:.8}50%{transform:scale(1.25);opacity:1}}
+/* Transparent, borderless text watermark that actively evades the pointer. */
+
+.creator-floater{position:fixed;right:24px;bottom:20px;left:auto;top:auto;z-index:120;display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding:8px 10px;background:transparent;border:0;box-shadow:none;border-radius:0;pointer-events:none;user-select:none;white-space:nowrap;opacity:0;transform-origin:bottom right;animation:creatorTextAppear 1s ease 1.1s forwards,creatorFloat 4.5s ease-in-out 2s infinite}
+.creator-role{font-size:9px;letter-spacing:.2em;font-weight:900;color:#b9812b;text-shadow:0 1px 0 #fff5d5,0 0 10px #e9bd5c80}
+.creator-name{font-size:16px;font-weight:950;letter-spacing:-.035em;color:#b67a20;-webkit-text-stroke:.25px #f7d98a;text-shadow:0 1px 0 #fff2c6,0 2px 0 #916018,0 4px 12px #a8792c55,0 0 18px #f1ca6c55}
+.creator-name b{display:inline-block;color:#e7b94f;text-shadow:0 0 5px #fff0b5,0 0 14px #e4b84f;animation:creatorStar 1.5s ease-in-out infinite}
+@keyframes creatorTextAppear{from{opacity:0;filter:blur(5px);transform:translateY(8px) scale(.94)}to{opacity:.98;filter:blur(0);transform:translateY(0) scale(1)}}
+@keyframes creatorFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes creatorStar{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(24deg) scale(1.22)}}
+.creator-butterfly-layer{position:fixed;inset:0;z-index:10000;pointer-events:none;overflow:hidden}
+.creator-butterfly{position:absolute;opacity:0;filter:drop-shadow(0 2px 5px #d7a94d55);animation:butterflyFly var(--duration,2.7s) ease-out forwards;will-change:transform,opacity}
+.creator-butterfly svg{display:block;overflow:visible;animation:butterflyFlap .22s ease-in-out infinite alternate}
+.creator-hover-card{position:fixed;right:22px;bottom:78px;z-index:121;pointer-events:none;opacity:0;transform:translateY(8px) scale(.96);padding:10px 14px;border:1px solid #e4bd69a8;border-radius:12px;background:linear-gradient(135deg,#fffaf0f5,#f4e2bdf0);box-shadow:0 12px 34px #50381725;color:#6b4714;font-size:11px;font-weight:800;letter-spacing:.04em;transition:opacity .18s,transform .18s}
+.creator-hover-card.visible{opacity:1;transform:translateY(0) scale(1)}
+.creator-hover-card small{display:block;margin-top:3px;color:#9c7b42;font-size:9px;font-weight:600;letter-spacing:.02em}
+@keyframes butterflyFly{0%{opacity:0;transform:translate(0,15px) rotate(-18deg) scale(.45)}12%{opacity:1}72%{opacity:.95}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(1.08)}}
+@keyframes butterflyFlap{from{transform:scaleX(.65) rotate(-4deg)}to{transform:scaleX(1) rotate(5deg)}}
+@media(max-width:650px){.hero-live-widget{margin-top:20px;padding:12px}.hero-live-content{gap:10px}.hero-mini-map{width:58px;height:68px}.hero-live-side{gap:5px 9px}.creator-floater{top:auto;right:10px;bottom:12px;left:auto}.creator-name{font-size:13px}.creator-hover-card{right:10px;bottom:65px}}
+@media(prefers-reduced-motion:reduce){.hero-live-widget,.creator-floater,.mini-pin,.creator-name b{animation:none!important}}
+
+</style>
+
+
+<style id="abhiButterflyStyles">
+#abhiCreatorMark{position:fixed!important;right:22px!important;bottom:18px!important;left:auto!important;top:auto!important;z-index:2147483000!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:4px!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:8px!important;pointer-events:auto!important;cursor:default!important;user-select:none!important;white-space:nowrap!important;animation:abhiMarkFloat 3.8s ease-in-out infinite!important}
+#abhiCreatorMark .abhiCreatorRole{font:900 9px/1.3 Arial,sans-serif!important;letter-spacing:.2em!important;color:#bd842d!important;text-shadow:0 1px 0 #fff5d6,0 0 12px #e9bd5c!important}
+#abhiCreatorMark .abhiCreatorName{font:950 16px/1.2 Arial,sans-serif!important;letter-spacing:-.03em!important;color:#b77b22!important;-webkit-text-stroke:.25px #f7d98a!important;text-shadow:0 1px 0 #fff2c6,0 2px 0 #916018,0 4px 12px #a8792c66!important}
+#abhiCreatorMark .abhiCreatorName b{display:inline-block!important;color:#e7b94f!important;text-shadow:0 0 6px #fff0b5,0 0 14px #e4b84f!important;animation:abhiStarPulse 1.3s ease-in-out infinite!important}
+#abhiButterflyPopup{position:fixed!important;right:22px!important;bottom:78px!important;z-index:2147483001!important;pointer-events:none!important;opacity:0!important;transform:translateY(9px) scale(.96)!important;transition:opacity .2s,transform .2s!important;padding:11px 15px!important;border:1px solid #dfb75e!important;border-radius:12px!important;background:linear-gradient(135deg,#fffaf0f7,#f1dfbaf5)!important;box-shadow:0 12px 34px #50381730!important;color:#704a13!important;font:800 11px/1.4 Arial,sans-serif!important}
+#abhiButterflyPopup small{display:block!important;margin-top:3px!important;color:#9c7b42!important;font:600 9px/1.4 Arial,sans-serif!important}
+#abhiButterflyPopup.abhiShown{opacity:1!important;transform:translateY(0) scale(1)!important}
+#abhiButterflyLayer{position:fixed!important;inset:0!important;z-index:2147483002!important;overflow:visible!important;pointer-events:none!important}
+.abhiButterfly{position:absolute!important;opacity:0;will-change:transform,opacity;animation:abhiFly var(--abhiDuration,2.6s) ease-out forwards;filter:drop-shadow(0 2px 4px #c28d3b66)!important}
+.abhiButterfly svg{display:block!important;animation:abhiFlap .18s ease-in-out infinite alternate!important;overflow:visible!important}
+@keyframes abhiMarkFloat{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes abhiStarPulse{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(18deg) scale(1.22)}}
+@keyframes abhiFly{0%{opacity:0;transform:translate(0,14px) rotate(-15deg) scale(.45)}12%{opacity:1}70%{opacity:1}100%{opacity:0;transform:translate(var(--abhiDx,120px),var(--abhiDy,-120px)) rotate(var(--abhiRot,45deg)) scale(1.1)}}
+@keyframes abhiFlap{from{transform:scaleX(.55) rotate(-5deg)}to{transform:scaleX(1) rotate(5deg)}}
+@media(max-width:650px){#abhiCreatorMark{right:8px!important;bottom:10px!important}#abhiCreatorMark .abhiCreatorName{font-size:13px!important}#abhiButterflyPopup{right:10px!important;bottom:62px!important}}
+</style>
+
+<style id="commandCenterSeparatePageFix">
+/* Dedicated Command Center page mode: isolate admin workspace from the agent dashboard */
+body.admin-mode{background:#f4f1eb!important;min-height:100vh}
+body.admin-mode .layout{display:block!important;width:100%!important;max-width:1500px!important;margin:0 auto!important;padding:24px clamp(14px,2vw,32px) 56px!important;box-sizing:border-box!important;clear:both!important}
+body.admin-mode #agentShell{display:none!important}
+body.admin-mode #adminShell.active{display:block!important;position:relative!important;inset:auto!important;float:none!important;clear:both!important;width:100%!important;max-width:none!important;margin:0 auto!important;padding:0!important;box-sizing:border-box!important;transform:none!important;z-index:1!important;isolation:isolate!important}
+body.admin-mode #adminLogin,body.admin-mode #adminWorkspace{position:relative;box-sizing:border-box;max-width:100%;min-width:0}
+body.admin-mode #adminWorkspace{width:100%;display:block}
+body.admin-mode .admin-head{width:100%;box-sizing:border-box;align-items:flex-start}
+body.admin-mode .admin-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);align-items:start;gap:20px;width:100%;box-sizing:border-box}
+body.admin-mode .form-card,body.admin-mode .form-grid,body.admin-mode .manage-list{min-width:0;max-width:100%;box-sizing:border-box}
+body.admin-mode .form-group input,body.admin-mode .form-group textarea,body.admin-mode .form-group select{min-width:0;max-width:100%;box-sizing:border-box}
+body.admin-mode .footer{position:relative!important;clear:both!important;width:100%!important;margin-top:28px!important}
+body.admin-mode #abhiCreatorMark,body.admin-mode .creator-floater{opacity:.45;transform:scale(.88);transform-origin:bottom right;pointer-events:none!important}
+@media(max-width:900px){body.admin-mode .admin-grid{grid-template-columns:minmax(0,1fr)!important}body.admin-mode .layout{padding:16px 12px 40px!important}}
+</style>
+
+<style id="commandCenterTruePageSwitchFix">
+/* True page switch: the admin page must occupy the first visible content area */
+body.admin-mode .app{min-height:100vh;display:flex;flex-direction:column}
+body.admin-mode .topbar{position:relative!important;top:auto!important;z-index:100!important;flex:0 0 auto}
+body.admin-mode main.layout{display:block!important;flex:1 0 auto!important;min-height:calc(100vh - 76px)!important;padding:22px clamp(14px,2.2vw,36px) 48px!important;margin:0 auto!important;width:100%!important;max-width:1600px!important;box-sizing:border-box!important}
+body.admin-mode main.layout > *:not(#adminShell){display:none!important}
+body.admin-mode main.layout #adminShell{display:none!important}
+body.admin-mode main.layout #adminShell.active{display:block!important;width:100%!important;max-width:none!important;min-height:calc(100vh - 150px);margin:0!important;padding:0!important;position:relative!important;top:0!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;float:none!important;clear:both!important;box-sizing:border-box!important}
+body.admin-mode #adminLogin{width:min(100%,520px);margin:28px auto!important}
+body.admin-mode #adminWorkspace{width:100%;margin:0 auto}
+body.admin-mode .admin-head{margin-bottom:22px}
+body.admin-mode .footer{display:none!important}
+@media(max-width:700px){
+ body.admin-mode main.layout{padding:14px 12px 28px!important}
+ body.admin-mode main.layout #adminShell.active{min-height:calc(100vh - 110px)}
+ body.admin-mode #adminLogin{margin:14px auto!important}
+}
+</style>
+
+
+<style id="commandCenterOverlayHardFix">
+/* Hard page separation: hide the entire agent canvas and place admin view at viewport top. */
+body.admin-mode main.layout { display:block!important; position:static!important; margin:0!important; padding:0!important; width:100%!important; max-width:none!important; min-height:0!important; overflow:visible!important; }
+body.admin-mode main.layout > #agentShell,
+body.admin-mode main.layout > .footer { display:none!important; visibility:hidden!important; height:0!important; min-height:0!important; margin:0!important; padding:0!important; overflow:hidden!important; }
+body.admin-mode main.layout > #adminShell { display:none!important; }
+body.admin-mode main.layout > #adminShell.active {
+ display:block!important; position:fixed!important; z-index:9999!important;
+ top:76px!important; left:0!important; right:0!important; bottom:0!important;
+ width:100vw!important; max-width:none!important; height:auto!important; min-height:calc(100vh - 76px)!important;
+ margin:0!important; padding:clamp(16px,2.5vw,36px)!important; box-sizing:border-box!important;
+ overflow:auto!important; transform:none!important; float:none!important; clear:both!important;
+ background:var(--bg, #f5f2ec)!important;
+}
+body.admin-mode #adminLogin { width:min(100%,520px)!important; margin:clamp(22px,5vh,60px) auto!important; }
+body.admin-mode #adminWorkspace { width:100%!important; max-width:1600px!important; margin:0 auto!important; }
+body.admin-mode .topbar { position:relative!important; z-index:10000!important; }
+body.admin-mode .footer { display:none!important; }
+@media(max-width:700px){
+ body.admin-mode main.layout > #adminShell.active { top:68px!important; min-height:calc(100vh - 68px)!important; padding:14px!important; }
+ body.admin-mode #adminLogin { margin:18px auto!important; }
+}
+</style>
+
+
+<style id="commandCenterViewportPageHardFix">
+/* Hard page isolation: admin workspace is removed from document flow and pinned to viewport */
+:root{--ops-header-height:72px}
+body.admin-mode{overflow:hidden!important;min-height:100vh!important;height:100vh!important}
+body.admin-mode .app{height:100vh!important;min-height:100vh!important;overflow:hidden!important}
+body.admin-mode header.topbar,body.admin-mode .topbar{position:fixed!important;left:0!important;right:0!important;top:0!important;width:100%!important;z-index:100001!important}
+body.admin-mode main.layout{display:block!important;position:static!important;width:100%!important;max-width:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important}
+body.admin-mode #agentShell,body.admin-mode main.layout>.footer,body.admin-mode .footer{display:none!important;visibility:hidden!important}
+body.admin-mode #adminShell,
+body.admin-mode #adminShell.active,
+body.admin-mode section#adminShell.active{
+ display:block!important;visibility:visible!important;position:fixed!important;
+ top:var(--ops-header-height)!important;right:0!important;bottom:0!important;left:0!important;
+ width:100vw!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;padding:24px clamp(14px,2.5vw,40px) 40px!important;
+ overflow-x:hidden!important;overflow-y:auto!important;float:none!important;clear:both!important;
+ inset:var(--ops-header-height) 0 0 0!important;transform:none!important;z-index:100000!important;
+ background:#f4f1eb!important;box-sizing:border-box!important;isolation:isolate!important;
+}
+body.admin-mode #adminLogin{width:min(100%,520px)!important;margin:clamp(28px,8vh,90px) auto 40px!important;position:relative!important;top:auto!important;left:auto!important;transform:none!important}
+body.admin-mode #adminWorkspace{width:100%!important;max-width:1600px!important;margin:0 auto!important;position:relative!important}
+body.admin-mode .modal-backdrop{z-index:100010!important}
+@media(max-width:700px){
+ :root{--ops-header-height:66px}
+ body.admin-mode #adminShell,body.admin-mode #adminShell.active,body.admin-mode section#adminShell.active{padding:16px 12px 28px!important}
+ body.admin-mode #adminLogin{margin:28px auto!important}
+}
+</style>
+
+
+<style id="final-command-center-page-isolation">
+:root{--ops-header-height:74px}
+body.admin-mode{height:100vh!important;min-height:100vh!important;overflow:hidden!important}
+body.admin-mode .app{height:100vh!important;min-height:100vh!important;overflow:visible!important}
+body.admin-mode .topbar,body.admin-mode header.topbar{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:74px!important;z-index:100001!important}
+body.admin-mode main.layout{height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important}
+body.admin-mode #agentShell,body.admin-mode .footer{display:none!important;visibility:hidden!important}
+body.admin-mode #adminShell,body.admin-mode #adminShell.active{display:block!important;visibility:visible!important;position:fixed!important;inset:74px 0 0 0!important;width:100vw!important;height:auto!important;min-height:0!important;max-height:none!important;max-width:none!important;margin:0!important;padding:clamp(16px,2.5vw,36px)!important;overflow-x:hidden!important;overflow-y:auto!important;transform:none!important;float:none!important;clear:both!important;z-index:100000!important;background:#f4f1eb!important;box-sizing:border-box!important;isolation:isolate!important}
+body.admin-mode #adminLogin{width:min(100%,520px)!important;margin:clamp(24px,7vh,72px) auto 36px!important}
+body.admin-mode #adminWorkspace{width:100%!important;max-width:1600px!important;margin:0 auto!important}
+body.admin-mode .modal-backdrop{z-index:100010!important}
+@media(max-width:700px){:root{--ops-header-height:65px}body.admin-mode .topbar,body.admin-mode header.topbar{height:65px!important}body.admin-mode #adminShell,body.admin-mode #adminShell.active{inset:65px 0 0 0!important;padding:14px 12px 24px!important}body.admin-mode #adminLogin{margin:22px auto 30px!important}}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+<header class="topbar">
+ <div class="brand"><div class="brandmark">M</div><div><div class="brandname" style="font-size:15px;letter-spacing:-.025em">Roadblock &amp; Weather</div><div class="brandsub">Disruption Ops Command</div></div></div>
+ <div class="topactions"><div class="status"><span class="pulse"></span><span id="liveLabel">Updates board</span></div><button class="btn" id="agentHomeBtn" onclick="showAgent()">Agent view</button><button class="btn primary" id="adminEntryBtn" onclick="showAdminLogin()">⌘ Command Center</button></div>
+</header>
+<main class="layout">
+<section class="agent-shell" id="agentShell">
+ <div class="hero">
+  <div class="hero-main"><div class="eyebrow">Workforce update network</div><h1>Every city. Every update.<br>One clear source.</h1><p>View active operational updates by city, check effective windows, and follow the latest SOP without searching through email threads.</p><div class="hero-quick"><button class="btn primary" onclick="document.getElementById('citySection').scrollIntoView({behavior:'smooth'})">Explore city updates ↓</button><button class="btn" onclick="openLatest()">View latest update ↗</button></div>
+   <div class="hero-live-widget" aria-label="Live operations overview">
+    <div class="hero-live-head"><span><i class="live-signal"></i> LIVE OPERATIONS PULSE</span><b id="heroLiveCount">0 cities reporting</b></div>
+    <div class="hero-live-content">
+     <svg class="hero-mini-map" viewBox="0 0 180 190" role="img" aria-label="Stylized India mini map with active update locations">
+      <defs><linearGradient id="miniLand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d991"/><stop offset="1" stop-color="#bd7a25"/></linearGradient></defs>
+      <path class="mini-india-land" d="M47 9 L67 15 79 27 99 28 109 42 128 47 139 65 132 82 119 91 113 111 103 128 96 151 83 179 72 155 63 137 55 116 42 103 35 86 25 76 29 58 19 46 29 29Z"/>
+      <path class="mini-india-line" d="M48 35L91 43 124 63M35 75L77 78 119 91M53 111L91 105 110 128M65 137L96 151M67 15L63 55 77 78 72 113 83 179M99 28L91 65 119 91"/>
+      <g id="heroMiniPins"><circle cx="83" cy="179" r="4" class="mini-pin"/><circle cx="91" cy="105" r="4" class="mini-pin"/><circle cx="91" cy="43" r="4" class="mini-pin"/></g>
+     </svg>
+     <div class="hero-live-side"><div class="live-stat"><small>Published updates</small><strong id="heroLiveUpdates">0</strong></div><div class="live-stat"><small>Active now</small><strong id="heroLiveActive">0</strong></div><div class="live-ticker"><span class="ticker-orb"></span><span id="heroLiveTicker">Monitoring city updates…</span></div><button class="hero-mini-action" onclick="document.getElementById('indiaMap').scrollIntoView({behavior:'smooth',block:'center'})">Explore live map <span>↗</span></button></div>
+    </div>
+   </div>
+  </div>
+  <div class="map-card">
+   <div class="map-title"><h3>India · District & City Operations Map</h3><span id="mapStatus">LOADING GEOGRAPHIC BOUNDARIES…</span></div>
+   <div class="map-toolbar"><input id="mapSearch" type="search" placeholder="Search city, district or state…" aria-label="Search city, district or state" oninput="filterMapSearch(this.value)"><select id="mapLayerMode" aria-label="Map display mode" onchange="changeMapMode(this.value)"><option value="operations">Operations coverage</option><option value="districts">District boundaries</option><option value="states">State boundaries</option></select><button class="btn" type="button" onclick="resetIndiaMap()">Reset map</button></div>
+   <div id="indiaMap" class="vector-india-map" role="application" aria-label="Interactive India district map; only cities with published updates have indicators"></div>
+   </div></div>
+   <div class="map-legend"><span><i class="legend-dot"></i>Published update city</span><span><i class="legend-line"></i>Illustrative hub route</span><span>District map works without raster tiles or API keys · Click a district or city marker for details</span></div>
+  </div>
+ </div>
+ <div class="stats">
+  <div class="stat"><div class="stat-icon">◎</div><div class="stat-label">Cities covered</div><div class="stat-value" id="statCities">0</div><div class="stat-note">With published updates</div></div>
+  <div class="stat"><div class="stat-icon">↗</div><div class="stat-label">Published updates</div><div class="stat-value" id="statUpdates">0</div><div class="stat-note">Across all cities</div></div>
+  <div class="stat"><div class="stat-icon">◷</div><div class="stat-label">Active now</div><div class="stat-value" id="statActive">0</div><div class="stat-note">Within effective window</div></div>
+  <div class="stat"><div class="stat-icon">◉</div><div class="stat-label">Last published</div><div class="stat-value" id="statLatest" style="font-size:19px;margin-top:11px">—</div><div class="stat-note">Most recent command-center update</div></div>
+ </div>
+ <div class="section-head" id="citySection"><div><h2>City update directory</h2><p>Select any city card to open its updates in a detailed pop-up.</p></div><div class="filters"><input id="citySearch" class="field" placeholder="Search city or area…" oninput="renderBoard()"><select id="statusFilter" class="field" onchange="renderBoard()"><option value="all">All updates</option><option value="active">Active now</option><option value="upcoming">Upcoming</option><option value="past">Past updates</option></select><select id="typeFilter" class="field" onchange="renderBoard()"><option value="all">All types</option><option>Temporary Change</option><option>Permanent Change</option><option>General Information</option></select></div></div>
+ <div class="city-grid" id="cityGrid"></div>
+ <div class="lower-grid">
+  <div class="panel"><h3>Recently published</h3><div class="panel-sub">Latest updates added to the board</div><div class="recent-list" id="recentList"></div></div>
+  <div class="panel"><h3>How to use this board</h3><div class="panel-sub">Quick guide for agents</div><div class="recent-list">
+   <div class="recent-item"><span class="recent-dot"></span><div><strong>1. Find your city</strong><p>Search or select a city card to view updates relevant to that location.</p></div></div>
+   <div class="recent-item"><span class="recent-dot"></span><div><strong>2. Check the effective window</strong><p>Confirm the date, time, affected areas, and update status before acting.</p></div></div>
+   <div class="recent-item"><span class="recent-dot"></span><div><strong>3. Follow the published SOP</strong><p>Use the step-by-step instructions and required tags/rejection reasons shown in the detail window.</p></div></div>
+  </div></div>
+ </div>
+</section>
+<section class="admin-shell" id="adminShell">
+ <div id="adminLogin" class="admin-lock"><div class="lockicon">⌘</div><h2>Command Center</h2><p>Restricted workspace for authorized operations admins to publish and maintain city updates.</p><input id="adminPassword" type="password" placeholder="Enter admin passcode" onkeydown="if(event.key==='Enter')unlockAdmin()"><button class="btn primary" style="width:100%" onclick="unlockAdmin()">Unlock command center →</button><div class="demo-warning"><strong>Prototype access:</strong> The passcode below is only a front-end demonstration. Do not use this client-side gate to protect production data.</div></div>
+ <div id="adminWorkspace" style="display:none">
+  <div class="admin-head"><div><div class="eyebrow" style="color:var(--orange)">Admin workspace</div><h1>Command Center</h1><div style="color:var(--muted);font-size:12px;margin-top:5px">Create, publish, and manage city-wise operational updates.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="showAdminDashboard()">Analytics dashboard</button><button class="btn" onclick="exportUpdates()">Export JSON</button><button class="btn" onclick="lockAdmin()">Lock workspace</button></div></div>
+  <div class="form-card" id="emailIntake" style="margin-bottom:18px"><h3>1. Import operational email</h3><div class="panel-sub" style="margin-bottom:14px">Paste the email or upload a .txt/.eml file. Extracted values populate the editable form below; review them before publishing.</div>
+    <div class="form-grid">
+     <div class="form-group full"><label for="emailPaste">Paste source email</label><textarea id="emailPaste" style="min-height:155px" placeholder="Paste the complete roadblock / weather disruption email here…"></textarea></div>
+     <div class="form-group"><label for="emailFile">Or upload email file (.txt, .eml)</label><input id="emailFile" type="file" accept=".txt,.eml,text/plain,message/rfc822" onchange="loadEmailFile(event)"></div>
+     <div class="form-group" style="justify-content:end"><button class="btn primary" type="button" onclick="parseEmailToForm()">Extract details into fields ↓</button></div>
+    </div><div class="admin-note">Local rule-based extraction for this prototype. Verify complex emails against the source.</div></div>
+   <div class="admin-grid">
+   <div class="form-card"><h3 id="formTitle">2. Review and publish update</h3><div class="panel-sub" style="margin-bottom:18px">Fill the operational details. Published updates appear on the agent board in this browser immediately.</div>
+    <form id="updateForm" onsubmit="saveUpdate(event)"><input type="hidden" id="editId">
+     <div class="form-grid">
+      <div class="form-group"><label for="fCity">Affected city *</label><input id="fCity" required placeholder="e.g. Coimbatore"></div>
+      <div class="form-group"><label for="fType">Update type *</label><select id="fType"><option>Temporary Change</option><option>Permanent Change</option><option>General Information</option></select></div>
+      <div class="form-group"><label for="fFrom">Effective from *</label><input id="fFrom" type="datetime-local" required></div>
+      <div class="form-group"><label for="fTo">Effective to</label><input id="fTo" type="datetime-local"></div>
+      <div class="form-group full"><label for="fAreas">Affected areas (comma-separated) *</label><input id="fAreas" required placeholder="Gandhipuram, R.S. Puram, Peelamedu"></div>
+      <div class="form-group full"><label for="fTitle">Update headline *</label><input id="fTitle" required placeholder="Roadblocks due to scheduled public event"></div>
+      <div class="form-group full"><label for="fReason">Reason / context *</label><textarea id="fReason" required placeholder="Why this update is being issued"></textarea></div>
+      <div class="form-group full"><label for="fSummary">Operational update</label><textarea id="fSummary" placeholder="Impact and important context"></textarea></div>
+      <div class="form-group full"><label for="fSop">SOP to follow (one step per line) *</label><textarea id="fSop" required style="min-height:145px" placeholder="1. Convince the DP once to deliver the order.&#10;2. If DP agrees, ask DP to deliver.&#10;3. If DP disagrees, follow the pickup-status decision flow."></textarea></div>
+      <div class="form-group"><label for="fTag">Operational tag</label><input id="fTag" placeholder="Can't deliver due to Strike issue"></div>
+      <div class="form-group"><label for="fReject">Rejection reason</label><input id="fReject" placeholder="Roadblock/Barricading"></div>
+      <div class="form-group full"><label for="fImportant">Important instruction</label><textarea id="fImportant" placeholder="Restrictions or reminders for agents"></textarea></div>
+
+      <div class="form-group full"><button class="btn primary" type="submit" id="publishBtn">Publish update ↗</button><button class="btn" type="button" onclick="resetForm()" style="margin-top:7px">Clear form</button></div>
+     </div>
+    </form><div class="admin-note">Updates are saved in this browser for this prototype. Cross-device and live multi-user sync require a shared backend.</div>
+   </div>
+   <div class="form-card"><h3>Published update library</h3><div class="panel-sub">Edit, archive, or remove previously published items.</div><div class="filters" style="margin-top:14px"><input class="field" id="adminSearch" placeholder="Search updates…" oninput="renderAdminList()" style="width:100%"></div><div class="manage-list" id="adminList"></div></div>
+  </div>
+ </div>
+</section>
+<div class="footer">ROADBLOCK & WEATHER DISRUPTION OPS COMMAND · VERIFY SOURCE DETAILS BEFORE ACTION</div>
+</main>
+</div>
+<div class="modal-backdrop" id="cityModal" onclick="if(event.target===this)closeCityModal()"><div class="modal"><div class="modal-head"><div><div class="eyebrow">City operations brief</div><h2 id="modalCityName">City updates</h2><p id="modalCitySub">Effective windows and mandatory SOPs</p></div><button class="close" onclick="closeCityModal()" aria-label="Close">×</button></div><div class="modal-body" id="modalContent"></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const STORAGE_KEY='mailshift_ops_updates_v2';
+const DEMO_ADMIN_PASS='2468'; // Prototype only. Replace with server-side authentication before production.
+const cityImages={
+ 'Coimbatore':'https://images.unsplash.com/photo-1565019011521-445b2a9b4f2b?auto=format&fit=crop&w=900&q=80',
+ 'Kochi':'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=80',
+ 'Chennai':'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=900&q=80',
+ 'Delhi':'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=900&q=80',
+ 'Mumbai':'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=900&q=80',
+ 'Kolkata':'https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=900&q=80',
+ 'Hyderabad':'https://images.unsplash.com/photo-1572445271230-a78b5944a659?auto=format&fit=crop&w=900&q=80',
+ 'Bengaluru':'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=900&q=80',
+ 'default':'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80'
+};
+let updates=[];
+try{updates=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){updates=[]}
+// Start with a clean update library. Remove demo/sample records left by earlier versions.
+updates = updates.filter(u => !u.demo && !String(u.id || '').startsWith('demo-'));
+try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updates)); } catch (e) {}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(updates));return true}catch(e){toast('Browser storage is unavailable. Export your updates for backup.');return false}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function prettyDate(s){if(!s)return 'Not specified';let d=new Date(s);return isNaN(d)?s:d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'})}
+function dateOnly(s){if(!s)return 'Not specified';let d=new Date(s);return isNaN(d)?s:d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
+function stateOf(u){const now=Date.now(),from=u.from?new Date(u.from).getTime():0,to=u.to?new Date(u.to).getTime():Infinity;if(now<from)return 'upcoming';if(now>to)return 'past';return 'active'}
+function stateLabel(s){return s==='active'?'Active now':s==='upcoming'?'Upcoming':'Past update'}
+function uniqueCities(){return [...new Set(updates.map(u=>u.city.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b))}
+function cityImage(city,custom){return custom||cityImages[city]||cityImages.default}
+
+function refreshAllUpdateViews(notify=false){
+ // Refresh each surface independently; a map/widget error must never block the agent board.
+ try { if(typeof refreshHeroPulse==='function') refreshHeroPulse(); } catch(e){ console.error('Mini-map / live summary refresh failed',e); }
+ try { if(typeof renderOpsUpdateMarkers==='function') renderOpsUpdateMarkers(); } catch(e){ console.error('Map marker refresh failed',e); }
+ try { renderBoard(); } catch(e){ console.error('Agent board refresh failed',e); }
+ try { if(typeof renderAdminList==='function') renderAdminList(); } catch(e){ console.error('Command Center list refresh failed',e); }
+ // Refresh any city navigation/left-rail lists found in this layout.
+ const navCandidates=['citySidebarList','cityNavList','leftCityList','agentCityList','cityQuickList','sidebarCities','cityFilterList'];
+ navCandidates.forEach(id=>{
+   const el=document.getElementById(id); if(!el) return;
+   const names=[...new Set(updates.map(u=>String(u.city||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+   el.innerHTML=names.length?names.map(city=>{
+     const count=updates.filter(u=>String(u.city||'').trim().toLowerCase()===city.toLowerCase()).length;
+     return `<button type="button" class="city-nav-item" onclick="openCityByName('${String(city).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')"><span>${esc(city)}</span><small>${count}</small></button>`;
+   }).join(''):'<div class="empty">No city updates yet.</div>';
+ });
+ if(notify){const label=document.getElementById('liveLabel');if(label)label.textContent='Board refreshed '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}
+}
+
+function renderBoard(){if(opsMap)renderOpsUpdateMarkers();if(typeof refreshHeroPulse==='function')refreshHeroPulse();
+ const query=(document.getElementById('citySearch')?.value||'').trim().toLowerCase(),sf=document.getElementById('statusFilter')?.value||'all',tf=document.getElementById('typeFilter')?.value||'all';
+ let cities=uniqueCities().filter(city=>{const us=updates.filter(u=>u.city.toLowerCase()===city.toLowerCase());return us.some(u=>(city+' '+u.areas+' '+u.title+' '+u.reason).toLowerCase().includes(query)&&(sf==='all'||stateOf(u)===sf)&&(tf==='all'||u.type===tf))});
+ const grid=document.getElementById('cityGrid');
+ if(!grid)return;
+ if(!cities.length){grid.innerHTML='<div class="empty"><strong>No matching city updates</strong><br><span style="font-size:12px">Try a different filter or check back when an admin publishes an update.</span></div>'}
+ else grid.innerHTML=cities.map(city=>{
+  const us=updates.filter(u=>u.city.toLowerCase()===city.toLowerCase()&&(sf==='all'||stateOf(u)===sf)&&(tf==='all'||u.type===tf)&& (city+' '+u.areas+' '+u.title+' '+u.reason).toLowerCase().includes(query)).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));
+  const active=us.filter(u=>stateOf(u)==='active').length,latest=us[0],areas=latest?.areas||'';
+  return `<article class="city-card" tabindex="0" role="button" aria-label="View ${esc(city)} updates" onclick="openCityByName('${esc(city).replace(/'/g,"\\'")}')" onkeydown="if(event.key==='Enter')openCityByName('${esc(city).replace(/'/g,"\\'")}')"><div class="city-photo"><div class="city-name-overlay">${esc(city)}</div></div><div class="city-content"><div class="city-topline"><span class="pill ${active?'green':us.length?'':'grey'}">${active?active+' active':us.length+' update'+(us.length===1?'':'s')}</span><span class="city-count">${us.length} total</span></div><div class="city-summary">${esc(latest?.title||'No update title')}<br><span style="font-size:10px;color:#88867e">${esc(areas.split(',').slice(0,2).join(', '))}${areas.split(',').length>2?' + more':''}</span></div><div class="city-footer"><span>Latest: ${latest?dateOnly(latest.publishedAt):'—'}</span><span class="arrow">View updates ↗</span></div></div></article>`
+ }).join('');
+ const active=updates.filter(u=>stateOf(u)==='active').length;
+ document.getElementById('statCities').textContent=uniqueCities().length;
+ document.getElementById('statUpdates').textContent=updates.length;
+ document.getElementById('statActive').textContent=active;
+ const latest=updates.slice().sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt))[0];
+ document.getElementById('statLatest').textContent=latest?dateOnly(latest.publishedAt):'—';
+ document.getElementById('recentList').innerHTML=updates.slice().sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt)).slice(0,5).map(u=>`<div class="recent-item"><span class="recent-dot"></span><div><strong>${esc(u.city)} · ${esc(u.title)}</strong><p>${esc(u.type)} · Effective ${esc(dateOnly(u.from))}</p></div><time>${esc(dateOnly(u.publishedAt))}</time></div>`).join('')||'<div class="empty">No published updates yet.</div>';
+ document.getElementById('liveLabel').textContent='Board refreshed '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+function openCityByName(city){const us=updates.filter(u=>u.city.toLowerCase()===city.toLowerCase()).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));if(!us.length){toast('No published updates for '+city+' yet.');return}document.getElementById('modalCityName').textContent=city+' updates';document.getElementById('modalCitySub').textContent=us.length+' published update'+(us.length===1?'':'s')+' · Select the relevant effective window';document.getElementById('modalContent').innerHTML=us.map((u,i)=>`<div style="${i?'border-top:1px solid var(--line);margin-top:22px;padding-top:22px':''}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:13px"><span class="pill ${stateOf(u)==='active'?'green':stateOf(u)==='past'?'grey':''}">${stateLabel(stateOf(u))}</span><span class="pill">${esc(u.type)}</span></div><h3 style="font-size:18px;letter-spacing:-.03em;margin:0 0 14px">${esc(u.title)}</h3><div class="detail-grid"><div class="detail"><label>Effective from</label><div>${esc(prettyDate(u.from))}</div></div><div class="detail"><label>Effective to</label><div>${esc(prettyDate(u.to))}</div></div><div class="detail full"><label>Affected areas</label><div>${esc(u.areas||'Not specified')}</div></div><div class="detail full"><label>Reason / context</label><div>${esc(u.reason||'Not specified')}</div></div><div class="detail full"><label>Operational update</label><div>${esc(u.summary||'No additional summary.')}</div></div><div class="detail full"><label>SOP to follow</label><ol class="sop-list">${(u.sop||'SOP not specified').split('\n').filter(Boolean).map(s=>`<li>${esc(s.replace(/^\\s*\\d+[.)]\\s*/,''))}</li>`).join('')}</ol></div><div class="detail"><label>Operational tag</label><div>${esc(u.tag||'Not specified')}</div></div><div class="detail"><label>Rejection reason</label><div>${esc(u.reject||'Not specified')}</div></div></div>${u.important?`<div class="warning"><strong>Important instruction</strong><br>${esc(u.important)}</div>`:''}<div style="font-size:10px;color:var(--muted);margin-top:12px">Published ${esc(prettyDate(u.publishedAt))}${u.demo?' · Sample record':''}</div></div>`).join('');document.getElementById('cityModal').classList.add('open')}
+function closeCityModal(){document.getElementById('cityModal').classList.remove('open')}
+function openLatest(){const u=updates.slice().sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt))[0];if(u)openCityByName(u.city);else toast('No updates published yet.')}
+function showAdminLogin(){
+ const body=document.body, agent=document.getElementById('agentShell'), admin=document.getElementById('adminShell');
+ // Move the admin section out of main.layout so it cannot be laid out below the agent dashboard.
+ if(admin.parentElement!==body) body.appendChild(admin);
+ body.classList.add('admin-mode');
+ agent.classList.add('hidden'); agent.setAttribute('aria-hidden','true');
+ admin.classList.add('active'); admin.setAttribute('aria-hidden','false');
+ document.getElementById('adminLogin').style.display='block';
+ document.getElementById('adminWorkspace').style.display='none';
+ document.getElementById('adminPassword').value='';
+ window.scrollTo(0,0);
+ requestAnimationFrame(()=>{window.scrollTo(0,0); if(opsMap)opsMap.invalidateSize(); window.dispatchEvent(new Event('resize'));});
+}
+function showAgent(){
+ const body=document.body, admin=document.getElementById('adminShell'), agent=document.getElementById('agentShell'), layout=document.querySelector('main.layout'), footer=document.querySelector('main.layout > .footer');
+ // Restore the admin section to its original place only after leaving admin mode.
+ body.classList.remove('admin-mode'); admin.classList.remove('active'); admin.setAttribute('aria-hidden','true');
+ if(admin.parentElement!==layout) layout.insertBefore(admin,footer||null);
+ agent.classList.remove('hidden'); agent.removeAttribute('aria-hidden');
+ window.scrollTo(0,0); renderBoard();
+ requestAnimationFrame(()=>{if(opsMap)opsMap.invalidateSize();window.dispatchEvent(new Event('resize'));});
+}
+function unlockAdmin(){if(document.getElementById('adminPassword').value!==DEMO_ADMIN_PASS){toast('Passcode not recognized.');return}document.getElementById('adminLogin').style.display='none';document.getElementById('adminWorkspace').style.display='block';renderAdminList();toast('Command center unlocked (prototype mode).')}
+function lockAdmin(){showAgent();toast('Command center locked.')}
+function saveUpdate(e){e.preventDefault();const id=document.getElementById('editId').value;const city=document.getElementById('fCity').value.trim();const from=document.getElementById('fFrom').value;const to=document.getElementById('fTo').value;if(to&&new Date(to)<new Date(from)){toast('Effective-to must be after effective-from.');return}
+ const item={id:id||'upd-'+Date.now().toString(36),city,type:document.getElementById('fType').value,from,to,areas:document.getElementById('fAreas').value.trim(),title:document.getElementById('fTitle').value.trim(),reason:document.getElementById('fReason').value.trim(),summary:document.getElementById('fSummary').value.trim(),sop:document.getElementById('fSop').value.trim(),tag:document.getElementById('fTag').value.trim(),reject:document.getElementById('fReject').value.trim(),important:document.getElementById('fImportant').value.trim(),publishedAt:new Date().toISOString()};
+ if(id){updates=updates.map(u=>u.id===id?item:u)}else updates.unshift(item);
+ const saved = persist();
+ resetForm();
+ refreshAllUpdateViews(true);
+ if(saved){
+   try { lastUpdateSnapshot=localStorage.getItem(STORAGE_KEY)||JSON.stringify(updates); } catch(e) {}
+   try { if(window.mailShiftUpdatesChannel) window.mailShiftUpdatesChannel.postMessage({type:'updates-changed',updates}); } catch(e){}
+   // Dispatch a same-page event for any panels/widgets that subscribe to update changes.
+   try { window.dispatchEvent(new CustomEvent('mailshift:updates-changed',{detail:{updates}})); } catch(e){}
+   toast(id?'Update saved and all views refreshed.':'Update published to Agent View, map, sidebar and dashboard.');
+ }
+}
+function resetForm(){document.getElementById('updateForm').reset();document.getElementById('editId').value='';document.getElementById('formTitle').textContent='Publish a new update';document.getElementById('publishBtn').textContent='Publish update ↗'}
+function editUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;document.getElementById('editId').value=u.id;for(const [k,v] of Object.entries({City:u.city,Type:u.type,From:u.from,To:u.to,Areas:u.areas,Title:u.title,Reason:u.reason,Summary:u.summary,Sop:u.sop,Tag:u.tag,Reject:u.reject,Important:u.important})){const el=document.getElementById('f'+k);if(el)el.value=v||''}document.getElementById('formTitle').textContent='Edit published update';document.getElementById('publishBtn').textContent='Save update changes ↗';document.getElementById('adminWorkspace').scrollIntoView({behavior:'smooth'})}
+function deleteUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;if(!confirm('Delete the update for '+u.city+' — '+u.title+'?'))return;updates=updates.filter(x=>x.id!==id);persist();renderBoard();renderAdminList();toast('Update deleted.')}
+function renderAdminList(){const q=(document.getElementById('adminSearch')?.value||'').toLowerCase();const list=document.getElementById('adminList');if(!list)return;const filtered=updates.filter(u=>(u.city+' '+u.title+' '+u.areas).toLowerCase().includes(q)).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));list.innerHTML=filtered.map(u=>`<div class="manage-item"><div class="mi-text"><strong>${esc(u.city)} · ${esc(u.title)}</strong><small>${esc(dateOnly(u.from))} · ${esc(stateLabel(stateOf(u)))}${u.demo?' · sample':''}</small></div><button class="btn small" onclick="editUpdate('${esc(u.id)}')">Edit</button><button class="btn small" onclick="deleteUpdate('${esc(u.id)}')">Delete</button></div>`).join('')||'<div class="empty">No updates found.</div>'}
+function exportUpdates(){const blob=new Blob([JSON.stringify(updates,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='mailshift-updates-backup.json';a.click();URL.revokeObjectURL(url);toast('JSON backup exported.')}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
+window.mailShiftUpdatesChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('mailshift_ops_live_updates') : null;
+function applyIncomingUpdates(raw, notify=false){
+ try{
+  const incoming=Array.isArray(raw)?raw:JSON.parse(raw||'[]');
+  updates=incoming.filter(u=>!u.demo && !String(u.id||'').startsWith('demo-'));
+  refreshAllUpdateViews(notify);
+  if(notify)toast('Agent board, map, sidebar and dashboard refreshed.');
+ }catch(err){}
+}
+window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY)applyIncomingUpdates(e.newValue,true)});
+if(window.mailShiftUpdatesChannel)window.mailShiftUpdatesChannel.addEventListener('message',e=>{if(e.data&&e.data.type==='updates-changed')applyIncomingUpdates(e.data.updates,true)});
+let lastUpdateSnapshot='';try{lastUpdateSnapshot=localStorage.getItem(STORAGE_KEY)||'[]'}catch(e){}
+setInterval(()=>{try{const snap=localStorage.getItem(STORAGE_KEY)||'[]';if(snap!==lastUpdateSnapshot){lastUpdateSnapshot=snap;applyIncomingUpdates(snap,false)}}catch(e){}},1500);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCityModal()});
+window.addEventListener('mailshift:updates-changed',()=>refreshAllUpdateViews(false));
+window.addEventListener('resize',()=>{if(opsMap){setTimeout(()=>{opsMap.invalidateSize();renderOpsUpdateMarkers()},150)}});
+
+function loadEmailFile(e){const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{document.getElementById('emailPaste').value=String(reader.result||'').replace(/\r/g,'');toast('Email file loaded. Select Extract details into fields.');};reader.readAsText(file)}
+function parseEmailToForm(){
+ const raw=(document.getElementById('emailPaste').value||'').replace(/\r/g,'').replace(/&nbsp;/gi,' ').replace(/&#xA0;/gi,' ').replace(/\\\n/g,'\n');
+ if(!raw.trim()){toast('Paste or upload an email first.');return}
+ const txt=raw.replace(/<[^>]*>/g,' ').replace(/&amp;/gi,'&').replace(/[ \t]+/g,' ');
+ const lines=txt.split('\n').map(x=>x.trim()).filter(Boolean);
+ const find=(re)=>{const m=txt.match(re);return m?m[1].trim():''};
+ const city=find(/(?:City|Affected City)\s*:\s*([^\n\r]+)/i);
+ const areas=find(/(?:Affected Areas?|Affected Zones?|Localit(?:y|ies))\s*:\s*([^\n\r]+)/i);
+ const date=find(/(?:Date|Effective Date)\s*:\s*([^\n\r]+)/i);
+ const time=find(/(?:Time|Time Window|Timings?)\s*:\s*([^\n\r]+)/i);
+ const tag=find(/(?:The tag would be|Operational Tag|Tag)\s*(?:would be|is|:)?\s*["“]?([^"\n\r”]+)["”]?/i);
+ const reject=find(/(?:rejection reason)\s*(?:would be|is|:)?\s*["“]?([^"\n\r”]+)["”]?/i);
+ const type=/temporary/i.test(txt)?'Temporary Change':/permanent/i.test(txt)?'Permanent Change':'General Information';
+ let effectiveFrom='',effectiveTo='';
+ const d=date||find(/(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s+20\d{2})/);
+ if(d){const dm=d.match(/(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s+(20\d{2})/);if(dm){const months={jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};const mo=months[dm[2].slice(0,3).toLowerCase()];if(mo)effectiveFrom=`${dm[3]}-${mo}-${dm[1].padStart(2,'0')}`}}
+ const tm=time||((txt.match(/\b(\d{1,2}(?::\d{2})?\s*(?:AM|PM)\s*(?:to|[-–])\s*\d{1,2}(?::\d{2})?\s*PM?)\b/i)||[])[1]||'');
+ if(effectiveFrom){const norm=t=>{let m=t.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);if(!m)return'09:00';let h=+m[1],mi=m[2]||'00',ap=(m[3]||'').toUpperCase();if(ap==='PM'&&h<12)h+=12;if(ap==='AM'&&h===12)h=0;return String(h).padStart(2,'0')+':'+mi};const parts=tm.match(/(\d{1,2}(?::\d{2})?\s*(?:AM|PM)?)\s*(?:to|[-–])\s*(\d{1,2}(?::\d{2})?\s*(?:AM|PM)?)/i);if(parts){let a=parts[1].trim(),b=parts[2].trim();const apB=(b.match(/AM|PM/i)||[])[0];if(apB&&!/AM|PM/i.test(a))a+=' '+apB;effectiveFrom+='T'+norm(a);effectiveTo=effectiveFrom.slice(0,10)+'T'+norm(b)}else effectiveFrom+='T09:00'}
+ const reasonLines=lines.filter(x=>/due to|scheduled visit|roadblock|road closure|heavy rain|weather|flood|strike|diverted|inauguration/i.test(x)&&!/^(date|time|city|affected)/i.test(x));
+ const headline=lines.find(x=>/roadblock|road closure|weather|rain|flood|strike|disruption|diversion/i.test(x))||'Operational disruption update';
+ const summary=lines.filter(x=>/please follow|exception|delivery delays|ensure customer|orders in the above|affected locality/i.test(x)).join(' ');
+ const sopStart=txt.search(/(?:temporary SOP steps|SOP steps|below-mentioned|below mentioned|follow the below|SOP to follow)/i);
+ let sopText='';
+ if(sopStart>=0){let block=txt.slice(sopStart);block=block.replace(/^(?:.*?(?:temporary SOP steps|SOP steps|below-mentioned temporary SOP steps|below mentioned temporary SOP steps|follow the below-mentioned|follow the below).{0,100}\n)/i,'');const cut=block.search(/(?:The tag would be|The rejection reason|Also, kindly|Regards,|Thanks,|Best regards)/i);if(cut>0)block=block.slice(0,cut);sopText=block.split('\n').map(x=>x.replace(/^[\s\\]*(?:[-•]\s*)?/,'').replace(/^\d+[.)\\]?\s*/,'').trim()).filter(x=>x.length>3&&!/^(hi team|impact details|date:|time:|city:|affected zones?:)/i.test(x)).join('\n')}
+ const set=(id,val)=>{if(val)document.getElementById(id).value=val};
+ set('fCity',city);set('fAreas',areas);set('fType',type);set('fFrom',effectiveFrom);set('fTo',effectiveTo);set('fTitle',headline.replace(/^[*#\s]+|[*#\s]+$/g,''));set('fReason',reasonLines.slice(0,4).join(' ').replace(/\*\*/g,''));set('fSummary',summary.replace(/\*\*/g,''));set('fSop',sopText);set('fTag',tag);set('fReject',reject);
+ document.getElementById('formTitle').scrollIntoView({behavior:'smooth',block:'start'});
+ toast('Extraction complete. Review every field and correct anything uncertain before publishing.');
+}
+function showAdminDashboard(){
+ const ws=document.getElementById('adminWorkspace');let dash=document.getElementById('adminAnalytics');
+ if(!dash){dash=document.createElement('div');dash.id='adminAnalytics';dash.className='form-card';dash.style.marginBottom='18px';ws.insertBefore(dash,ws.children[1]);}
+ const cities=uniqueCities(),active=updates.filter(u=>stateOf(u)==='active').length,upcoming=updates.filter(u=>stateOf(u)==='upcoming').length,past=updates.filter(u=>stateOf(u)==='past').length;
+ const byCity=cities.map(c=>({city:c,count:updates.filter(u=>u.city.toLowerCase()===c.toLowerCase()).length})).sort((a,b)=>b.count-a.count);
+ dash.innerHTML=`<h3>Command Center · Analytics dashboard</h3><div class="panel-sub">Current update library overview · ${updates.length} records</div><div class="stats" style="margin:15px 0"><div class="stat"><div class="stat-label">Total records</div><div class="stat-value">${updates.length}</div></div><div class="stat"><div class="stat-label">Active now</div><div class="stat-value">${active}</div></div><div class="stat"><div class="stat-label">Upcoming</div><div class="stat-value">${upcoming}</div></div><div class="stat"><div class="stat-label">Past / expired</div><div class="stat-value">${past}</div></div></div><h3 style="margin-top:15px">Updates by city</h3><div style="display:grid;gap:10px;margin-top:12px">${byCity.map(x=>`<div style="display:grid;grid-template-columns:130px 1fr 30px;gap:10px;align-items:center;font-size:12px"><strong>${esc(x.city)}</strong><div style="height:10px;background:#efeee9;border-radius:9px;overflow:hidden"><div style="height:100%;width:${Math.max(5,x.count/Math.max(1,updates.length)*100)}%;background:linear-gradient(90deg,#b95d2b,#e5a16d);border-radius:9px"></div></div><span>${x.count}</span></div>`).join('')||'<p>No records yet.</p>'}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px"><button class="btn" onclick="exportUpdates()">Download JSON backup</button><button class="btn" onclick="document.getElementById('emailIntake').scrollIntoView({behavior:'smooth'})">Go to email import</button></div>`;
+ dash.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+
+
+const OPS_CITY_COORDS={"Delhi":[28.6139,77.209],"New Delhi":[28.6139,77.209],"Mumbai":[19.076,72.8777],"Kolkata":[22.5726,88.3639],"Hyderabad":[17.385,78.4867],"Bengaluru":[12.9716,77.5946],"Bangalore":[12.9716,77.5946],"Chennai":[13.0827,80.2707],"Pune":[18.5204,73.8567],"Ahmedabad":[23.0225,72.5714],"Jaipur":[26.9124,75.7873],"Lucknow":[26.8467,80.9462],"Coimbatore":[11.0168,76.9558],"Kochi":[9.9312,76.2673],"Ernakulam":[9.9816,76.2999],"Kozhikode":[11.2588,75.7804],"Calicut":[11.2588,75.7804],"Thrissur":[10.5276,76.2144],"Alappuzha":[9.4981,76.3388],"Cherthala":[9.684,76.3355],"Thiruvananthapuram":[8.5241,76.9366],"Trivandrum":[8.5241,76.9366],"Kollam":[8.8932,76.6141],"Palakkad":[10.7867,76.6548],"Kannur":[11.8745,75.3704],"Kasaragod":[12.4996,74.9869],"Kottayam":[9.5916,76.5222],"Pathanamthitta":[9.2648,76.787],"Malappuram":[11.051,76.0711],"Vijayawada":[16.5062,80.648],"Visakhapatnam":[17.6868,83.2185],"Nagpur":[21.1458,79.0882],"Indore":[22.7196,75.8577],"Bhopal":[23.2599,77.4126],"Patna":[25.5941,85.1376],"Ranchi":[23.3441,85.3096],"Bhubaneswar":[20.2961,85.8245],"Guwahati":[26.1445,91.7362],"Chandigarh":[30.7333,76.7794],"Amritsar":[31.634,74.8723],"Ludhiana":[30.901,75.8573],"Dehradun":[30.3165,78.0322],"Srinagar":[34.0837,74.7973],"Jammu":[32.7266,74.857],"Raipur":[21.2514,81.6296],"Gurugram":[28.4595,77.0266],"Noida":[28.5355,77.391],"Faridabad":[28.4089,77.3178],"Surat":[21.1702,72.8311],"Vadodara":[22.3072,73.1812],"Rajkot":[22.3039,70.8022],"Jodhpur":[26.2389,73.0243],"Udaipur":[24.5854,73.7125],"Agra":[27.1767,78.0081],"Varanasi":[25.3176,82.9739],"Kanpur":[26.4499,80.3319],"Prayagraj":[25.4358,81.8463],"Meerut":[28.9845,77.7064],"Howrah":[22.5958,88.2636],"Siliguri":[26.7271,88.3953],"Madurai":[9.9252,78.1198],"Tiruchirappalli":[10.7905,78.7047],"Salem":[11.6643,78.146],"Erode":[11.341,77.7172],"Tiruppur":[11.1085,77.3411],"Mysuru":[12.2958,76.6394],"Mangalore":[12.9141,74.856],"Hubballi":[15.3647,75.124],"Warangal":[17.9689,79.5941],"Jabalpur":[23.1815,79.9864],"Jubbulpore":[23.1815,79.9864],"Jalpaiguri":[26.5215,88.7196],"Kullu":[31.9579,77.1095],"Kulu":[31.9579,77.1095],"Jalpaiguri, West Bengal":[26.5215,88.7196],"Kullu, Himachal Pradesh":[31.9579,77.1095]};
+let opsMap=null,opsDistricts=null,opsMarkers=null,opsDistrictLabels=null,opsStateLabels=null,opsCityLabels=null;
+function opsName(f){const p=f.properties||{};return p.district||p.DISTRICT||p.dtname||p.NAME_2||p.name||p.NAME||p.Dist_Name||p.st_nm||p.ST_NM||'Administrative boundary'}
+function opsStyle(f){const n=opsName(f).toLowerCase();const hit=updates.some(u=>(String(u.areas||'')+' '+String(u.city||'')).toLowerCase().includes(n)&&n.length>2);const pal=['#f5d7b8','#f4e4a9','#d7e8c6','#c9e4e8','#d9d3f0','#f0d3d9','#e7dfc7','#cfe1d4','#e7d4bb','#d4e0f4'];let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return{color:'#fffdf8',weight:.8,opacity:1,fillColor:hit?'#ed8b37':pal[h%pal.length],fillOpacity:hit?.98:.88}}
+function opsCoords(city){
+ const raw=String(city||'').trim();
+ if(!raw)return null;
+ if(OPS_CITY_COORDS[raw])return OPS_CITY_COORDS[raw];
+ const norm=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/\\b(city|district|urban|rural)\\b/g,'').replace(/[^a-z0-9]/g,'');
+ const target=norm(raw);
+ const key=Object.keys(OPS_CITY_COORDS).find(x=>norm(x)===target);
+ if(key)return OPS_CITY_COORDS[key];
+ // Accept a city followed by district/state metadata (e.g. "Coimbatore, Tamil Nadu").
+ const first=raw.split(/[,(|/]/)[0].trim();
+ const key2=Object.keys(OPS_CITY_COORDS).find(x=>norm(x)===norm(first));
+ return key2?OPS_CITY_COORDS[key2]:null;
+}
+function initIndiaMap(){
+ const el=document.getElementById('indiaMap');if(!el)return;if(!window.L){document.getElementById('mapStatus').textContent='MAP LIBRARY FAILED TO LOAD';el.innerHTML='<div class="map-load-error"><b>Interactive map library did not load.</b><br>Reconnect to the internet and reload this page.</div>';return}
+ if(opsMap){opsMap.invalidateSize();return}
+ opsMap=L.map(el,{zoomControl:true,scrollWheelZoom:true,preferCanvas:true}).setView([22.7,79.2],4);
+ opsMap.createPane('publishedUpdatePane');opsMap.getPane('publishedUpdatePane').style.zIndex='850';opsMap.getPane('publishedUpdatePane').style.pointerEvents='auto';
+ L.control.scale({imperial:false,metric:true,maxWidth:130}).addTo(opsMap);
+ opsMarkers=L.layerGroup().addTo(opsMap);
+ renderOpsUpdateMarkers();
+ const mode=document.getElementById('mapLayerMode');if(mode){mode.innerHTML='<option value="operations">Districts & update indicators</option><option value="updates">Only cities with updates</option>';mode.onchange=()=>{if(!opsDistricts)return;if(mode.value==='updates'){opsMap.removeLayer(opsDistricts);[opsDistrictLabels,opsStateLabels].forEach(x=>x&&opsMap.removeLayer(x))}else{opsMap.addLayer(opsDistricts);const z=opsMap.getZoom();if(z<5.5&&opsStateLabels)opsMap.addLayer(opsStateLabels);if(z>=5.5&&z<7&&opsDistrictLabels)opsMap.addLayer(opsDistrictLabels)}}}
+ const search=document.getElementById('mapSearch');if(search){search.placeholder='Search city, district or state…';search.onkeydown=e=>{if(e.key==='Enter')searchIndiaMap(search.value)}}
+ const boundarySources=[
+  'https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/india.geojson',
+  'https://cdn.jsdelivr.net/gh/udit-001/india-maps-data@main/geojson/india.geojson',
+  'https://mausam.imd.gov.in/imd_latest/contents/district_shapefiles/sd_boundary_rainfall.json'
+ ];
+ const loadBoundaries=async()=>{let lastError;for(const url of boundarySources){try{const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);const response=await fetch(url,{signal:controller.signal,cache:'force-cache'});clearTimeout(timer);if(!response.ok)throw Error('HTTP '+response.status);const data=await response.json();if(data&&Array.isArray(data.features)&&data.features.length>100)return data;throw Error('GeoJSON did not contain district features')}catch(error){lastError=error}}throw lastError||Error('No boundary source available')};
+ loadBoundaries().then(data=>{
+  opsDistricts=L.geoJSON(data,{style:opsStyle,onEachFeature:(f,l)=>{l.bindTooltip(opsName(f),{sticky:true});l.bindPopup('<strong>'+esc(opsName(f))+'</strong><br><small>District / administrative boundary</small>')}}).addTo(opsMap);
+  opsDistrictLabels=L.layerGroup();
+  data.features.forEach(f=>{const name=opsName(f);const g=f.geometry;if(!g||!g.coordinates)return;let rings=[];if(g.type==='Polygon')rings=g.coordinates.slice(0,1);else if(g.type==='MultiPolygon')rings=g.coordinates.map(poly=>poly[0]);if(!rings.length)return;const ring=rings.sort((a,b)=>b.length-a.length)[0];if(!ring||ring.length<4)return;let sx=0,sy=0;ring.forEach(pt=>{sx+=pt[0];sy+=pt[1]});const ll=[sy/ring.length,sx/ring.length];const label=L.marker(ll,{interactive:false,keyboard:false,icon:L.divIcon({className:'',html:'<span class="india-district-label">'+esc(name)+'</span>',iconSize:null})});opsDistrictLabels.addLayer(label)});
+  opsStateLabels=L.layerGroup();
+  const stateLabelCoords={'Jammu & Kashmir':[33.7,76.0],'Ladakh':[34.2,78.3],'Himachal Pradesh':[31.8,77.2],'Punjab':[31.0,75.3],'Haryana':[29.2,76.2],'Uttarakhand':[30.1,79.0],'Rajasthan':[26.7,73.8],'Uttar Pradesh':[27.0,80.5],'Bihar':[25.9,85.5],'Sikkim':[27.5,88.5],'Arunachal Pradesh':[28.2,94.5],'Nagaland':[26.1,94.3],'Manipur':[24.7,93.9],'Mizoram':[23.2,92.8],'Tripura':[23.8,91.6],'Meghalaya':[25.5,91.3],'Assam':[26.0,92.8],'West Bengal':[23.5,87.7],'Jharkhand':[23.6,85.5],'Chhattisgarh':[21.3,82.0],'Madhya Pradesh':[23.5,78.5],'Gujarat':[22.7,71.8],'Maharashtra':[19.5,75.5],'Goa':[15.4,74.0],'Telangana':[17.9,79.2],'Andhra Pradesh':[16.2,80.8],'Karnataka':[15.0,76.0],'Kerala':[10.4,76.2],'Tamil Nadu':[11.0,78.4],'Odisha':[20.5,84.5]};
+  Object.entries(stateLabelCoords).forEach(([name,coords])=>opsStateLabels.addLayer(L.marker(coords,{interactive:false,keyboard:false,icon:L.divIcon({className:'',html:'<span class="india-state-label">'+esc(name)+'</span>',iconSize:null})})));
+  opsCityLabels=L.layerGroup();
+  Object.entries(OPS_CITY_COORDS).forEach(([name,coords])=>{if(name==='Bangalore'||name==='Calicut'||name==='Trivandrum'||name==='New Delhi')return;const label=L.marker(coords,{interactive:false,keyboard:false,icon:L.divIcon({className:'',html:'<span class="india-city-label">'+esc(name)+'</span>',iconSize:null,iconAnchor:[-8,8]})});opsCityLabels.addLayer(label)});
+  opsMap.on('zoomend',()=>{const z=opsMap.getZoom();if(opsStateLabels){if(z>=5.5)opsMap.removeLayer(opsStateLabels);else if(!opsMap.hasLayer(opsStateLabels))opsMap.addLayer(opsStateLabels)}if(opsDistrictLabels){if(z<5.5||z>=7)opsMap.removeLayer(opsDistrictLabels);else if(!opsMap.hasLayer(opsDistrictLabels))opsMap.addLayer(opsDistrictLabels)}if(opsCityLabels){if(z<7)opsMap.removeLayer(opsCityLabels);else if(!opsMap.hasLayer(opsCityLabels))opsMap.addLayer(opsCityLabels)}});
+  opsStateLabels.addTo(opsMap);
+
+  const bounds=opsDistricts.getBounds();if(bounds.isValid())opsMap.fitBounds(bounds,{padding:[12,12]});
+  document.getElementById('mapStatus').textContent=(data.features?.length||'India')+' DISTRICT BOUNDARIES LOADED';renderOpsUpdateMarkers();refreshAllUpdateViews(false);setTimeout(()=>opsMap.invalidateSize(),200);
+ }).catch(err=>{document.getElementById('mapStatus').textContent='DISTRICT DATA COULD NOT LOAD';el.innerHTML='<div class="map-load-error"><b>India district boundaries could not be downloaded.</b><br>The map tried multiple public GeoJSON sources and timed out. Check your connection and reload. No map API key is required.</div>';console.warn(err)});
+}
+function renderOpsUpdateMarkers(){
+ const status=document.getElementById('mapStatus');
+ if(!opsMap||!opsMarkers){
+   if(status)status.textContent='MAP READY — UPDATE INDICATORS WILL APPEAR WHEN MAP OPENS';
+   return;
+ }
+ try{
+  if(!opsMap.hasLayer(opsMarkers))opsMarkers.addTo(opsMap);
+  opsMarkers.clearLayers();
+  const source=Array.isArray(updates)?updates:[];
+  const groups=new Map();
+  source.forEach(u=>{
+   const city=String(u.city||u.affectedCity||u.targetCity||u.location||'').trim();
+   if(!city)return;
+   const key=city.toLowerCase().replace(/[^a-z0-9]/g,'');
+   if(!groups.has(key))groups.set(key,{city,records:[]});
+   groups.get(key).records.push(u);
+  });
+  let shown=0,missing=[];
+  groups.forEach(g=>{
+   const coords=opsCoords(g.city);
+   if(!coords){missing.push(g.city);return;}
+   const count=g.records.length;
+   const icon=L.divIcon({
+    className:'ops-update-marker-icon',
+    html:'<span class="ops-update-marker-pulse"></span><span class="ops-update-marker-label">'+esc(g.city)+(count>1?' · '+count:'')+'</span>',
+    iconSize:[190,42],iconAnchor:[10,10]
+   });
+   const marker=L.marker(coords,{pane:'publishedUpdatePane',icon,title:g.city+' — '+count+' published update(s)',zIndexOffset:10000,keyboard:true,riseOnHover:true}).addTo(opsMarkers);
+   marker.bindTooltip('<b>'+esc(g.city)+'</b><br>'+count+' published update'+(count===1?'':'s'),{direction:'top',className:'ops-update-tooltip'});
+   marker.on('click',()=>showOpsCityPopup(g.city,g.records,marker));
+   shown++;
+  });
+  if(status){
+   status.textContent=shown+' CITY UPDATE INDICATOR'+(shown===1?'':'S')+' SHOWN'+(missing.length?' · COORDINATES NEEDED: '+missing.join(', '):'');
+   status.style.color=missing.length?'#a65a14':'#a94b0b';
+  }
+  console.info('[Roadblock Ops] Map indicators rendered:',shown,'updates:',source.length,'locations without coordinates:',missing);
+ }catch(err){
+  console.error('[Roadblock Ops] Marker render failed',err);
+  if(status)status.textContent='MAP INDICATOR ERROR — '+String(err.message||err);
+ }
+}
+function showOpsCityPopup(city,records,marker){
+ const content=records.map(u=>'<article class="ops-popup-update"><div class="ops-popup-meta">'+esc(u.type||'Operational update')+' · '+esc(u.from||'Date not specified')+(u.to?' – '+esc(u.to):'')+'</div><h4>'+esc(u.title||u.city+' update')+'</h4><p>'+esc(u.summary||u.reason||'See SOP for instructions.')+'</p>'+(u.areas?'<p><b>Affected areas:</b> '+esc(u.areas)+'</p>':'')+'<details><summary>View SOP and handling instructions</summary><p>'+esc(u.sop||'No SOP supplied.')+'</p>'+(u.tag?'<p><b>Tag:</b> '+esc(u.tag)+'</p>':'')+(u.reject?'<p><b>Rejection reason:</b> '+esc(u.reject)+'</p>':'')+(u.important?'<p><b>Important:</b> '+esc(u.important)+'</p>':'')+'</details></article>').join('');
+ marker.bindPopup('<div class="ops-city-popup"><h3>'+esc(city)+' · Updates</h3>'+content+'</div>',{maxWidth:340,minWidth:250,maxHeight:360}).openPopup();
+}
+function searchIndiaMap(q){q=String(q||'').trim().toLowerCase();if(!q||!opsMap)return;const city=Object.keys(OPS_CITY_COORDS).find(n=>n.toLowerCase()===q)||Object.keys(OPS_CITY_COORDS).find(n=>n.toLowerCase().includes(q));if(city){const c=OPS_CITY_COORDS[city];opsMap.setView(c,8);const m=opsMarkers.getLayers().find(x=>x.getLatLng().distanceTo(L.latLng(c))<1000);if(m)m.fire('click');return}if(opsDistricts){let found=null;opsDistricts.eachLayer(l=>{if(!found&&JSON.stringify(l.feature.properties||{}).toLowerCase().includes(q))found=l});if(found){opsMap.fitBounds(found.getBounds(),{padding:[20,20]});found.openTooltip()}}}
+function filterMapSearch(q){searchIndiaMap(q)}
+function changeMapMode(v){const m=document.getElementById('mapLayerMode');if(m)m.value=v;if(opsDistricts){if(v==='updates'){opsMap.removeLayer(opsDistricts);[opsDistrictLabels,opsStateLabels].forEach(x=>x&&opsMap.removeLayer(x))}else{opsMap.addLayer(opsDistricts);const z=opsMap.getZoom();if(z<5.5&&opsStateLabels)opsMap.addLayer(opsStateLabels);if(z>=5.5&&z<7&&opsDistrictLabels)opsMap.addLayer(opsDistrictLabels)}}}
+function resetIndiaMap(){if(opsMap&&opsDistricts){const b=opsDistricts.getBounds();if(b.isValid())opsMap.fitBounds(b,{padding:[22,22]});else opsMap.setView([22.7,79.2],4);setTimeout(()=>opsMap.setZoom(Math.min(opsMap.getZoom(),4.5)),80)}}
+function setupReferenceMap(){initIndiaMap()}
+window.addEventListener('load',()=>{if(!opsMap)setTimeout(()=>{const st=document.getElementById('mapStatus');const el=document.getElementById('indiaMap');if(st&&st.textContent.includes('LOADING')){st.textContent='MAP INITIALIZATION RETRY';if(el&&!window.L)el.innerHTML='<div class="map-load-error"><b>Map library unavailable.</b><br>Please check your internet connection and reload.</div>';else initIndiaMap()}},2500)})
+
+function refreshHeroPulse(){
+ const citySet=new Set(updates.map(u=>String(u.city||'').trim()).filter(Boolean));
+ const active=updates.filter(u=>stateOf(u)==='active').length;
+ const c=document.getElementById('heroLiveCount');if(c)c.textContent=citySet.size+' cities reporting';
+ const u=document.getElementById('heroLiveUpdates');if(u)u.textContent=updates.length;
+ const a=document.getElementById('heroLiveActive');if(a)a.textContent=active;
+ const pins=document.getElementById('heroMiniPins');
+ if(pins){
+  const coords=Object.entries(OPS_CITY_COORDS).filter(([name])=>citySet.has(name));
+  const fallback=[[83,179],[91,105],[91,43],[54,91],[119,91],[63,55]];
+  const pts=coords.length?coords.slice(0,8).map(([name,latlon])=>[Math.max(22,Math.min(139,34+(latlon[1]-68)*3.0)),Math.max(14,Math.min(176,16+(36-latlon[0])*5.1))]):fallback.slice(0,3);
+  pins.innerHTML=pts.map(([x,y],i)=>'<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="3.2" class="mini-pin" style="animation-delay:'+(i*.16)+'s"/>').join('');
+ }
+ const ticker=document.getElementById('heroLiveTicker');
+ if(ticker){const latest=[...updates].sort((x,y)=>String(y.publishedAt||'').localeCompare(String(x.publishedAt||'')))[0];ticker.textContent=latest?(latest.city||'City update')+' · '+(latest.title||latest.summary||'Operational update published'):'No published updates yet · monitoring ready';}
+}
+function installCreatorEvader(){
+ const el=document.getElementById('creatorToast');
+ if(el){el.style.right='24px';el.style.bottom='20px';el.style.left='auto';el.style.top='auto';el.style.pointerEvents='none'}
+}
+
+
+
+function installCreatorButterflies(){
+ const sensor=document.getElementById('creatorHoverSensor');
+ const card=document.getElementById('creatorHoverCard');
+ const layer=document.getElementById('creatorButterflyLayer');
+ if(!sensor||!card||!layer)return;
+ let active=false,hideTimer=null;
+ const rand=(a,b)=>a+Math.random()*(b-a);
+ function burst(){
+  if(active)return;
+  active=true;
+  card.classList.add('visible');
+  layer.innerHTML='';
+  const ox=Math.max(90,Math.min(window.innerWidth-90,window.innerWidth-155));
+  const oy=Math.max(90,Math.min(window.innerHeight-90,window.innerHeight-78));
+  const colors=['#f0b83f','#d9942e','#f6d77c','#bd8ce0','#f4a7c6','#7ed8c2','#fff0b8','#ff8b58'];
+  for(let i=0;i<32;i++){
+   const el=document.createElement('span');
+   el.className='creator-butterfly';
+   const size=rand(17,29),angle=rand(0,Math.PI*2),distance=rand(90,330);
+   const dx=Math.cos(angle)*distance,dy=Math.sin(angle)*distance-rand(15,120);
+   const color=colors[Math.floor(Math.random()*colors.length)];
+   el.style.left=(ox+rand(-28,28))+'px';
+   el.style.top=(oy+rand(-18,18))+'px';
+   el.style.setProperty('--dx',dx+'px');
+   el.style.setProperty('--dy',dy+'px');
+   el.style.setProperty('--rot',rand(-140,140)+'deg');
+   el.style.setProperty('--duration',rand(2.25,3.05)+'s');
+   el.style.zIndex='10000';
+   el.innerHTML='<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11 C7 2 1 3 3 10 C4 14 8 14 11 13 C5 14 5 21 9 21 C12 20 12 15 12 12Z" fill="'+color+'" stroke="#fff5dc" stroke-width=".65"/><path d="M12 11 C17 2 23 3 21 10 C20 14 16 14 13 13 C19 14 19 21 15 21 C12 20 12 15 12 12Z" fill="'+color+'" stroke="#fff5dc" stroke-width=".65"/><path d="M12 8 L12 17" stroke="#765323" stroke-width="1.2" stroke-linecap="round"/></svg>';
+   layer.appendChild(el);
+  }
+  clearTimeout(hideTimer);
+  hideTimer=setTimeout(()=>{
+   card.classList.remove('visible');
+   layer.innerHTML='';
+   active=false;
+  },3200);
+ }
+ sensor.addEventListener('mouseenter',burst);
+ sensor.addEventListener('pointerenter',burst);
+ sensor.addEventListener('click',burst);
+ sensor.addEventListener('pointermove',burst,{passive:true});
+ sensor.addEventListener('touchstart',burst,{passive:true});
+ const watermark=document.getElementById('creatorToast');
+ if(watermark){watermark.addEventListener('mouseenter',burst);watermark.addEventListener('pointerenter',burst);watermark.addEventListener('click',burst);}
+}
+
+renderBoard();
+refreshHeroPulse();
+installCreatorEvader();
+installCreatorButterflies();
+
+</script>
+
+<div id="abhiCreatorMark" aria-label="Creator and Admin Abhijith Prasad">
+  <span class="abhiCreatorRole">✧ CREATOR &amp; ADMIN ✧</span>
+  <span class="abhiCreatorName">Abhijith Prasad <b>✦</b></span>
+</div>
+<div id="abhiButterflyPopup" role="status">✨ A little magic from Abhijith!<small>Creator &amp; Admin · Roadblock Ops Command</small></div>
+<div id="abhiButterflyLayer" aria-hidden="true"></div>
+
+
+<script id="abhiButterflyEngine">
+(function(){
+ function initAbhiButterflies(){
+  const mark=document.getElementById('abhiCreatorMark');
+  const popup=document.getElementById('abhiButterflyPopup');
+  const layer=document.getElementById('abhiButterflyLayer');
+  if(!mark||!popup||!layer||mark.dataset.abhiReady==='1')return;
+  mark.dataset.abhiReady='1';
+  let running=false, hideTimer;
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  function launch(){
+   if(running)return;
+   running=true;
+   popup.classList.add('abhiShown');
+   layer.replaceChildren();
+   const box=mark.getBoundingClientRect();
+   const originX=Math.max(65,Math.min(innerWidth-65,box.left+box.width*.5));
+   const originY=Math.max(65,Math.min(innerHeight-65,box.top+box.height*.35));
+   const palette=['#f0b83f','#d9942e','#f6d77c','#bd8ce0','#f4a7c6','#7ed8c2','#fff0b8','#ff8b58'];
+   for(let i=0;i<42;i++){
+    const butterfly=document.createElement('span');
+    butterfly.className='abhiButterfly';
+    const size=rand(22,36),angle=rand(0,Math.PI*2),distance=rand(110,360);
+    const dx=Math.cos(angle)*distance,dy=Math.sin(angle)*distance-rand(25,100);
+    const colour=palette[Math.floor(Math.random()*palette.length)];
+    butterfly.style.left=(originX+rand(-24,24))+'px';
+    butterfly.style.top=(originY+rand(-14,14))+'px';
+    butterfly.style.setProperty('--abhiDx',dx+'px');
+    butterfly.style.setProperty('--abhiDy',dy+'px');
+    butterfly.style.setProperty('--abhiRot',rand(-130,130)+'deg');
+    butterfly.style.setProperty('--abhiDuration',rand(2.2,3.0)+'s');
+    butterfly.innerHTML='<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11 C7 2 1 3 3 10 C4 14 8 14 11 13 C5 14 5 21 9 21 C12 20 12 15 12 12Z" fill="'+colour+'" stroke="#fff5dc" stroke-width=".7"/><path d="M12 11 C17 2 23 3 21 10 C20 14 16 14 13 13 C19 14 19 21 15 21 C12 20 12 15 12 12Z" fill="'+colour+'" stroke="#fff5dc" stroke-width=".7"/><path d="M12 8 L12 17" stroke="#765323" stroke-width="1.2" stroke-linecap="round"/></svg>';
+    layer.appendChild(butterfly);
+   }
+   clearTimeout(hideTimer);
+   hideTimer=setTimeout(function(){
+    popup.classList.remove('abhiShown');
+    layer.replaceChildren();
+    running=false;
+   },3200);
+  }
+  mark.addEventListener('pointerenter',launch);
+  mark.addEventListener('mouseenter',launch);
+  mark.addEventListener('click',launch);
+  mark.addEventListener('touchstart',launch,{passive:true});
+  // Automatic one-time preview confirms the effect is present when the page opens.
+  setTimeout(launch,1800);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initAbhiButterflies);
+ else initAbhiButterflies();
+})();
+</script>
+
+</body>
+</html>
