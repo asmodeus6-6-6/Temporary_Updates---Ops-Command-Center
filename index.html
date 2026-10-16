@@ -710,7 +710,8 @@ function filterMapSearch(q){searchIndiaMap(q)}
 function changeMapMode(v){const m=document.getElementById('mapLayerMode');if(m)m.value=v;if(opsDistricts){if(v==='updates'){opsMap.removeLayer(opsDistricts);[opsDistrictLabels,opsStateLabels].forEach(x=>x&&opsMap.removeLayer(x))}else{opsMap.addLayer(opsDistricts);const z=opsMap.getZoom();if(z<5.5&&opsStateLabels)opsMap.addLayer(opsStateLabels);if(z>=5.5&&z<7&&opsDistrictLabels)opsMap.addLayer(opsDistrictLabels)}}}
 function resetIndiaMap(){if(opsMap&&opsDistricts){const b=opsDistricts.getBounds();if(b.isValid())opsMap.fitBounds(b,{padding:[22,22]});else opsMap.setView([22.7,79.2],4);setTimeout(()=>opsMap.setZoom(Math.min(opsMap.getZoom(),4.5)),80)}}
 function setupReferenceMap(){initIndiaMap()}
-window.addEventListener('load',()=>{if(!opsMap)setTimeout(()=>{const st=document.getElementById('mapStatus');const el=document.getElementById('indiaMap');if(st&&st.textContent.includes('LOADING')){st.textContent='MAP INITIALIZATION RETRY';if(el&&!window.L)el.innerHTML='<div class="map-load-error"><b>Map library unavailable.</b><br>Please check your internet connection and reload.</div>';else initIndiaMap()}},2500)})
+// Always initialize the map after the page loads. Previously this retry only ran while the status text contained LOADING, so the map could remain an empty blue panel forever.
+window.addEventListener('load',()=>{setTimeout(()=>{try{initIndiaMap();if(opsMap){opsMap.invalidateSize();renderOpsUpdateMarkers()}else if(!window.L){renderNoApiMap('Leaflet library unavailable; showing built-in map')} }catch(err){console.error('[Roadblock Ops] Map startup failed:',err);try{renderNoApiMap(err&&err.message||'Map startup failed')}catch(fallbackErr){console.error('[Roadblock Ops] Built-in map fallback failed:',fallbackErr)}}},250)})
 
 function refreshHeroPulse(){
  const citySet=new Set(updates.map(u=>String(u.city||'').trim()).filter(Boolean));
