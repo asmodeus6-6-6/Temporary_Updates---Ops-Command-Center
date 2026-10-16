@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Static GitHub Pages build. Updates are stored in browser localStorage; shared multi-user sync requires a backend. -->
+<!-- GitHub Pages frontend. Configure Supabase below for shared, cross-device persistence. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -328,7 +328,7 @@ body.admin-mode .modal-backdrop{z-index:100010!important}
      <div class="form-group" style="justify-content:end"><button class="btn primary" type="button" onclick="parseEmailToForm()">Extract details into fields ↓</button></div>
     </div><div class="admin-note">Local rule-based extraction for this prototype. Verify complex emails against the source.</div></div>
    <div class="admin-grid">
-   <div class="form-card"><h3 id="formTitle">2. Review and publish update</h3><div class="panel-sub" style="margin-bottom:18px">Fill the operational details. Published updates appear on the agent board in this browser immediately.</div>
+   <div class="form-card"><h3 id="formTitle">2. Review and publish update</h3><div class="panel-sub" style="margin-bottom:18px">Fill the operational details. Published updates appear on the agent board immediately. Configure the shared database below in the source file so all agents/devices receive them.</div>
     <form id="updateForm" onsubmit="saveUpdate(event)"><input type="hidden" id="editId">
      <div class="form-grid">
       <div class="form-group"><label for="fCity">Affected city *</label><input id="fCity" required placeholder="e.g. Coimbatore"></div>
@@ -346,7 +346,7 @@ body.admin-mode .modal-backdrop{z-index:100010!important}
 
       <div class="form-group full"><button class="btn primary" type="submit" id="publishBtn">Publish update ↗</button><button class="btn" type="button" onclick="resetForm()" style="margin-top:7px">Clear form</button></div>
      </div>
-    </form><div class="admin-note">Updates are saved in this browser for this prototype. Cross-device and live multi-user sync require a shared backend.</div>
+    </form><div class="admin-note">Shared mode: Supabase stores updates centrally and refreshes agent views about every 15 seconds. If Supabase is not configured, updates stay in this browser only.</div>
    </div>
    <div class="form-card"><h3>Published update library</h3><div class="panel-sub">Edit, archive, or remove previously published items.</div><div class="filters" style="margin-top:14px"><input class="field" id="adminSearch" placeholder="Search updates…" oninput="renderAdminList()" style="width:100%"></div><div class="manage-list" id="adminList"></div></div>
   </div>
@@ -358,8 +358,57 @@ body.admin-mode .modal-backdrop{z-index:100010!important}
 <div class="modal-backdrop" id="cityModal" onclick="if(event.target===this)closeCityModal()"><div class="modal"><div class="modal-head"><div><div class="eyebrow">City operations brief</div><h2 id="modalCityName">City updates</h2><p id="modalCitySub">Effective windows and mandatory SOPs</p></div><button class="close" onclick="closeCityModal()" aria-label="Close">×</button></div><div class="modal-body" id="modalContent"></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
-const STORAGE_KEY='mailshift_ops_updates_v2';
-const DEMO_ADMIN_PASS='2468'; // Prototype only. Replace with server-side authentication before production.
+const STORAGE_KEY='mailshift_ops_updates_v3';
+// SHARED DATABASE CONFIGURATION: fill these two values from your Supabase project.
+// Project Settings > API > Project URL and anon/public key. Never use a service_role key here.
+const SUPABASE_URL='https://fmsniyqrveqdnzwvbaqr.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_9FmDNJMr8GPrdmk0MOKx5g_3npPEiAC';
+const SHARED_TABLE='city_updates';
+const DEMO_ADMIN_PASS='2468'; // Client-side demo gate only; not secure authentication for sensitive operations.
+const sharedDbReady=()=>/^https:\/\//.test(SUPABASE_URL)&&!SUPABASE_URL.includes('YOUR_')&&SUPABASE_ANON_KEY&&!SUPABASE_ANON_KEY.includes('YOUR_');
+let sharedSyncBusy=false;
+async function sharedRequest(path,options={}){
+ if(!sharedDbReady()) throw new Error('Shared database is not configured.');
+ const headers={apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json',Prefer:'return=representation',...(options.headers||{})};
+ // New sb_publishable keys are not JWTs. Send Authorization only for legacy JWT anon keys.
+ if(/^eyJ/.test(SUPABASE_ANON_KEY)) headers.Authorization='Bearer '+SUPABASE_ANON_KEY;
+ const response=await fetch(SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/'+path,{...options,headers});
+ if(!response.ok) throw new Error('Database request failed ('+response.status+'): '+(await response.text()).slice(0,220));
+ const text=await response.text(); return text?JSON.parse(text):[];
+}
+async function pullSharedUpdates(showNotice=false){
+ if(!sharedDbReady()||sharedSyncBusy)return false;
+ sharedSyncBusy=true;
+ try{
+  const rows=await sharedRequest(SHARED_TABLE+'?select=id,payload');
+  const cloudUpdates=(rows||[]).map(r=>r.payload).filter(u=>u&&!u.demo&&!String(u.id||'').startsWith('demo-'));
+  let localUpdates=[];try{localUpdates=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]').filter(u=>u&&!u.demo&&!String(u.id||'').startsWith('demo-'));}catch(e){}
+  const cloudIds=new Set(cloudUpdates.map(u=>String(u.id)));
+  // One-time migration: preserve locally saved records by uploading records not yet in the shared table.
+  const localOnly=localUpdates.filter(u=>!cloudIds.has(String(u.id)));
+  if(localOnly.length){
+    const isUuid=v=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(v||''));
+    const migrated=localOnly.map(u=>{const item={...u,id:isUuid(u.id)?u.id:crypto.randomUUID()};return item;});
+    await sharedRequest(SHARED_TABLE+'?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify(migrated.map(u=>({id:u.id,payload:u,city:u.city,district:u.district||null,state:u.state||null,title:u.title,update_type:u.type||'General',description:u.reason||u.summary||null,affected_areas:u.areas||null,effective_from:u.from||null,effective_to:u.to||null,sop_instructions:u.sop||null,status:'published'})))});
+    migrated.forEach(u=>{cloudUpdates.push(u);cloudIds.add(String(u.id));});
+  }
+  updates=cloudUpdates.sort((a,b)=>new Date(b.publishedAt||0)-new Date(a.publishedAt||0));
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(updates));}catch(e){}
+  refreshAllUpdateViews(showNotice);
+  try{lastUpdateSnapshot=JSON.stringify(updates);}catch(e){}
+  return true;
+ }catch(err){console.error('Shared update sync failed:',err);if(showNotice)toast('Could not load shared updates. Check Supabase setup and table policies.');return false;}
+ finally{sharedSyncBusy=false;}
+}
+async function pushSharedUpdate(item){
+ if(!sharedDbReady())return {ok:false,localOnly:true};
+ try{
+  const row={id:item.id,payload:item,city:item.city,district:item.district||null,state:item.state||null,title:item.title,update_type:item.type||'General',description:item.reason||item.summary||null,affected_areas:item.areas||null,effective_from:item.from||null,effective_to:item.to||null,sop_instructions:item.sop||null,status:'published',updated_at:new Date().toISOString()};
+  await sharedRequest(SHARED_TABLE+'?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify(row)});return {ok:true};
+ }
+ catch(err){console.error('Shared publish failed:',err);return {ok:false,error:err.message};}
+}
+async function removeSharedUpdate(id){if(!sharedDbReady())return {ok:false,localOnly:true};try{await sharedRequest(SHARED_TABLE+'?id=eq.'+encodeURIComponent(id),{method:'DELETE'});return {ok:true};}catch(err){console.error('Shared delete failed:',err);return {ok:false,error:err.message};}}
 const cityImages={
  'Coimbatore':'https://images.unsplash.com/photo-1565019011521-445b2a9b4f2b?auto=format&fit=crop&w=900&q=80',
  'Kochi':'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=80',
@@ -372,7 +421,7 @@ const cityImages={
  'default':'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80'
 };
 let updates=[];
-try{updates=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){updates=[]}
+try{updates=JSON.parse(localStorage.getItem(STORAGE_KEY)||localStorage.getItem('mailshift_ops_updates_v2')||'[]')}catch(e){updates=[]}
 // Start with a clean update library. Remove demo/sample records left by earlier versions.
 updates = updates.filter(u => !u.demo && !String(u.id || '').startsWith('demo-'));
 try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updates)); } catch (e) {}
@@ -451,10 +500,12 @@ function showAgent(){
 }
 function unlockAdmin(){if(document.getElementById('adminPassword').value!==DEMO_ADMIN_PASS){toast('Passcode not recognized.');return}document.getElementById('adminLogin').style.display='none';document.getElementById('adminWorkspace').style.display='block';renderAdminList();toast('Command center unlocked (prototype mode).')}
 function lockAdmin(){showAgent();toast('Command center locked.')}
-function saveUpdate(e){e.preventDefault();const id=document.getElementById('editId').value;const city=document.getElementById('fCity').value.trim();const from=document.getElementById('fFrom').value;const to=document.getElementById('fTo').value;if(to&&new Date(to)<new Date(from)){toast('Effective-to must be after effective-from.');return}
- const item={id:id||'upd-'+Date.now().toString(36),city,type:document.getElementById('fType').value,from,to,areas:document.getElementById('fAreas').value.trim(),title:document.getElementById('fTitle').value.trim(),reason:document.getElementById('fReason').value.trim(),summary:document.getElementById('fSummary').value.trim(),sop:document.getElementById('fSop').value.trim(),tag:document.getElementById('fTag').value.trim(),reject:document.getElementById('fReject').value.trim(),important:document.getElementById('fImportant').value.trim(),publishedAt:new Date().toISOString()};
+async function saveUpdate(e){e.preventDefault();const id=document.getElementById('editId').value;const city=document.getElementById('fCity').value.trim();const from=document.getElementById('fFrom').value;const to=document.getElementById('fTo').value;if(to&&new Date(to)<new Date(from)){toast('Effective-to must be after effective-from.');return}
+ const item={id:id||crypto.randomUUID(),city,type:document.getElementById('fType').value,from,to,areas:document.getElementById('fAreas').value.trim(),title:document.getElementById('fTitle').value.trim(),reason:document.getElementById('fReason').value.trim(),summary:document.getElementById('fSummary').value.trim(),sop:document.getElementById('fSop').value.trim(),tag:document.getElementById('fTag').value.trim(),reject:document.getElementById('fReject').value.trim(),important:document.getElementById('fImportant').value.trim(),publishedAt:new Date().toISOString()};
  if(id){updates=updates.map(u=>u.id===id?item:u)}else updates.unshift(item);
  const saved = persist();
+ if(!saved)return;
+ const cloudResult = await pushSharedUpdate(item);
  resetForm();
  refreshAllUpdateViews(true);
  if(saved){
@@ -462,12 +513,14 @@ function saveUpdate(e){e.preventDefault();const id=document.getElementById('edit
    try { if(window.mailShiftUpdatesChannel) window.mailShiftUpdatesChannel.postMessage({type:'updates-changed',updates}); } catch(e){}
    // Dispatch a same-page event for any panels/widgets that subscribe to update changes.
    try { window.dispatchEvent(new CustomEvent('mailshift:updates-changed',{detail:{updates}})); } catch(e){}
-   toast(id?'Update saved and all views refreshed.':'Update published to Agent View, map, sidebar and dashboard.');
+   if(cloudResult.ok) toast(id?'Update saved to shared database and all views refreshed.':'Update published to the shared board for all agents.');
+   else if(cloudResult.localOnly) toast('Saved on this browser only. Configure Supabase to share updates across devices.');
+   else toast('Saved locally, but shared publish failed: '+cloudResult.error+' — other users will not see it yet.');
  }
 }
 function resetForm(){document.getElementById('updateForm').reset();document.getElementById('editId').value='';document.getElementById('formTitle').textContent='Publish a new update';document.getElementById('publishBtn').textContent='Publish update ↗'}
 function editUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;document.getElementById('editId').value=u.id;for(const [k,v] of Object.entries({City:u.city,Type:u.type,From:u.from,To:u.to,Areas:u.areas,Title:u.title,Reason:u.reason,Summary:u.summary,Sop:u.sop,Tag:u.tag,Reject:u.reject,Important:u.important})){const el=document.getElementById('f'+k);if(el)el.value=v||''}document.getElementById('formTitle').textContent='Edit published update';document.getElementById('publishBtn').textContent='Save update changes ↗';document.getElementById('adminWorkspace').scrollIntoView({behavior:'smooth'})}
-function deleteUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;if(!confirm('Delete the update for '+u.city+' — '+u.title+'?'))return;updates=updates.filter(x=>x.id!==id);persist();renderBoard();renderAdminList();toast('Update deleted.')}
+async function deleteUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;if(!confirm('Delete the update for '+u.city+' — '+u.title+'?'))return;updates=updates.filter(x=>x.id!==id);persist();const cloudResult=await removeSharedUpdate(id);renderBoard();renderAdminList();toast(cloudResult.ok?'Update deleted from shared board.':cloudResult.localOnly?'Update deleted on this browser only.':'Deleted locally; shared delete failed: '+cloudResult.error)}
 function renderAdminList(){const q=(document.getElementById('adminSearch')?.value||'').toLowerCase();const list=document.getElementById('adminList');if(!list)return;const filtered=updates.filter(u=>(u.city+' '+u.title+' '+u.areas).toLowerCase().includes(q)).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));list.innerHTML=filtered.map(u=>`<div class="manage-item"><div class="mi-text"><strong>${esc(u.city)} · ${esc(u.title)}</strong><small>${esc(dateOnly(u.from))} · ${esc(stateLabel(stateOf(u)))}${u.demo?' · sample':''}</small></div><button class="btn small" onclick="editUpdate('${esc(u.id)}')">Edit</button><button class="btn small" onclick="deleteUpdate('${esc(u.id)}')">Delete</button></div>`).join('')||'<div class="empty">No updates found.</div>'}
 function exportUpdates(){const blob=new Blob([JSON.stringify(updates,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='mailshift-updates-backup.json';a.click();URL.revokeObjectURL(url);toast('JSON backup exported.')}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
@@ -483,7 +536,14 @@ function applyIncomingUpdates(raw, notify=false){
 window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY)applyIncomingUpdates(e.newValue,true)});
 if(window.mailShiftUpdatesChannel)window.mailShiftUpdatesChannel.addEventListener('message',e=>{if(e.data&&e.data.type==='updates-changed')applyIncomingUpdates(e.data.updates,true)});
 let lastUpdateSnapshot='';try{lastUpdateSnapshot=localStorage.getItem(STORAGE_KEY)||'[]'}catch(e){}
+// Local browser tabs sync immediately; separate devices sync through Supabase polling.
 setInterval(()=>{try{const snap=localStorage.getItem(STORAGE_KEY)||'[]';if(snap!==lastUpdateSnapshot){lastUpdateSnapshot=snap;applyIncomingUpdates(snap,false)}}catch(e){}},1500);
+if(sharedDbReady()){
+  pullSharedUpdates(false);
+  setInterval(()=>pullSharedUpdates(false),15000);
+} else {
+  console.warn('Supabase is not configured: published updates remain local to this browser.');
+}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCityModal()});
 window.addEventListener('mailshift:updates-changed',()=>refreshAllUpdateViews(false));
 window.addEventListener('resize',()=>{if(opsMap){setTimeout(()=>{opsMap.invalidateSize();renderOpsUpdateMarkers()},150)}});
