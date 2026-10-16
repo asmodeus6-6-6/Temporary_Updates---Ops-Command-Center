@@ -267,6 +267,10 @@ body.admin-mode .modal-backdrop{z-index:100010!important}
 @media(max-width:700px){:root{--ops-header-height:65px}body.admin-mode .topbar,body.admin-mode header.topbar{height:65px!important}body.admin-mode #adminShell,body.admin-mode #adminShell.active{inset:65px 0 0 0!important;padding:14px 12px 24px!important}body.admin-mode #adminLogin{margin:22px auto 30px!important}}
 </style>
 
+
+<style>
+.fallback-map-shell{position:relative;width:100%;height:100%;min-height:420px;overflow:hidden;background:#dceef4;border-radius:14px}.fallback-map-shell svg{display:block;width:100%;height:100%;min-height:420px}.fallback-city-label{font-size:10px;fill:#4c514b;font-weight:700;paint-order:stroke;stroke:#f7f3e7;stroke-width:3px;stroke-linejoin:round}.fallback-update-marker{cursor:pointer;outline:none}.fallback-update-marker text{font:700 12px system-ui;fill:#a53616;paint-order:stroke;stroke:#fff8e9;stroke-width:4px;stroke-linejoin:round}.fallback-dot{fill:#e4471d;stroke:white;stroke-width:2}.fallback-pulse{fill:#f16a3d55;stroke:#e4471d;stroke-width:1;animation:opsPulse 1.8s infinite}.fallback-map-controls{position:absolute;z-index:3;top:12px;right:12px;display:flex;gap:5px}.fallback-map-controls button,.fallback-popup-close{border:1px solid #d7d0c2;background:#fffdf8;border-radius:8px;padding:7px 11px;font-weight:800;color:#473b2b;cursor:pointer}.fallback-map-note{position:absolute;bottom:8px;left:10px;right:10px;background:#fffdf0dc;border-radius:7px;padding:6px 9px;font-size:10px;color:#635c50}.fallback-map-popup{position:absolute;z-index:5;right:12px;bottom:42px;width:min(330px,calc(100% - 24px));max-height:65%;overflow:auto;padding:15px;background:#fffdf8;border:1px solid #e1d6c4;border-radius:13px;box-shadow:0 12px 32px #31210e33}.fallback-map-popup h3{margin:0 32px 10px 0;font-size:16px}.fallback-map-popup article{padding:10px 0;border-top:1px solid #eee4d4}.fallback-map-popup p{margin:5px 0;font-size:12px;white-space:pre-wrap}.fallback-map-popup small{color:#7c7161}.fallback-popup-close{position:absolute;right:10px;top:9px;padding:2px 9px;font-size:19px}
+</style>
 </head>
 <body>
 
@@ -606,8 +610,24 @@ function opsCoords(city){
  const key2=Object.keys(OPS_CITY_COORDS).find(x=>norm(x)===norm(first));
  return key2?OPS_CITY_COORDS[key2]:null;
 }
+let fallbackMapZoom=1;
+function renderNoApiMap(reason){
+ const el=document.getElementById('indiaMap'); if(!el)return;
+ const W=900,H=650, bounds={minLon:67,maxLon:98,minLat:6,maxLat:38};
+ const xy=([lat,lon])=>[40+(lon-bounds.minLon)/(bounds.maxLon-bounds.minLon)*(W-80),25+(bounds.maxLat-lat)/(bounds.maxLat-bounds.minLat)*(H-55)];
+ const outline=[[35,74],[33,74],[31,77],[30,80],[28,82],[27,88],[25,94],[22,97],[20,93],[18,88],[16,84],[13,80],[9,77],[7,75],[10,73],[14,72],[18,70],[22,69],[25,68],[29,70],[32,72]].map(xy).map(p=>p.join(',')).join(' ');
+ const source=Array.isArray(updates)?updates:[];const groups=new Map();source.forEach(u=>{const c=String(u.city||u.affectedCity||u.targetCity||u.location||'').trim();if(c){const k=c.toLowerCase().replace(/[^a-z0-9]/g,'');if(!groups.has(k))groups.set(k,{city:c,records:[]});groups.get(k).records.push(u)}});
+ const labels=Object.entries(OPS_CITY_COORDS).filter(([n])=>!['New Delhi','Bangalore','Calicut','Trivandrum','Jubbulpore','Kulu'].includes(n)).map(([name,coord])=>{const [x,y]=xy(coord);return `<text x="${x+6}" y="${y-4}" class="fallback-city-label">${esc(name)}</text>`}).join('');
+ const markers=[...groups.values()].map(g=>{const c=opsCoords(g.city);if(!c)return '';const [x,y]=xy(c);return `<g class="fallback-update-marker" role="button" tabindex="0" data-city="${esc(g.city)}" transform="translate(${x} ${y})"><circle r="10" class="fallback-pulse"/><circle r="5.5" class="fallback-dot"/><text x="12" y="-9">${esc(g.city)}${g.records.length>1?' · '+g.records.length:''}</text></g>`}).join('');
+ el.innerHTML=`<div class="fallback-map-shell"><div class="fallback-map-controls"><button type="button" data-z="in" aria-label="Zoom in">＋</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset">Reset</button></div><svg id="fallbackIndiaSvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Interactive schematic India map with city labels and update indicators"><defs><pattern id="fallbackGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#b6d5df" stroke-width=".7"/></pattern></defs><rect width="100%" height="100%" fill="#dceef4"/><rect width="100%" height="100%" fill="url(#fallbackGrid)"/><g id="fallbackMapGroup"><polygon points="${outline}" fill="#e8d7a9" stroke="#ae9b6c" stroke-width="2.5"/><path d="M240 150 L310 235 L390 210 L450 280 L550 245 M300 310 L420 350 L510 330 L600 390 M220 420 L350 430 L440 480 L520 530 M500 150 L530 230 L610 270 L680 300" fill="none" stroke="#c4b27f" stroke-width="1.4" stroke-dasharray="5 4"/>${labels}${markers}</g></svg><div class="fallback-map-note">Schematic India view · city positions are approximate · update markers are interactive. Geographic boundary service unavailable.</div><div id="fallbackMapPopup" class="fallback-map-popup" hidden></div></div>`;
+ const group=document.getElementById('fallbackMapGroup');
+ el.querySelectorAll('[data-z]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.z==='in')fallbackMapZoom=Math.min(2.5,fallbackMapZoom+.25);else if(b.dataset.z==='out')fallbackMapZoom=Math.max(1,fallbackMapZoom-.25);else fallbackMapZoom=1;group.setAttribute('transform',`translate(${W*(1-fallbackMapZoom)/2} ${H*(1-fallbackMapZoom)/2}) scale(${fallbackMapZoom})`)}));
+ const open=g=>{const pop=document.getElementById('fallbackMapPopup');if(!pop)return;pop.hidden=false;pop.innerHTML=`<button type="button" class="fallback-popup-close" aria-label="Close">×</button><h3>${esc(g.city)} · Updates</h3>`+g.records.map(u=>`<article><strong>${esc(u.title||g.city+' update')}</strong><p>${esc(u.summary||u.reason||'See SOP for instructions.')}</p><small>${esc(u.from||'Date not specified')}${u.to?' – '+esc(u.to):''}</small><details><summary>View SOP</summary><p>${esc(u.sop||u.sopInstructions||'No SOP supplied.')}</p></details></article>`).join('');pop.querySelector('.fallback-popup-close').onclick=()=>pop.hidden=true};
+ el.querySelectorAll('.fallback-update-marker').forEach(m=>{const g=groups.get(m.dataset.city.toLowerCase().replace(/[^a-z0-9]/g,''));m.addEventListener('click',()=>g&&open(g));m.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g&&open(g)}})});
+ const status=document.getElementById('mapStatus');if(status)status.textContent=`SCHEMATIC MAP · ${groups.size} CITY UPDATE INDICATOR${groups.size===1?'':'S'}`;
+}
 function initIndiaMap(){
- const el=document.getElementById('indiaMap');if(!el)return;if(!window.L){document.getElementById('mapStatus').textContent='MAP LIBRARY FAILED TO LOAD';el.innerHTML='<div class="map-load-error"><b>Interactive map library did not load.</b><br>Reconnect to the internet and reload this page.</div>';return}
+ const el=document.getElementById('indiaMap');if(!el)return;if(!window.L){renderNoApiMap('Leaflet unavailable');return}
  if(opsMap){opsMap.invalidateSize();return}
  opsMap=L.map(el,{zoomControl:true,scrollWheelZoom:true,preferCanvas:true}).setView([22.7,79.2],4);
  opsMap.createPane('publishedUpdatePane');opsMap.getPane('publishedUpdatePane').style.zIndex='850';opsMap.getPane('publishedUpdatePane').style.pointerEvents='auto';
@@ -636,7 +656,7 @@ function initIndiaMap(){
 
   const bounds=opsDistricts.getBounds();if(bounds.isValid())opsMap.fitBounds(bounds,{padding:[12,12]});
   document.getElementById('mapStatus').textContent=(data.features?.length||'India')+' DISTRICT BOUNDARIES LOADED';renderOpsUpdateMarkers();refreshAllUpdateViews(false);setTimeout(()=>opsMap.invalidateSize(),200);
- }).catch(err=>{document.getElementById('mapStatus').textContent='DISTRICT DATA COULD NOT LOAD';el.innerHTML='<div class="map-load-error"><b>India district boundaries could not be downloaded.</b><br>The map tried multiple public GeoJSON sources and timed out. Check your connection and reload. No map API key is required.</div>';console.warn(err)});
+ }).catch(err=>{console.warn('[Roadblock Ops] District boundaries unavailable; using built-in schematic fallback.',err);renderNoApiMap(err&&err.message||'Boundary data unavailable')});
 }
 function renderOpsUpdateMarkers(){
  const status=document.getElementById('mapStatus');
