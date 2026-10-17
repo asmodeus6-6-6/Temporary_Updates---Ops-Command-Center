@@ -1823,11 +1823,34 @@ installCreatorButterflies();
 </style>
 <script id="ztp-escalation-broadcast-script">
 (function(){
- const KEY='mailshift_ztp_escalations_v1';let escalationItems=[];let lastFocus=null;
+ const KEY='mailshift_ztp_escalations_v1';const ESCALATION_TABLE='ztp_escalations';const MIGRATION_KEY='mailshift_ztp_escalations_cloud_migrated_v1';let escalationItems=[];let lastFocus=null;let escalationCloudBusy=false;let escalationCloudReady=false;
  const $=id=>document.getElementById(id);
  const escHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');escalationItems=Array.isArray(a)?a:[]}catch(e){escalationItems=[]}renderAdmin();renderTicker();}
- function persist(){try{localStorage.setItem(KEY,JSON.stringify(escalationItems))}catch(e){if(typeof toast==='function')toast('Could not save escalation log in this browser.')}renderAdmin();renderTicker();renderPopup();}
+ function localItems(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+ function renderAll(){renderAdmin();renderTicker();renderPopup()}
+ function load(){escalationItems=localItems();renderAll();loadSharedEscalations(false)}
+ async function loadSharedEscalations(showNotice=false){
+  if(!sharedDbReady()||escalationCloudBusy)return false;escalationCloudBusy=true;
+  try{
+   const rows=await sharedRequest(ESCALATION_TABLE+'?select=id,payload&order=created_at.desc');
+   const cloud=(rows||[]).map(r=>r&&r.payload).filter(x=>x&&x.id);
+   const local=localItems();const cloudIds=new Set(cloud.map(x=>String(x.id)));
+   let alreadyMigrated=false;try{alreadyMigrated=localStorage.getItem(MIGRATION_KEY)==='1'}catch(e){}
+   const localOnly=alreadyMigrated?[]:local.filter(x=>!cloudIds.has(String(x.id)));
+   // Migrate existing browser records once, then use the shared table as the source of truth.
+   if(localOnly.length){await sharedRequest(ESCALATION_TABLE+'?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(localOnly.map(x=>({id:String(x.id),payload:x})))});}
+   const combined=[...cloud];const ids=new Set(combined.map(x=>String(x.id)));localOnly.forEach(x=>{if(!ids.has(String(x.id))){combined.push(x);ids.add(String(x.id))}});
+   escalationItems=combined.sort((a,b)=>new Date(b.createdAt||b.date||0)-new Date(a.createdAt||a.date||0));escalationCloudReady=true;
+   try{localStorage.setItem(KEY,JSON.stringify(escalationItems));localStorage.setItem(MIGRATION_KEY,'1')}catch(e){}renderAll();return true;
+  }catch(err){console.warn('Shared escalation sync unavailable:',err);if(showNotice&&typeof toast==='function')toast('Escalation board is using this browser only. Check the ztp_escalations table and Supabase permissions.');return false}
+  finally{escalationCloudBusy=false}
+ }
+ async function persist(){try{localStorage.setItem(KEY,JSON.stringify(escalationItems))}catch(e){if(typeof toast==='function')toast('Could not save escalation log in this browser.')}renderAll();
+  if(sharedDbReady()){
+   try{await sharedRequest(ESCALATION_TABLE+'?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(escalationItems.map(x=>({id:String(x.id),payload:x})))});escalationCloudReady=true;}
+   catch(e){console.error('Could not publish shared escalation records:',e);if(typeof toast==='function')toast('Saved in this browser, but shared publishing failed. Check Supabase table permissions.');}
+  }
+ }
  function dateFmt(s){if(!s)return 'Date not captured';const d=new Date(s);return isNaN(d)?s:d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
  function field(id){return $(id)?.value?.trim()||''}
  function set(id,v){if($(id))$(id).value=v||''}
@@ -1898,7 +1921,7 @@ installCreatorButterflies();
   batch.forEach((t,idx)=>{const specificIssue=targets.length?inferIssueForAgent(raw,t.agent)||base.issue:base.issue;escalationItems.unshift({...base,id:'ztp-'+Date.now().toString(36)+'-'+idx+'-'+Math.random().toString(36).slice(2,7),agent:t.agent||base.agent,subject:t.actionLabel||subject||'Escalation observation',issue:specificIssue,action:t.actionText||field('escalationAction')||'Action not specified; administrator review required.'});});pendingActionTargets=[];persist();if(typeof toast==='function')toast(batch.length>1?('Saved '+batch.length+' separate agent/action records to the ZTP briefing and broadcast.'):'Escalation saved to the ZTP briefing and broadcast.');closeEscalationBriefing();};
  window.clearEscalationForm=function(){['escalationRawMail','escalationDate','escalationCity','escalationAgent','escalationOrder','escalationSubject','escalationIssue','escalationLesson','escalationAction'].forEach(id=>set(id,''));if($('escalationMailFile'))$('escalationMailFile').value=''};
  function renderAdmin(){const count=$('escalationAdminCount'),list=$('escalationAdminList');if(count)count.textContent=escalationItems.length+' record'+(escalationItems.length===1?'':'s');if(!list)return;list.innerHTML=escalationItems.length?escalationItems.map(x=>`<div class="escalation-admin-item"><div><strong>${escHtml(x.subject)}</strong><small>${escHtml(dateFmt(x.date))} · ${escHtml(x.city||'Location not specified')} · ${escHtml(x.agent||'Agent not specified')} · ${escHtml(x.orderId||'No case ID')}</small></div><button class="btn" type="button" onclick="deleteEscalationMail('${escHtml(x.id)}')">Remove</button></div>`).join(''):'<div class="admin-note">No escalation emails saved yet. Add one above to include it in the ZTP briefing.</div>'}
- window.deleteEscalationMail=function(id){escalationItems=escalationItems.filter(x=>x.id!==id);persist();if(typeof toast==='function')toast('Escalation removed from this browser log.')};
+ window.deleteEscalationMail=async function(id){escalationItems=escalationItems.filter(x=>x.id!==id);try{localStorage.setItem(KEY,JSON.stringify(escalationItems))}catch(e){}renderAll();if(sharedDbReady()){try{await sharedRequest(ESCALATION_TABLE+'?id=eq.'+encodeURIComponent(String(id)),{method:'DELETE',headers:{Prefer:'return=minimal'}})}catch(e){console.error('Shared escalation delete failed:',e);if(typeof toast==='function')toast('Removed locally, but shared delete failed. Check Supabase permissions.');return}}if(typeof toast==='function')toast('Escalation removed from the shared log.')};
  window.exportEscalationsCsv=function(){if(!escalationItems.length){if(typeof toast==='function')toast('No escalation records to export.');return}const cols=['date','city','agent','orderId','subject','issue','lesson','action'];const csv=[cols,...escalationItems.map(x=>cols.map(k=>x[k]||''))].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='ZTP_Escalation_Log_'+new Date().toISOString().slice(0,10)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
  function renderPopup(){
   const count=$('ztpEscalationCount'),list=$('ztpPopupRecords');
@@ -1926,7 +1949,7 @@ installCreatorButterflies();
  window.openEscalationBriefing=function(){lastFocus=document.activeElement;renderPopup();const o=$('ztpPopupOverlay');if(o){o.classList.add('is-open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}};
  window.closeEscalationBriefing=function(){const o=$('ztpPopupOverlay');if(o){o.classList.remove('is-open');o.setAttribute('aria-hidden','true')}document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus()};window.skipEscalationBriefing=function(){window.closeEscalationBriefing()};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('ztpPopupOverlay')?.classList.contains('is-open')){e.preventDefault();window.closeEscalationBriefing()}});
- document.addEventListener('DOMContentLoaded',()=>{load();setTimeout(()=>{if($('ztpPopupOverlay'))window.openEscalationBriefing()},900)});
+ document.addEventListener('DOMContentLoaded',()=>{load();setTimeout(()=>{if($('ztpPopupOverlay'))window.openEscalationBriefing()},900);if(sharedDbReady())setInterval(()=>loadSharedEscalations(false),15000)});
  window.addEventListener('storage',e=>{if(e.key===KEY)load()});
 })();
 </script>
