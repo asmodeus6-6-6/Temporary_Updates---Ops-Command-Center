@@ -960,7 +960,7 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
 <div class="toast" id="toast"></div>
 <script>
 const STORAGE_KEY='mailshift_ops_updates_v3';
-// SHARED DATABASE CONFIGURATION: fill these two values from your Supabase project.
+// SHARED DATABASE CONFIGURATION: these values must be valid for every deployed visitor. LocalStorage is browser-only; cross-user escalation visibility requires the ztp_escalations table and correct Supabase RLS policies.
 // Project Settings > API > Project URL and anon/public key. Never use a service_role key here.
 const SUPABASE_URL='https://fmsniyqrveqdnzwvbaqr.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_9FmDNJMr8GPrdmk0MOKx5g_3npPEiAC';
@@ -1828,7 +1828,7 @@ installCreatorButterflies();
  const escHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  function localItems(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
  function renderAll(){renderAdmin();renderTicker();renderPopup()}
- function load(){escalationItems=localItems();renderAll();loadSharedEscalations(false)}
+ function load(){escalationItems=localItems();renderAll();loadSharedEscalations(true)}
  async function loadSharedEscalations(showNotice=false){
   if(!sharedDbReady()||escalationCloudBusy)return false;escalationCloudBusy=true;
   try{
@@ -1842,7 +1842,7 @@ installCreatorButterflies();
    const combined=[...cloud];const ids=new Set(combined.map(x=>String(x.id)));localOnly.forEach(x=>{if(!ids.has(String(x.id))){combined.push(x);ids.add(String(x.id))}});
    escalationItems=combined.sort((a,b)=>new Date(b.createdAt||b.date||0)-new Date(a.createdAt||a.date||0));escalationCloudReady=true;
    try{localStorage.setItem(KEY,JSON.stringify(escalationItems));localStorage.setItem(MIGRATION_KEY,'1')}catch(e){}renderAll();return true;
-  }catch(err){console.warn('Shared escalation sync unavailable:',err);if(showNotice&&typeof toast==='function')toast('Escalation board is using this browser only. Check the ztp_escalations table and Supabase permissions.');return false}
+  }catch(err){console.warn('Shared escalation sync unavailable:',err);if(showNotice&&typeof toast==='function')toast('SHARED ESCALATIONS OFFLINE: other agents cannot see browser-only records. Verify ztp_escalations table, SELECT/INSERT permissions, and Supabase API key.');return false}
   finally{escalationCloudBusy=false}
  }
  async function persist(){try{localStorage.setItem(KEY,JSON.stringify(escalationItems))}catch(e){if(typeof toast==='function')toast('Could not save escalation log in this browser.')}renderAll();
@@ -1949,7 +1949,7 @@ installCreatorButterflies();
  window.openEscalationBriefing=function(){lastFocus=document.activeElement;renderPopup();const o=$('ztpPopupOverlay');if(o){o.classList.add('is-open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}};
  window.closeEscalationBriefing=function(){const o=$('ztpPopupOverlay');if(o){o.classList.remove('is-open');o.setAttribute('aria-hidden','true')}document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus()};window.skipEscalationBriefing=function(){window.closeEscalationBriefing()};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('ztpPopupOverlay')?.classList.contains('is-open')){e.preventDefault();window.closeEscalationBriefing()}});
- document.addEventListener('DOMContentLoaded',()=>{load();setTimeout(()=>{if($('ztpPopupOverlay'))window.openEscalationBriefing()},900);if(sharedDbReady())setInterval(()=>loadSharedEscalations(false),15000)});
+ document.addEventListener('DOMContentLoaded',()=>{load();setTimeout(()=>{if($('ztpPopupOverlay'))window.openEscalationBriefing()},1200);if(sharedDbReady())setInterval(()=>loadSharedEscalations(false),15000)});
  window.addEventListener('storage',e=>{if(e.key===KEY)load()});
 })();
 </script>
