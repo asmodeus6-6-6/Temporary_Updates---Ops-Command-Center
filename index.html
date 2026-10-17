@@ -74,6 +74,10 @@
 .fallback-map-popup h3{color:#a84e12!important}
 @media(max-width:650px){.leaflet-popup-content{max-width:calc(100vw - 82px)!important;max-height:48vh!important;margin:12px!important}.leaflet-popup-content-wrapper{border-radius:12px!important}.ops-city-popup h3{font-size:14px!important}}
 
+
+/* Mail details export panel */
+.integration-card{background:linear-gradient(135deg,#fffdf7,#f7f3e7);border:1px solid #dfc46d;border-radius:16px;padding:18px;margin-bottom:18px}.integration-card h3{display:flex;align-items:center;gap:8px}.integration-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.integration-help{font-size:11px;color:#6e6858;margin-top:8px}
+
 </style>
 
 <style>
@@ -672,8 +676,135 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
 @media(min-width:1051px){.hero-main{min-height:0!important}.hero-live-widget{margin-top:20px!important;transform:none!important}}
 @media(max-width:760px){.hero-main{min-height:0!important;padding:22px 19px!important}.hero-feature-strip{grid-template-columns:1fr;gap:7px;margin-top:16px}.hero-feature{padding:9px 10px}.hero-feature b{font-size:11px}.hero-feature small{font-size:10px}.hero-main .hero-live-widget{margin-top:16px!important}.hero h1{font-size:clamp(29px,8vw,39px)!important;line-height:1.06!important}.hero p{font-size:13px!important;line-height:1.6!important}.hero-quick{margin-top:16px!important}.hero-quick .btn{flex:1 1 140px}}
 @media(prefers-reduced-motion:reduce){.hero-feature,.hero-live-widget{animation:none!important;transition:none!important}}
-</style>
 
+</style>
+<style>
+/* Incident-aware live map indicators and animated schematic connectivity */
+.ops-update-marker-icon{background:transparent!important;border:0!important;overflow:visible!important}
+.ops-update-marker-shell{position:relative;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(145deg,#fff4c4,#d7a52b);border:2px solid #fff8e4;box-shadow:0 0 0 3px #e5b63a55,0 0 18px #efb72d70;animation:opsIncidentPulse 2s ease-out infinite;box-sizing:border-box}
+.ops-update-marker-shell.incident-rain{background:linear-gradient(145deg,#dff6ff,#2196e8);border-color:#eafaff;box-shadow:0 0 0 3px #279de955,0 0 19px #2196e880}
+.ops-update-marker-shell.incident-roadblock{background:linear-gradient(145deg,#ffebe7,#e52d27);border-color:#fff2ef;box-shadow:0 0 0 3px #ef393955,0 0 20px #ef393980}
+.ops-update-marker-shell.incident-event{background:linear-gradient(145deg,#f4e8ff,#9456d9);border-color:#fff7ff;box-shadow:0 0 0 3px #a66be955,0 0 18px #a66be980}
+.ops-update-marker-shell.incident-accident{background:linear-gradient(145deg,#fff0e8,#f07822);border-color:#fff8ef;box-shadow:0 0 0 3px #f0782255,0 0 18px #f0782280}
+.ops-update-marker-shell.incident-power{background:linear-gradient(145deg,#fff9ce,#f1b800);border-color:#fffde7;box-shadow:0 0 0 3px #f1b80055,0 0 18px #f1b80080}
+.ops-update-marker-shell.incident-high{background:linear-gradient(145deg,#ffe8a8,#e38a12);border-color:#fff6d9;box-shadow:0 0 0 3px #e38a1255,0 0 18px #e38a1280}
+.ops-update-marker-glyph{font-family:system-ui,sans-serif;font-size:19px;line-height:1;filter:drop-shadow(0 1px 1px #17202a55);transform:translateY(-.5px);display:grid;place-items:center}
+ .ops-update-marker-glyph svg{display:block;width:25px;height:25px;overflow:visible}
+/* Tiny incident animation stays attached to each map indicator and is generated for every city update. */
+.ops-map-mini-scene{position:absolute;left:-7px;top:39px;width:88px;height:34px;display:block;overflow:hidden;border:1px solid #d9b75b;border-radius:8px;background:linear-gradient(180deg,#263442,#17212a);box-shadow:0 3px 9px #0007;z-index:8;pointer-events:none}
+.ops-map-mini-road{position:absolute;left:0;right:0;bottom:4px;height:12px;background:#3c4650;border-top:1px solid #77818a}
+.ops-map-mini-road:after{content:"";position:absolute;left:0;right:0;top:5px;border-top:1px dashed #f4d46e;animation:opsSceneRoadDash .55s linear infinite}
+.ops-map-mini-car{position:absolute;left:1px;bottom:6px;width:24px;height:13px;z-index:3;animation:opsMiniCarDetour 4.8s ease-in-out infinite}
+.ops-map-mini-car svg{width:100%;height:100%;display:block}
+.ops-map-mini-barrier{position:absolute;left:56px;bottom:11px;width:19px;height:11px;z-index:4;background:repeating-linear-gradient(125deg,#fff 0 4px,#e52d27 4px 8px);border:1px solid #fff;border-radius:2px;box-shadow:0 0 5px #f33}
+.ops-map-mini-detour{position:absolute;left:28px;top:7px;width:43px;height:20px;border-top:2px dashed #ffd34f;border-radius:50%;transform:rotate(-13deg);animation:opsDetourGlow .8s ease-in-out infinite alternate}
+.ops-map-mini-bubble{position:absolute;left:2px;top:1px;font:800 6px/1.1 system-ui,sans-serif;color:#fff4c9;z-index:5;opacity:0;animation:opsMiniBubble 4.8s ease-in-out infinite}
+.ops-map-mini-scene.rain{background:linear-gradient(180deg,#173b58,#102638);border-color:#65c8ff}
+.ops-map-mini-cloud{position:absolute;left:5px;top:0;font:12px/1 system-ui,sans-serif}
+.ops-map-mini-drops{position:absolute;left:8px;top:12px;width:25px;height:15px;background:repeating-linear-gradient(110deg,transparent 0 5px,#62caff 5px 6px,transparent 6px 10px);animation:opsMiniRain .65s linear infinite}
+.ops-map-mini-person{position:absolute;left:40px;bottom:5px;font:15px/1 system-ui,sans-serif;z-index:3}
+.ops-map-mini-umbrella{position:absolute;left:37px;top:3px;font:12px/1 system-ui,sans-serif;opacity:0;transform:scale(.3);transform-origin:bottom center;animation:opsMiniUmbrella 3.5s ease-in-out infinite;z-index:4}
+@keyframes opsMiniCarDetour{0%,8%{transform:translateX(0)}28%{transform:translateX(27px)}40%{transform:translate(34px,-5px) rotate(-8deg)}64%,100%{transform:translate(59px,-7px)}}
+@keyframes opsMiniBubble{0%,20%{opacity:0}27%,45%{opacity:1}54%,100%{opacity:0}}
+@keyframes opsMiniRain{0%{background-position:0 0}100%{background-position:0 10px}}
+@keyframes opsMiniUmbrella{0%,28%{opacity:0;transform:scale(.3)}42%,100%{opacity:1;transform:scale(1)}}
+.ops-city-popup-head{position:relative;padding-right:30px}
+.ops-city-popup-close{position:absolute;right:0;top:-3px;width:27px;height:27px;border:1px solid #d6b65e;border-radius:8px;background:#fff8e4;color:#5b3b05;font:800 20px/1 system-ui,sans-serif;cursor:pointer;z-index:20;display:grid;place-items:center}
+.ops-city-popup-close:hover{background:#f4d36d;color:#211700}
+@media(prefers-reduced-motion:reduce){.ops-map-mini-scene *{animation:none!important}.ops-map-mini-car{transform:translateX(28px)!important}.ops-map-mini-umbrella{opacity:1!important;transform:none!important}}
+/* Incident storyboards appear inside the selected city's popup, so the map stays uncluttered. */
+.ops-incident-scene{position:relative;height:112px;margin:0 0 12px;border:1px solid #d9b75b;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#202b37,#17202a);color:#fff;isolation:isolate}
+.ops-incident-scene:after{content:"LIVE INCIDENT SIMULATION · ILLUSTRATIVE";position:absolute;right:8px;bottom:5px;font:700 7px/1 system-ui,sans-serif;letter-spacing:.08em;color:#e9d18d;opacity:.85}
+.ops-scene-road{position:absolute;left:0;right:0;bottom:13px;height:30px;background:#39434e;border-top:2px solid #68717b;border-bottom:2px solid #68717b}
+.ops-scene-road:after{content:"";position:absolute;left:0;right:0;top:12px;border-top:2px dashed #f6d878;animation:opsSceneRoadDash .7s linear infinite}
+.ops-scene-barricade{position:absolute;left:61%;bottom:38px;width:36px;height:28px;z-index:3;filter:drop-shadow(0 2px 3px #0008)}
+.ops-scene-car{position:absolute;left:0;bottom:20px;width:42px;height:25px;z-index:4;animation:opsCarDetour 6s ease-in-out infinite}
+.ops-scene-speech{position:absolute;left:30%;top:8px;background:#fffdf6;color:#a52c20;border:1px solid #ff5a4f;border-radius:9px;padding:5px 8px;font:800 10px/1.2 system-ui,sans-serif;box-shadow:0 3px 10px #0006;opacity:0;transform:translateY(5px);animation:opsSpeechAppear 6s ease-in-out infinite;z-index:5;white-space:nowrap}
+.ops-scene-detour{position:absolute;left:40%;top:31px;width:42%;height:44px;border-top:2px dashed #ffd34f;border-radius:50%;transform:rotate(-9deg);opacity:.8;animation:opsDetourGlow 1.4s ease-in-out infinite alternate}
+.ops-incident-scene.rain{background:linear-gradient(180deg,#142c42,#1a3448)}
+.ops-scene-cloud{position:absolute;left:26px;top:11px;font-size:27px;filter:drop-shadow(0 2px 3px #0007)}
+.ops-scene-rainfall{position:absolute;left:33px;top:38px;width:64px;height:48px;background:repeating-linear-gradient(110deg,transparent 0 8px,#65c8ff 9px 11px,transparent 12px 18px);opacity:.0;animation:opsRainStart 4s ease-in-out infinite}
+.ops-scene-person{position:absolute;left:42%;bottom:18px;font-size:30px;z-index:3;transform-origin:bottom center;animation:opsPersonReact 4s ease-in-out infinite}
+.ops-scene-umbrella{position:absolute;left:calc(42% - 7px);bottom:47px;font-size:25px;opacity:0;transform:scale(.25) rotate(-30deg);transform-origin:bottom center;z-index:4;animation:opsUmbrellaOpen 4s ease-in-out infinite}
+.ops-scene-rain-speech{position:absolute;left:55%;top:10px;background:#f5fbff;color:#12517d;border:1px solid #65c8ff;border-radius:9px;padding:5px 8px;font:800 10px/1.2 system-ui,sans-serif;opacity:0;animation:opsRainSpeech 4s ease-in-out infinite;white-space:nowrap;z-index:5}
+@keyframes opsSceneRoadDash{to{background-position:22px 0}}
+@keyframes opsCarDetour{0%{transform:translate(0,0) rotate(0)}20%{transform:translate(150px,0) rotate(0)}31%{transform:translate(150px,0) rotate(0)}43%{transform:translate(164px,-22px) rotate(-8deg)}62%{transform:translate(235px,-28px) rotate(0)}78%,100%{transform:translate(270px,-20px) rotate(0)}}
+@keyframes opsSpeechAppear{0%,12%{opacity:0;transform:translateY(5px)}18%,42%{opacity:1;transform:translateY(0)}54%,100%{opacity:0;transform:translateY(-3px)}}
+@keyframes opsDetourGlow{from{opacity:.35;filter:drop-shadow(0 0 1px #ffd34f)}to{opacity:1;filter:drop-shadow(0 0 5px #ffd34f)}}
+@keyframes opsRainStart{0%,22%{opacity:0;transform:translateY(-8px)}36%,88%{opacity:.85;transform:translateY(5px)}100%{opacity:0}}
+@keyframes opsPersonReact{0%,25%{transform:translateY(0)}33%{transform:translateY(-4px) rotate(-8deg)}42%,100%{transform:translateY(0) rotate(0)}}
+@keyframes opsUmbrellaOpen{0%,34%{opacity:0;transform:scale(.25) rotate(-30deg)}44%,100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes opsRainSpeech{0%,28%{opacity:0;transform:translateY(4px)}38%,72%{opacity:1;transform:translateY(0)}88%,100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.ops-scene-road:after,.ops-scene-car,.ops-scene-speech,.ops-scene-detour,.ops-scene-rainfall,.ops-scene-person,.ops-scene-umbrella,.ops-scene-rain-speech{animation:none!important}.ops-scene-speech,.ops-scene-rain-speech{opacity:1!important}.ops-scene-umbrella{opacity:1!important;transform:none!important}}
+.ops-update-marker-label{position:absolute;left:41px;top:5px;display:block;white-space:nowrap;background:#171b21;color:#fff1c9;border:1px solid #d9ad43;border-radius:8px;padding:5px 8px;font:750 11px/1.2 Inter,system-ui,sans-serif;box-shadow:0 3px 12px #0008;pointer-events:none}
+.ops-animated-route{stroke:#ffd34f!important;stroke-width:3!important;stroke-dasharray:3 12!important;stroke-linecap:round!important;opacity:.98!important;animation:opsRouteDash .85s linear infinite;filter:drop-shadow(0 0 3px #ffda63) drop-shadow(0 0 7px #d79e2670);pointer-events:none}
+.ops-map-live-glow{animation:opsMapGlow 5s ease-in-out infinite alternate}
+@keyframes opsIncidentPulse{0%,100%{box-shadow:0 0 0 2px #e5b63a40,0 0 12px #efb72d55;transform:scale(.98)}50%{box-shadow:0 0 0 7px #e5b63a08,0 0 22px #efb72dcc;transform:scale(1.05)}}
+@keyframes opsRouteDash{to{stroke-dashoffset:-30}}
+@keyframes opsMapGlow{from{box-shadow:inset 0 0 0 1px #d5a83b12}to{box-shadow:inset 0 0 0 1px #d5a83b45,inset 0 0 38px #d5a83b08}}
+.leaflet-marker-icon.ops-update-marker-icon{transition:filter .2s ease;z-index:10000!important}.leaflet-marker-icon.ops-update-marker-icon:hover{filter:brightness(1.12);z-index:10001!important}
+/* Keep India in view, prevent zooming far out, but allow city-level zoom-in. */
+#indiaMap.vector-india-map{position:relative!important;width:100%!important;min-width:0!important;height:clamp(360px,58vh,620px)!important;min-height:360px!important;max-height:620px!important;overflow:hidden!important;border-radius:14px!important;isolation:isolate}
+#indiaMap .leaflet-pane{max-width:100%}
+@media(max-width:760px){#indiaMap.vector-india-map{height:clamp(380px,62vh,560px)!important;min-height:380px!important}}
+@media(prefers-reduced-motion:reduce){.ops-update-marker-shell,.ops-animated-route,.ops-map-live-glow{animation:none!important;transition:none!important}}
+
+</style>
+<style id="ops-map-ambient-polish-v2">
+/* Keep animated incident storyboards inside popups only; map pins remain clean and readable. */
+.ops-map-mini-scene{display:none!important}
+/* Seamless map surface: remove the framed-card look and blend into the command-centre canvas. */
+#indiaMap.vector-india-map,
+#indiaMap.leaflet-container,
+#indiaMap{
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  background:
+    radial-gradient(ellipse at 18% 22%,rgba(238,184,66,.10),transparent 34%),
+    radial-gradient(ellipse at 78% 66%,rgba(46,137,184,.10),transparent 37%),
+    linear-gradient(135deg,#1b2027 0%,#202832 48%,#191e25 100%)!important;
+  box-shadow:none!important;
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+}
+/* Ambient golden aurora and subtle moving topographic rings behind the map layers. */
+#indiaMap:before{
+  content:"";position:absolute;inset:-25%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 22% 30%,rgba(255,205,91,.15),transparent 23%),
+    radial-gradient(ellipse at 72% 68%,rgba(65,157,206,.10),transparent 28%),
+    repeating-radial-gradient(ellipse at 48% 45%,transparent 0 44px,rgba(244,196,88,.055) 45px 46px,transparent 47px 82px);
+  animation:opsMapAurora 18s ease-in-out infinite alternate;
+}
+#indiaMap:after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.28;
+  background-image:radial-gradient(circle,rgba(255,218,128,.68) 0 1px,transparent 1.7px);
+  background-size:57px 53px;
+  mask-image:linear-gradient(120deg,transparent 3%,#000 34%,#000 72%,transparent 98%);
+  animation:opsMapParticles 24s linear infinite;
+}
+#indiaMap .leaflet-map-pane,#indiaMap .leaflet-control-container{z-index:1}
+#indiaMap .leaflet-tile-pane{filter:saturate(.78) brightness(.87) contrast(1.04)}
+#indiaMap .leaflet-overlay-pane path{stroke-dasharray:1 0}
+/* Bright, continuous moving gold dashes make schematic connections visibly live. */
+#indiaMap .ops-animated-route{
+  stroke:#ffd34f!important;stroke-width:3.2!important;stroke-dasharray:2 13!important;
+  stroke-linecap:round!important;opacity:1!important;
+  animation:opsRouteDash .72s linear infinite,opsRouteGlow 2.4s ease-in-out infinite alternate!important;
+  filter:drop-shadow(0 0 3px rgba(255,210,75,.95)) drop-shadow(0 0 8px rgba(236,170,35,.62))!important;
+  pointer-events:none!important;
+}
+#indiaMap .leaflet-control-zoom a{background:#1b2027!important;color:#ffdc79!important;border-color:#9a772b!important}
+#indiaMap .leaflet-control-zoom a:hover{background:#3a3020!important;color:#fff0b5!important}
+/* Popup story animation remains independent of close controls. */
+.ops-city-popup-close,.leaflet-popup-close-button{pointer-events:auto!important;cursor:pointer!important;z-index:10002!important}
+@keyframes opsMapAurora{0%{transform:translate3d(-2%,1%,0) rotate(-2deg);opacity:.72}50%{opacity:1}100%{transform:translate3d(3%,-2%,0) rotate(3deg);opacity:.8}}
+@keyframes opsMapParticles{from{background-position:0 0}to{background-position:171px 159px}}
+@keyframes opsRouteGlow{from{filter:drop-shadow(0 0 2px rgba(255,210,75,.65)) drop-shadow(0 0 4px rgba(236,170,35,.28))}to{filter:drop-shadow(0 0 4px rgba(255,225,113,1)) drop-shadow(0 0 11px rgba(236,170,35,.75))}}
+@media(prefers-reduced-motion:reduce){#indiaMap:before,#indiaMap:after,#indiaMap .ops-animated-route{animation:none!important}}
+</style>
 </head>
 <body>
 
@@ -738,7 +869,7 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
    </div>
    <div id="indiaMap" class="vector-india-map" role="application" aria-label="Interactive India district map; only cities with published updates have indicators"></div>
    </div></div>
-   <div class="map-legend"><span><i class="legend-dot"></i>Published update city</span><span><i class="legend-line"></i>Illustrative hub route</span><span>District map works without raster tiles or API keys · Click a district or city marker for details</span></div>
+   <div class="map-legend"><span><i class="legend-dot"></i>Published update city</span><span><i class="legend-line"></i>Animated update connector (schematic)</span><span>Click an incident icon for details · Dotted connectors are visual links, not road routes</span></div>
   </div>
  </div>
  <div class="stats">
@@ -768,11 +899,18 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
      <div class="form-group"><label for="emailFile">Or upload email file (.txt, .eml)</label><input id="emailFile" type="file" accept=".txt,.eml,text/plain,message/rfc822" onchange="loadEmailFile(event)"></div>
      <div class="form-group" style="justify-content:end"><button class="btn primary" type="button" onclick="parseEmailToForm()">Extract details into fields ↓</button></div>
     </div><div class="admin-note">Local rule-based extraction for this prototype. Verify complex emails against the source.</div></div>
+   <div class="integration-card" id="mailDataTools">
+    <h3><span aria-hidden="true">✦</span> Mail Details · Data Analysis</h3>
+    <div class="panel-sub">Export only structured operational email details—dates, city/district/state, reason, impact, tags and SOP—not the full dashboard or unrelated UI data.</div>
+    <div class="integration-actions"><button class="btn primary" type="button" onclick="exportMailDetailsExcel()">⇩ Export Mail Details to Excel</button><span class="integration-help" style="margin:0;align-self:center">Exports structured mail/update details only (CSV opens in Excel).</span></div>
+   </div>
    <div class="admin-grid">
    <div class="form-card"><h3 id="formTitle">2. Review and publish update</h3><div class="panel-sub" style="margin-bottom:18px">Fill the operational details. Published updates appear on the agent board immediately. Configure the shared database below in the source file so all agents/devices receive them.</div>
     <form id="updateForm" onsubmit="saveUpdate(event)"><input type="hidden" id="editId">
      <div class="form-grid">
       <div class="form-group"><label for="fCity">Affected city *</label><input id="fCity" required placeholder="e.g. Coimbatore"></div>
+      <div class="form-group"><label for="fDistrict">District</label><input id="fDistrict" placeholder="e.g. Ernakulam"></div>
+      <div class="form-group"><label for="fState">State</label><input id="fState" placeholder="e.g. Kerala"></div>
       <div class="form-group"><label for="fType">Update type *</label><select id="fType"><option>Temporary Change</option><option>Permanent Change</option><option>General Information</option></select></div>
       <div class="form-group"><label for="fFrom">Effective from *</label><input id="fFrom" type="datetime-local" required></div>
       <div class="form-group"><label for="fTo">Effective to</label><input id="fTo" type="datetime-local"></div>
@@ -783,6 +921,8 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
       <div class="form-group full"><label for="fSop">SOP to follow (one step per line) *</label><textarea id="fSop" required style="min-height:145px" placeholder="1. Convince the DP once to deliver the order.&#10;2. If DP agrees, ask DP to deliver.&#10;3. If DP disagrees, follow the pickup-status decision flow."></textarea></div>
       <div class="form-group"><label for="fTag">Operational tag</label><input id="fTag" placeholder="Can't deliver due to Strike issue"></div>
       <div class="form-group"><label for="fReject">Rejection reason</label><input id="fReject" placeholder="Roadblock/Barricading"></div>
+      <div class="form-group"><label for="fSourceSubject">Source email subject</label><input id="fSourceSubject" placeholder="Subject line from the original email"></div>
+      <div class="form-group"><label for="fSourceSender">Source email sender</label><input id="fSourceSender" placeholder="Sender name or email address"></div>
       <div class="form-group full"><label for="fImportant">Important instruction</label><textarea id="fImportant" placeholder="Restrictions or reminders for agents"></textarea></div>
 
       <div class="form-group full"><button class="btn primary" type="submit" id="publishBtn">Publish update ↗</button><button class="btn" type="button" onclick="resetForm()" style="margin-top:7px">Clear form</button></div>
@@ -942,11 +1082,13 @@ function showAgent(){
 function unlockAdmin(){if(document.getElementById('adminPassword').value!==DEMO_ADMIN_PASS){toast('Passcode not recognized.');return}document.getElementById('adminLogin').style.display='none';document.getElementById('adminWorkspace').style.display='block';renderAdminList();toast('Command center unlocked (prototype mode).')}
 function lockAdmin(){showAgent();toast('Command center locked.')}
 async function saveUpdate(e){e.preventDefault();const id=document.getElementById('editId').value;const city=document.getElementById('fCity').value.trim();const from=document.getElementById('fFrom').value;const to=document.getElementById('fTo').value;if(to&&new Date(to)<new Date(from)){toast('Effective-to must be after effective-from.');return}
- const item={id:id||crypto.randomUUID(),city,type:document.getElementById('fType').value,from,to,areas:document.getElementById('fAreas').value.trim(),title:document.getElementById('fTitle').value.trim(),reason:document.getElementById('fReason').value.trim(),summary:document.getElementById('fSummary').value.trim(),sop:document.getElementById('fSop').value.trim(),tag:document.getElementById('fTag').value.trim(),reject:document.getElementById('fReject').value.trim(),important:document.getElementById('fImportant').value.trim(),publishedAt:new Date().toISOString()};
+ const prior=id?updates.find(u=>u.id===id):null;
+ const item={id:id||crypto.randomUUID(),city,district:document.getElementById('fDistrict').value.trim(),state:document.getElementById('fState').value.trim(),type:document.getElementById('fType').value,from,to,areas:document.getElementById('fAreas').value.trim(),title:document.getElementById('fTitle').value.trim(),reason:document.getElementById('fReason').value.trim(),summary:document.getElementById('fSummary').value.trim(),sop:document.getElementById('fSop').value.trim(),tag:document.getElementById('fTag').value.trim(),reject:document.getElementById('fReject').value.trim(),important:document.getElementById('fImportant').value.trim(),sourceSubject:document.getElementById('fSourceSubject').value.trim(),sourceSender:document.getElementById('fSourceSender').value.trim(),publishedAt:prior?.publishedAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
  if(id){updates=updates.map(u=>u.id===id?item:u)}else updates.unshift(item);
  const saved = persist();
  if(!saved)return;
  const cloudResult = await pushSharedUpdate(item);
+
  resetForm();
  refreshAllUpdateViews(true);
  if(saved){
@@ -960,10 +1102,16 @@ async function saveUpdate(e){e.preventDefault();const id=document.getElementById
  }
 }
 function resetForm(){document.getElementById('updateForm').reset();document.getElementById('editId').value='';document.getElementById('formTitle').textContent='Publish a new update';document.getElementById('publishBtn').textContent='Publish update ↗'}
-function editUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;document.getElementById('editId').value=u.id;for(const [k,v] of Object.entries({City:u.city,Type:u.type,From:u.from,To:u.to,Areas:u.areas,Title:u.title,Reason:u.reason,Summary:u.summary,Sop:u.sop,Tag:u.tag,Reject:u.reject,Important:u.important})){const el=document.getElementById('f'+k);if(el)el.value=v||''}document.getElementById('formTitle').textContent='Edit published update';document.getElementById('publishBtn').textContent='Save update changes ↗';document.getElementById('adminWorkspace').scrollIntoView({behavior:'smooth'})}
+function editUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;document.getElementById('editId').value=u.id;for(const [k,v] of Object.entries({City:u.city,District:u.district,State:u.state,Type:u.type,From:u.from,To:u.to,Areas:u.areas,Title:u.title,Reason:u.reason,Summary:u.summary,Sop:u.sop,Tag:u.tag,Reject:u.reject,Important:u.important,SourceSubject:u.sourceSubject,SourceSender:u.sourceSender})){const el=document.getElementById('f'+k);if(el)el.value=v||''}document.getElementById('formTitle').textContent='Edit published update';document.getElementById('publishBtn').textContent='Save update changes ↗';document.getElementById('adminWorkspace').scrollIntoView({behavior:'smooth'})}
 async function deleteUpdate(id){const u=updates.find(x=>x.id===id);if(!u)return;if(!confirm('Delete the update for '+u.city+' — '+u.title+'?'))return;updates=updates.filter(x=>x.id!==id);persist();const cloudResult=await removeSharedUpdate(id);renderBoard();renderAdminList();toast(cloudResult.ok?'Update deleted from shared board.':cloudResult.localOnly?'Update deleted on this browser only.':'Deleted locally; shared delete failed: '+cloudResult.error)}
 function renderAdminList(){const q=(document.getElementById('adminSearch')?.value||'').toLowerCase();const list=document.getElementById('adminList');if(!list)return;const filtered=updates.filter(u=>(u.city+' '+u.title+' '+u.areas).toLowerCase().includes(q)).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));list.innerHTML=filtered.map(u=>`<div class="manage-item"><div class="mi-text"><strong>${esc(u.city)} · ${esc(u.title)}</strong><small>${esc(dateOnly(u.from))} · ${esc(stateLabel(stateOf(u)))}${u.demo?' · sample':''}</small></div><button class="btn small" onclick="editUpdate('${esc(u.id)}')">Edit</button><button class="btn small" onclick="deleteUpdate('${esc(u.id)}')">Delete</button></div>`).join('')||'<div class="empty">No updates found.</div>'}
 function exportUpdates(){const blob=new Blob([JSON.stringify(updates,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='mailshift-updates-backup.json';a.click();URL.revokeObjectURL(url);toast('JSON backup exported.')}
+// Export a focused, Excel-compatible CSV of structured operational email details.
+function mailAnalysisRows(){return updates.map(u=>({
+ 'Record ID':u.id||'', 'Mail Received / Published Date':u.publishedAt||'', 'Last Updated':u.updatedAt||'', 'Source Email Subject':u.sourceSubject||'', 'Source Email Sender':u.sourceSender||'',
+ 'City':u.city||'', 'District':u.district||'', 'State':u.state||'', 'Update Type':u.type||'', 'Effective From':u.from||'', 'Effective To':u.to||'', 'Affected Areas':u.areas||'', 'Reason / Context':u.reason||'', 'Update Headline':u.title||'', 'Operational Impact / Summary':u.summary||'', 'Operational Tag':u.tag||'', 'Rejection Reason':u.reject||'', 'Important Instruction':u.important||'', 'SOP Steps':u.sop||'', 'Status':typeof stateOf==='function'?stateLabel(stateOf(u)):'', 'Published At':u.publishedAt||''
+}));}
+function exportMailDetailsExcel(){const rows=mailAnalysisRows();if(!rows.length){toast('No mail/update records are available to export.');return}const headers=Object.keys(rows[0]);const csv=[headers,...rows.map(r=>headers.map(h=>r[h]??''))].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='MailShift_Operational_Mail_Details_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Mail details exported in Excel-compatible CSV format.');}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
 window.mailShiftUpdatesChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('mailshift_ops_live_updates') : null;
 function applyIncomingUpdates(raw, notify=false){
@@ -986,8 +1134,9 @@ if(sharedDbReady()){
   console.warn('Supabase is not configured: published updates remain local to this browser.');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCityModal()});
-window.addEventListener('mailshift:updates-changed',()=>refreshAllUpdateViews(false));
-window.addEventListener('resize',()=>{if(opsMap){setTimeout(()=>{opsMap.invalidateSize();renderOpsUpdateMarkers()},150)}});
+window.addEventListener('mailshift:updates-changed',()=>{refreshAllUpdateViews(false);setTimeout(refreshOpsLiveCityStrip,0)});
+window.addEventListener('resize',()=>{if(opsMap){setTimeout(()=>{opsMap.invalidateSize();renderOpsUpdateMarkers();refreshOpsLiveCityStrip()},150)}});
+window.addEventListener('load',()=>setTimeout(refreshOpsLiveCityStrip,250));
 
 function loadEmailFile(e){const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{document.getElementById('emailPaste').value=String(reader.result||'').replace(/\r/g,'');toast('Email file loaded. Select Extract details into fields.');};reader.readAsText(file)}
 function parseEmailToForm(){
@@ -996,7 +1145,11 @@ function parseEmailToForm(){
  const txt=raw.replace(/<[^>]*>/g,' ').replace(/&amp;/gi,'&').replace(/[ \t]+/g,' ');
  const lines=txt.split('\n').map(x=>x.trim()).filter(Boolean);
  const find=(re)=>{const m=txt.match(re);return m?m[1].trim():''};
+ const sourceSubject=find(/(?:Subject)\s*:\s*([^\n\r]+)/i);
+ const sourceSender=find(/(?:From|Sender)\s*:\s*([^\n\r]+)/i);
  const city=find(/(?:City|Affected City)\s*:\s*([^\n\r]+)/i);
+ const district=find(/(?:District)\s*:\s*([^\n\r]+)/i);
+ const state=find(/(?:State)\s*:\s*([^\n\r]+)/i);
  const areas=find(/(?:Affected Areas?|Affected Zones?|Localit(?:y|ies))\s*:\s*([^\n\r]+)/i);
  const date=find(/(?:Date|Effective Date)\s*:\s*([^\n\r]+)/i);
  const time=find(/(?:Time|Time Window|Timings?)\s*:\s*([^\n\r]+)/i);
@@ -1015,7 +1168,7 @@ function parseEmailToForm(){
  let sopText='';
  if(sopStart>=0){let block=txt.slice(sopStart);block=block.replace(/^(?:.*?(?:temporary SOP steps|SOP steps|below-mentioned temporary SOP steps|below mentioned temporary SOP steps|follow the below-mentioned|follow the below).{0,100}\n)/i,'');const cut=block.search(/(?:The tag would be|The rejection reason|Also, kindly|Regards,|Thanks,|Best regards)/i);if(cut>0)block=block.slice(0,cut);sopText=block.split('\n').map(x=>x.replace(/^[\s\\]*(?:[-•]\s*)?/,'').replace(/^\d+[.)\\]?\s*/,'').trim()).filter(x=>x.length>3&&!/^(hi team|impact details|date:|time:|city:|affected zones?:)/i.test(x)).join('\n')}
  const set=(id,val)=>{if(val)document.getElementById(id).value=val};
- set('fCity',city);set('fAreas',areas);set('fType',type);set('fFrom',effectiveFrom);set('fTo',effectiveTo);set('fTitle',headline.replace(/^[*#\s]+|[*#\s]+$/g,''));set('fReason',reasonLines.slice(0,4).join(' ').replace(/\*\*/g,''));set('fSummary',summary.replace(/\*\*/g,''));set('fSop',sopText);set('fTag',tag);set('fReject',reject);
+ set('fCity',city);set('fDistrict',district);set('fState',state);set('fSourceSubject',sourceSubject);set('fSourceSender',sourceSender);set('fAreas',areas);set('fType',type);set('fFrom',effectiveFrom);set('fTo',effectiveTo);set('fTitle',headline.replace(/^[*#\s]+|[*#\s]+$/g,''));set('fReason',reasonLines.slice(0,4).join(' ').replace(/\*\*/g,''));set('fSummary',summary.replace(/\*\*/g,''));set('fSop',sopText);set('fTag',tag);set('fReject',reject);
  document.getElementById('formTitle').scrollIntoView({behavior:'smooth',block:'start'});
  toast('Extraction complete. Review every field and correct anything uncertain before publishing.');
 }
@@ -1031,7 +1184,7 @@ function showAdminDashboard(){
 
 
 const OPS_CITY_COORDS={"Delhi":[28.6139,77.209],"New Delhi":[28.6139,77.209],"Mumbai":[19.076,72.8777],"Kolkata":[22.5726,88.3639],"Hyderabad":[17.385,78.4867],"Bengaluru":[12.9716,77.5946],"Bangalore":[12.9716,77.5946],"Chennai":[13.0827,80.2707],"Pune":[18.5204,73.8567],"Ahmedabad":[23.0225,72.5714],"Jaipur":[26.9124,75.7873],"Lucknow":[26.8467,80.9462],"Coimbatore":[11.0168,76.9558],"Kochi":[9.9312,76.2673],"Ernakulam":[9.9816,76.2999],"Kozhikode":[11.2588,75.7804],"Calicut":[11.2588,75.7804],"Thrissur":[10.5276,76.2144],"Alappuzha":[9.4981,76.3388],"Cherthala":[9.684,76.3355],"Thiruvananthapuram":[8.5241,76.9366],"Trivandrum":[8.5241,76.9366],"Kollam":[8.8932,76.6141],"Palakkad":[10.7867,76.6548],"Kannur":[11.8745,75.3704],"Kasaragod":[12.4996,74.9869],"Kottayam":[9.5916,76.5222],"Pathanamthitta":[9.2648,76.787],"Malappuram":[11.051,76.0711],"Vijayawada":[16.5062,80.648],"Visakhapatnam":[17.6868,83.2185],"Nagpur":[21.1458,79.0882],"Indore":[22.7196,75.8577],"Bhopal":[23.2599,77.4126],"Patna":[25.5941,85.1376],"Ranchi":[23.3441,85.3096],"Bhubaneswar":[20.2961,85.8245],"Guwahati":[26.1445,91.7362],"Chandigarh":[30.7333,76.7794],"Amritsar":[31.634,74.8723],"Ludhiana":[30.901,75.8573],"Dehradun":[30.3165,78.0322],"Srinagar":[34.0837,74.7973],"Jammu":[32.7266,74.857],"Raipur":[21.2514,81.6296],"Gurugram":[28.4595,77.0266],"Noida":[28.5355,77.391],"Faridabad":[28.4089,77.3178],"Surat":[21.1702,72.8311],"Vadodara":[22.3072,73.1812],"Rajkot":[22.3039,70.8022],"Jodhpur":[26.2389,73.0243],"Udaipur":[24.5854,73.7125],"Agra":[27.1767,78.0081],"Varanasi":[25.3176,82.9739],"Kanpur":[26.4499,80.3319],"Prayagraj":[25.4358,81.8463],"Meerut":[28.9845,77.7064],"Howrah":[22.5958,88.2636],"Siliguri":[26.7271,88.3953],"Madurai":[9.9252,78.1198],"Tiruchirappalli":[10.7905,78.7047],"Salem":[11.6643,78.146],"Erode":[11.341,77.7172],"Tiruppur":[11.1085,77.3411],"Mysuru":[12.2958,76.6394],"Mangalore":[12.9141,74.856],"Hubballi":[15.3647,75.124],"Warangal":[17.9689,79.5941],"Jabalpur":[23.1815,79.9864],"Jubbulpore":[23.1815,79.9864],"Jalpaiguri":[26.5215,88.7196],"Kullu":[31.9579,77.1095],"Kulu":[31.9579,77.1095],"Jalpaiguri, West Bengal":[26.5215,88.7196],"Kullu, Himachal Pradesh":[31.9579,77.1095]};
-let opsMap=null,opsDistricts=null,opsMarkers=null,opsDistrictLabels=null,opsStateLabels=null,opsCityLabels=null;
+let opsMap=null,opsDistricts=null,opsMarkers=null,opsRouteLines=null,opsDistrictLabels=null,opsStateLabels=null,opsCityLabels=null;
 let opsMapUpdateFilter="all";
 function opsName(f){const p=f.properties||{};return p.district||p.DISTRICT||p.dtname||p.NAME_2||p.name||p.NAME||p.Dist_Name||p.st_nm||p.ST_NM||'Administrative boundary'}
 function opsStyle(f){const n=opsName(f).toLowerCase();const hit=updates.some(u=>(String(u.areas||'')+' '+String(u.city||'')).toLowerCase().includes(n)&&n.length>2);const pal=['#34404b','#3d4853','#46515b','#394752','#4a535d','#303d48','#505861','#3a454f'];let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return{color:hit?'#ffd56a':'#d6bd83',weight:hit?1.8:1.1,opacity:1,fillColor:hit?'#c87924':pal[h%pal.length],fillOpacity:hit?.94:.9}}
@@ -1067,13 +1220,13 @@ function renderNoApiMap(reason){
 function initIndiaMap(){
  const el=document.getElementById('indiaMap');if(!el)return;if(!window.L){renderNoApiMap('Leaflet unavailable');return}
  if(opsMap){opsMap.invalidateSize();return}
- opsMap=L.map(el,{zoomControl:true,scrollWheelZoom:true,preferCanvas:true}).setView([22.7,79.2],4);
+ opsMap=L.map(el,{zoomControl:true,scrollWheelZoom:true,preferCanvas:true,minZoom:4,maxZoom:10,zoomSnap:0.5,zoomDelta:0.5,wheelPxPerZoomLevel:85,maxBounds:L.latLngBounds([[5.0,66.0],[38.8,99.5]]),maxBoundsViscosity:0.78}).setView([22.7,79.2],4.5);
  opsMap.createPane('publishedUpdatePane');opsMap.getPane('publishedUpdatePane').style.zIndex='640';opsMap.getPane('publishedUpdatePane').style.pointerEvents='auto';
  // Keep selected update popups above every marker, label, tooltip and district layer.
  if(opsMap.getPane('popupPane'))opsMap.getPane('popupPane').style.zIndex='1100';
  if(opsMap.getPane('tooltipPane'))opsMap.getPane('tooltipPane').style.zIndex='700';
  L.control.scale({imperial:false,metric:true,maxWidth:130}).addTo(opsMap);
- opsMarkers=L.layerGroup().addTo(opsMap);
+ opsRouteLines=L.layerGroup().addTo(opsMap);opsMarkers=L.layerGroup().addTo(opsMap);
  renderOpsUpdateMarkers();
  const mode=document.getElementById('mapLayerMode');if(mode){mode.innerHTML='<option value="operations">Districts & update indicators</option><option value="updates">Only cities with updates</option>';mode.onchange=()=>{if(!opsDistricts)return;if(mode.value==='updates'){opsMap.removeLayer(opsDistricts);[opsDistrictLabels,opsStateLabels].forEach(x=>x&&opsMap.removeLayer(x))}else{opsMap.addLayer(opsDistricts);const z=opsMap.getZoom();if(z<5.5&&opsStateLabels)opsMap.addLayer(opsStateLabels);if(z>=5.5&&z<7&&opsDistrictLabels)opsMap.addLayer(opsDistrictLabels)}}}
  const search=document.getElementById('mapSearch');if(search){search.placeholder='Search city, district or state…';search.onkeydown=e=>{if(e.key==='Enter')searchIndiaMap(search.value)}}
@@ -1095,9 +1248,34 @@ function initIndiaMap(){
   opsMap.on('zoomend',()=>{const z=opsMap.getZoom();if(opsStateLabels){if(z>=5.5)opsMap.removeLayer(opsStateLabels);else if(!opsMap.hasLayer(opsStateLabels))opsMap.addLayer(opsStateLabels)}if(opsDistrictLabels){if(z<5.5||z>=7)opsMap.removeLayer(opsDistrictLabels);else if(!opsMap.hasLayer(opsDistrictLabels))opsMap.addLayer(opsDistrictLabels)}if(opsCityLabels){if(z<7)opsMap.removeLayer(opsCityLabels);else if(!opsMap.hasLayer(opsCityLabels))opsMap.addLayer(opsCityLabels)}});
   opsStateLabels.addTo(opsMap);
 
-  const bounds=opsDistricts.getBounds();if(bounds.isValid())opsMap.fitBounds(bounds,{padding:[12,12]});
-  document.getElementById('mapStatus').textContent=(data.features?.length||'India')+' DISTRICT BOUNDARIES LOADED';renderOpsUpdateMarkers();refreshAllUpdateViews(false);setTimeout(()=>opsMap.invalidateSize(),200);
+  const bounds=opsDistricts.getBounds();if(bounds.isValid()){opsMap.invalidateSize();opsMap.fitBounds(bounds,{padding:[18,18],maxZoom:5.1,animate:false});if(opsMap.getZoom()<4)opsMap.setZoom(4,{animate:false});}
+  document.getElementById('mapStatus').textContent=(data.features?.length||'India')+' DISTRICT BOUNDARIES LOADED';renderOpsUpdateMarkers();refreshAllUpdateViews(false);setTimeout(()=>{opsMap.invalidateSize();if(bounds.isValid()&&opsMap.getZoom()<4)opsMap.setZoom(4,{animate:false})},250);
  }).catch(err=>{console.warn('[Roadblock Ops] District boundaries unavailable; using built-in schematic fallback.',err);renderNoApiMap(err&&err.message||'Boundary data unavailable')});
+}
+function opsIncidentIcon(records){
+ const text=(records||[]).map(u=>[u.impact,u.severity,u.priority,u.title,u.summary,u.reason,u.type,u.tag,u.reject].filter(Boolean).join(' ')).join(' ').toLowerCase();
+ // Incident-specific icon artwork: a recognisable striped barricade for road closures, not the generic construction emoji.
+ const barricade='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 21l2 8M25 21l-2 8" stroke="#e9e9e9" stroke-width="3" stroke-linecap="round"/><rect x="2.5" y="7" width="27" height="16" rx="2.5" fill="#fff8f2" stroke="#8d1f1b" stroke-width="1.5"/><path d="M5 20L13 8h5L10 22zM17 22L25 8h3l-8 14z" fill="#e52d27"/><path d="M3 24h26" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
+ const rain='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 19a6 6 0 0 1-.3-12 8 8 0 0 1 15.1 2.3A5.1 5.1 0 0 1 23 19z" fill="#f2fbff" stroke="#155e99" stroke-width="1.5"/><path d="M9 23l-2 4M17 23l-2 4M25 23l-2 4" stroke="#087fd0" stroke-width="2.8" stroke-linecap="round"/></svg>';
+ if(/roadblock|barricad|road closure|traffic diversion|blocked road|strike|road blocked|road obstruction|road closed/.test(text))return {glyph:'',glyphHtml:barricade,label:'Roadblock / Closure',theme:'roadblock',scene:'roadblock'};
+ if(/heavy rain|rain|weather|flood|waterlog|storm|cyclone|thunder|shower|wind|monsoon/.test(text))return {glyph:'',glyphHtml:rain,label:'Rain / Weather',theme:'rain',scene:'rain'};
+ if(/festival|procession|fair|event|public gathering|navaratri|dussehra|durga puja|celebration/.test(text))return {glyph:'🎪',label:'Festival / Event',theme:'event',scene:'event'};
+ if(/accident|crash|collision|vehicle breakdown/.test(text))return {glyph:'🚑',label:'Accident / Emergency',theme:'accident',scene:'accident'};
+ if(/power cut|power outage|electricity|transformer/.test(text))return {glyph:'⚡',label:'Power Disruption',theme:'power',scene:'power'};
+ if(/high impact|severe|major|critical|emergency|high priority/.test(text))return {glyph:'⚠️',label:'High Impact',theme:'high',scene:'high'};
+ return {glyph:'📍',label:'Operational Update',theme:'default',scene:'default'};
+}
+function opsIncidentSceneHTML(records){
+ const incident=opsIncidentIcon(records);
+ if(incident.scene==='roadblock')return '<div class="ops-incident-scene roadblock" role="img" aria-label="Illustration: a car approaches a road barricade, stops, then takes an alternate route"><div class="ops-scene-road"></div><div class="ops-scene-detour"></div><div class="ops-scene-speech">Oh! The road is blocked!</div><svg class="ops-scene-barricade" viewBox="0 0 40 32" aria-hidden="true"><path d="M7 24l-2 7M33 24l2 7" stroke="#f5f5f5" stroke-width="3" stroke-linecap="round"/><rect x="2" y="5" width="36" height="20" rx="2" fill="#fff" stroke="#df2929" stroke-width="1.5"/><path d="M4 22L15 6h7L11 24zM20 24L31 6h5L25 24z" fill="#e52d27"/><path d="M3 27h34" stroke="#f5f5f5" stroke-width="3" stroke-linecap="round"/></svg><svg class="ops-scene-car" viewBox="0 0 48 28" aria-hidden="true"><path d="M7 17l3-8q1-3 5-3h15q3 0 5 4l4 7z" fill="#f7bd36" stroke="#fff0a6" stroke-width="1.5"/><rect x="4" y="15" width="39" height="9" rx="3" fill="#e9a92c" stroke="#fff0a6" stroke-width="1.3"/><path d="M15 8h8v7H12zM25 8h4q2 0 3 3l1 4H25z" fill="#243544"/><circle cx="13" cy="24" r="3" fill="#111820" stroke="#d8dce0"/><circle cx="35" cy="24" r="3" fill="#111820" stroke="#d8dce0"/></svg></div>';
+ if(incident.scene==='rain')return '<div class="ops-incident-scene rain" role="img" aria-label="Illustration: rain begins and a pedestrian opens an umbrella"><div class="ops-scene-cloud">☁️</div><div class="ops-scene-rainfall"></div><div class="ops-scene-person">🚶</div><div class="ops-scene-umbrella">☂️</div><div class="ops-scene-rain-speech">Good thing I have an umbrella!</div><div class="ops-scene-road"></div></div>';
+ return '<div class="ops-incident-scene" role="img" aria-label="Live incident illustration"><div class="ops-scene-road"></div><div style="position:absolute;inset:28px 10px auto;text-align:center;color:#ffdf78;font:800 11px system-ui">'+esc(incident.label.toUpperCase())+' · LIVE MAP ALERT</div><div style="position:absolute;left:18px;top:47px;font-size:25px">'+(incident.glyph||'⚠️')+'</div><div style="position:absolute;right:24px;top:49px;font:700 10px system-ui;color:#f8f4e9">Incident activity detected</div></div>';
+}
+function opsMapMiniSceneHTML(incident){
+ const car='<svg viewBox="0 0 48 28" aria-hidden="true"><path d="M7 17l3-8q1-3 5-3h15q3 0 5 4l4 7z" fill="#f7bd36" stroke="#fff0a6" stroke-width="1.5"/><rect x="4" y="15" width="39" height="9" rx="3" fill="#e9a92c" stroke="#fff0a6" stroke-width="1.3"/><path d="M15 8h8v7H12zM25 8h4q2 0 3 3l1 4H25z" fill="#243544"/><circle cx="13" cy="24" r="3" fill="#111820" stroke="#d8dce0"/><circle cx="35" cy="24" r="3" fill="#111820" stroke="#d8dce0"/></svg>';
+ if(incident.scene==='roadblock')return '<span class="ops-map-mini-scene roadblock" aria-hidden="true"><span class="ops-map-mini-road"></span><span class="ops-map-mini-detour"></span><span class="ops-map-mini-car">'+car+'</span><span class="ops-map-mini-barrier"></span><span class="ops-map-mini-bubble">ROAD BLOCKED!</span></span>';
+ if(incident.scene==='rain')return '<span class="ops-map-mini-scene rain" aria-hidden="true"><span class="ops-map-mini-cloud">☁</span><span class="ops-map-mini-drops"></span><span class="ops-map-mini-person">🚶</span><span class="ops-map-mini-umbrella">☂</span><span class="ops-map-mini-road"></span></span>';
+ return '';
 }
 function renderOpsUpdateMarkers(){
  const status=document.getElementById('mapStatus');
@@ -1108,6 +1286,7 @@ function renderOpsUpdateMarkers(){
  try{
   if(!opsMap.hasLayer(opsMarkers))opsMarkers.addTo(opsMap);
   opsMarkers.clearLayers();
+  if(opsRouteLines){opsRouteLines.clearLayers();if(!opsMap.hasLayer(opsRouteLines))opsRouteLines.addTo(opsMap);}
   const allSource=Array.isArray(updates)?updates:[];
   const isHighImpact=u=>/high impact|severe|major|critical|high priority|emergency|major disruption/i.test([u.impact,u.severity,u.priority,u.title,u.summary,u.reason,u.type,u.tag].filter(Boolean).join(' '));
   const isRoadblock=u=>/roadblock|barricad|road closure|traffic diversion|strike|blocked road/i.test([u.title,u.summary,u.reason,u.type,u.tag,u.reject].filter(Boolean).join(' '));
@@ -1129,21 +1308,28 @@ function renderOpsUpdateMarkers(){
    if(!groups.has(key))groups.set(key,{city,records:[]});
    groups.get(key).records.push(u);
   });
-  let shown=0,missing=[];
+  let shown=0,missing=[],routePoints=[];
   groups.forEach(g=>{
    const coords=opsCoords(g.city);
    if(!coords){missing.push(g.city);return;}
-   const count=g.records.length;
+   const count=g.records.length,incident=opsIncidentIcon(g.records);
+   routePoints.push({city:g.city,coords});
    const icon=L.divIcon({
     className:'ops-update-marker-icon',
-    html:'<span class="ops-update-marker-pulse"></span><span class="ops-update-marker-label">'+esc(g.city)+(count>1?' · '+count:'')+'</span>',
-    iconSize:[190,42],iconAnchor:[10,10]
+    html:'<span class="ops-update-marker-shell incident-'+incident.theme+'" role="img" aria-label="'+esc(incident.label)+'"><span class="ops-update-marker-glyph">'+(incident.glyphHtml||incident.glyph)+'</span></span><span class="ops-update-marker-label">'+esc(g.city)+(count>1?' · '+count:'')+'</span>',
+    iconSize:[220,82],iconAnchor:[17,17]
    });
-   const marker=L.marker(coords,{pane:'publishedUpdatePane',icon,title:g.city+' — '+count+' published update(s)',zIndexOffset:10000,keyboard:true,riseOnHover:true}).addTo(opsMarkers);
-   marker.bindTooltip('<b>'+esc(g.city)+'</b><br>'+count+' published update'+(count===1?'':'s'),{direction:'top',className:'ops-update-tooltip'});
+   const marker=L.marker(coords,{pane:'publishedUpdatePane',icon,title:g.city+' — '+incident.label+' — '+count+' published update(s)',zIndexOffset:10000,keyboard:true,riseOnHover:true}).addTo(opsMarkers);
+   marker.bindTooltip('<b>'+esc(g.city)+'</b><br>'+esc(incident.label)+' · '+count+' published update'+(count===1?'':'s'),{direction:'top',className:'ops-update-tooltip'});
    marker.on('click',()=>showOpsCityPopup(g.city,g.records,marker));
    shown++;
   });
+  // Animated dotted connectors are schematic links between update locations, not real roads or navigation routes.
+  if(opsRouteLines&&routePoints.length>1){
+   const lineCoords=routePoints.map(p=>p.coords);
+   L.polyline(lineCoords,{pane:'overlayPane',className:'ops-animated-route',interactive:false,smoothFactor:1,color:'#ffd34f',weight:2.4,dashArray:'2 10',opacity:.9}).addTo(opsRouteLines);
+  }
+  const mapEl=document.getElementById('indiaMap');if(mapEl)mapEl.classList.add('ops-map-live-glow');
   if(status){
    status.textContent=shown+' '+(opsMapUpdateFilter==='all'?'CITY UPDATE INDICATOR'+(shown===1?'':'S')+' SHOWN':({active:'ACTIVE CITY',upcoming:'UPCOMING CITY',high:'HIGH-IMPACT CITY',roadblock:'ROADBLOCK CITY',weather:'WEATHER-ALERT CITY'}[opsMapUpdateFilter]||'CITY')+' FILTERED')+(missing.length?' · COORDINATES NEEDED: '+missing.join(', '):'');
    status.style.color=missing.length?'#a65a14':'#a94b0b';
@@ -1166,13 +1352,41 @@ function opsSopStepsHTML(raw){
  }
  return lines.map(line=>'<li>'+esc(line.replace(/^(?:(?:step\s*)?\d{1,2}[.) :-]+|[-•*]+\s*)/i,'').trim())+'</li>').join('');
 }
+window.closeOpsIncidentPopup=function(){
+ // Close immediately; never wait for the incident animation to finish.
+ try{if(typeof opsMap!=='undefined'&&opsMap){opsMap.closePopup();return;}}catch(e){}
+ document.querySelectorAll('.leaflet-popup-close-button').forEach(b=>b.click());
+ document.querySelectorAll('.ops-city-popup').forEach(p=>{const host=p.closest('.leaflet-popup');if(host)host.style.display='none';});
+};
 function showOpsCityPopup(city,records,marker){
- const content=records.map(u=>'<article class="ops-popup-update"><div class="ops-popup-meta">'+esc(u.type||'Operational update')+' · '+esc(u.from||'Date not specified')+(u.to?' – '+esc(u.to):'')+'</div><h4>'+esc(u.title||u.city+' update')+'</h4><p>'+esc(u.summary||u.reason||'See SOP for instructions.')+'</p>'+(u.areas?'<p><b>Affected areas:</b> '+esc(u.areas)+'</p>':'')+'<details class="ops-sop-details"><summary>View step-by-step SOP</summary><div class="ops-sop-intro">Follow these steps in order. If a step is unclear, pause and contact your TL/SME before taking action.</div><ol class="ops-sop-steps">'+opsSopStepsHTML(u.sop||u.sopInstructions||'')+'</ol>'+(u.tag?'<p><b>Operational tag:</b> '+esc(u.tag)+'</p>':'')+(u.reject?'<p><b>Rejection reason:</b> '+esc(u.reject)+'</p>':'')+(u.important?'<p class="ops-sop-important"><b>Important:</b> '+esc(u.important)+'</p>':'')+'</details></article>').join('');
- const popup=marker.getPopup();
- if(popup){popup.setContent('<div class="ops-city-popup"><h3>'+esc(city)+' · Updates</h3>'+content+'</div>');popup.options.maxWidth=390;popup.options.minWidth=280;popup.options.autoPan=true;popup.options.keepInView=true;popup.options.autoPanPaddingTopLeft=[36,36];popup.options.autoPanPaddingBottomRight=[36,36];marker.openPopup();}
- else marker.bindPopup('<div class="ops-city-popup"><h3>'+esc(city)+' · Updates</h3>'+content+'</div>',{maxWidth:390,minWidth:280,autoPan:true,keepInView:true,closeButton:true,autoPanPaddingTopLeft:[36,36],autoPanPaddingBottomRight:[36,36]}).openPopup();
- // If a popup opens close to the map edge, pan it into the visible map area after Leaflet lays it out.
- setTimeout(()=>{if(marker.isPopupOpen&&marker.isPopupOpen()){const el=marker.getPopup().getElement();if(el)el.style.zIndex='1100';}},80);
+ const content=opsIncidentSceneHTML(records)+records.map(u=>'<article class="ops-popup-update"><div class="ops-popup-meta">'+esc(u.type||'Operational update')+' · '+esc(u.from||'Date not specified')+(u.to?' – '+esc(u.to):'')+'</div><h4>'+esc(u.title||u.city+' update')+'</h4><p>'+esc(u.summary||u.reason||'See SOP for instructions.')+'</p>'+(u.areas?'<p><b>Affected areas:</b> '+esc(u.areas)+'</p>':'')+'<details class="ops-sop-details"><summary>View step-by-step SOP</summary><div class="ops-sop-intro">Follow these steps in order. If a step is unclear, pause and contact your TL/SME before taking action.</div><ol class="ops-sop-steps">'+opsSopStepsHTML(u.sop||u.sopInstructions||'')+'</ol>'+(u.tag?'<p><b>Operational tag:</b> '+esc(u.tag)+'</p>':'')+(u.reject?'<p><b>Rejection reason:</b> '+esc(u.reject)+'</p>':'')+(u.important?'<p class="ops-sop-important"><b>Important:</b> '+esc(u.important)+'</p>':'')+'</details></article>').join('');
+ // Use a fixed, independent dialog instead of Leaflet's popup pane. This keeps the close button
+ // and scroll viewport interactive even while map/incident animations are running.
+ let overlay=document.getElementById('opsIncidentOverlay');
+ if(!overlay){overlay=document.createElement('div');overlay.id='opsIncidentOverlay';overlay.className='ops-incident-overlay';overlay.innerHTML='<section class="ops-incident-dialog" role="dialog" aria-modal="true" aria-labelledby="opsIncidentTitle"><header class="ops-incident-dialog-head"><div><div class="ops-dialog-eyebrow">LIVE OPERATIONAL UPDATE</div><h3 id="opsIncidentTitle"></h3></div><button type="button" class="ops-incident-dialog-close" aria-label="Close incident details" title="Close now">×</button></header><div class="ops-incident-dialog-scroll" tabindex="0"></div></section>';document.body.appendChild(overlay);
+  overlay.querySelector('.ops-incident-dialog-close').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();window.closeOpsIncidentPopup();});
+  overlay.addEventListener('click',function(e){if(e.target===overlay)window.closeOpsIncidentPopup();});
+  const sc=overlay.querySelector('.ops-incident-dialog-scroll');if(window.L&&L.DomEvent){L.DomEvent.disableClickPropagation(sc);L.DomEvent.disableScrollPropagation(sc);}sc.addEventListener('wheel',e=>e.stopPropagation(),{passive:true});sc.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
+ }
+ overlay.querySelector('#opsIncidentTitle').textContent=city+' · Updates';
+ overlay.querySelector('.ops-incident-dialog-scroll').innerHTML=content;
+ overlay.classList.add('is-open');document.body.classList.add('ops-dialog-open');
+ // Remember focus and move focus to the close button for keyboard/touch accessibility.
+ const close=overlay.querySelector('.ops-incident-dialog-close');if(close)close.focus({preventScroll:true});
+}
+window.closeOpsIncidentPopup=function(){
+ const overlay=document.getElementById('opsIncidentOverlay');if(overlay){overlay.classList.remove('is-open');document.body.classList.remove('ops-dialog-open');}
+ try{if(typeof opsMap!=='undefined'&&opsMap)opsMap.closePopup();}catch(e){}
+ document.querySelectorAll('.leaflet-popup-close-button').forEach(b=>{try{b.click()}catch(e){}});
+};
+
+function refreshOpsLiveCityStrip(){
+ const host=document.getElementById('opsLiveCityItems');if(!host)return;
+ const rows=Array.isArray(updates)?updates:[];const groups=new Map();
+ rows.forEach(u=>{const city=String(u.city||u.affectedCity||u.targetCity||u.location||'').trim();if(!city)return;const key=city.toLowerCase();if(!groups.has(key))groups.set(key,{city,records:[]});groups.get(key).records.push(u)});
+ const items=[...groups.values()].sort((a,b)=>a.city.localeCompare(b.city));
+ host.innerHTML=items.length?items.map(g=>{const txt=g.records.map(u=>[u.type,u.title,u.summary,u.reason,u.tag].join(' ')).join(' ').toLowerCase();const inc={theme:/rain|weather|flood|waterlogging/.test(txt)?'weather':/roadblock|barricad|road closure|diversion/.test(txt)?'roadblock':/vip|visit|convoy|security/.test(txt)?'vip':'other'};return '<button type="button" class="ops-live-city-chip incident-'+esc(inc.theme)+'" data-city="'+esc(g.city)+'" title="Open '+esc(g.city)+' updates"><span class="ops-live-chip-dot"></span>'+esc(g.city)+'<small>'+g.records.length+'</small></button>'}).join(''):'<span class="ops-live-city-empty">No published city updates yet</span>';
+ host.querySelectorAll('.ops-live-city-chip').forEach(btn=>btn.addEventListener('click',()=>{const city=btn.dataset.city;const group=items.find(g=>g.city===city);if(!group)return;const marker=opsMarkers&&opsMarkers.getLayers().find(m=>String(m.options.title||'').toLowerCase().startsWith(city.toLowerCase()+' —'));if(marker){const c=marker.getLatLng();if(opsMap&&opsMap.getZoom()<6)opsMap.setView(c,6,{animate:true});showOpsCityPopup(city,group.records,marker)}else showOpsCityPopup(city,group.records,null)}));
 }
 function searchIndiaMap(q){q=String(q||'').trim().toLowerCase();if(!q||!opsMap)return;const city=Object.keys(OPS_CITY_COORDS).find(n=>n.toLowerCase()===q)||Object.keys(OPS_CITY_COORDS).find(n=>n.toLowerCase().includes(q));if(city){const c=OPS_CITY_COORDS[city];opsMap.setView(c,8);const m=opsMarkers.getLayers().find(x=>x.getLatLng().distanceTo(L.latLng(c))<1000);if(m)m.fire('click');return}if(opsDistricts){let found=null;opsDistricts.eachLayer(l=>{if(!found&&JSON.stringify(l.feature.properties||{}).toLowerCase().includes(q))found=l});if(found){opsMap.fitBounds(found.getBounds(),{padding:[20,20]});found.openTooltip()}}}
 function filterMapSearch(q){searchIndiaMap(q)}
@@ -1183,9 +1397,10 @@ function setMapUpdateFilter(mode,button){
  const map=document.getElementById('indiaMap');if(map){map.classList.remove('map-filter-flash');void map.offsetWidth;map.classList.add('map-filter-flash');setTimeout(()=>map.classList.remove('map-filter-flash'),650)}
 }
 function changeMapMode(v){const m=document.getElementById('mapLayerMode');if(m)m.value=v;if(opsDistricts){if(v==='updates'){opsMap.removeLayer(opsDistricts);[opsDistrictLabels,opsStateLabels].forEach(x=>x&&opsMap.removeLayer(x))}else{opsMap.addLayer(opsDistricts);const z=opsMap.getZoom();if(z<5.5&&opsStateLabels)opsMap.addLayer(opsStateLabels);if(z>=5.5&&z<7&&opsDistrictLabels)opsMap.addLayer(opsDistrictLabels)}}}
-function resetIndiaMap(){if(opsMap&&opsDistricts){const b=opsDistricts.getBounds();if(b.isValid())opsMap.fitBounds(b,{padding:[22,22]});else opsMap.setView([22.7,79.2],4);setTimeout(()=>opsMap.setZoom(Math.min(opsMap.getZoom(),4.5)),80)}}
+function resetIndiaMap(){if(opsMap){if(opsDistricts){const b=opsDistricts.getBounds();if(b.isValid())opsMap.fitBounds(b,{padding:[22,22],maxZoom:5.1,animate:true});else opsMap.setView([22.7,79.2],4.5,{animate:true})}else opsMap.setView([22.7,79.2],4.5,{animate:true});setTimeout(()=>{if(opsMap.getZoom()<4)opsMap.setZoom(4,{animate:false})},220)}}
 function setupReferenceMap(){initIndiaMap()}
 // Always initialize the map after the page loads. Previously this retry only ran while the status text contained LOADING, so the map could remain an empty blue panel forever.
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&typeof opsMap!=='undefined'&&opsMap)opsMap.closePopup();});
 window.addEventListener('load',()=>{setTimeout(()=>{try{initIndiaMap();if(opsMap){opsMap.invalidateSize();renderOpsUpdateMarkers()}else if(!window.L){renderNoApiMap('Leaflet library unavailable; showing built-in map')} }catch(err){console.error('[Roadblock Ops] Map startup failed:',err);try{renderNoApiMap(err&&err.message||'Map startup failed')}catch(fallbackErr){console.error('[Roadblock Ops] Built-in map fallback failed:',fallbackErr)} }installLiveTickerRotation();},250)})
 
 function jumpToLiveMap(){const map=document.getElementById('indiaMap');if(map){map.scrollIntoView({behavior:'smooth',block:'center'});map.classList.add('live-map-focus');setTimeout(()=>map.classList.remove('live-map-focus'),1600)}else{toast('Live map is not available yet.')}}
@@ -1535,5 +1750,154 @@ installCreatorButterflies();
 })();
 </script>
 
+
+<style id="ops-command-map-cinematic-final-fix">
+/* Seamless command-center map: search, filters and map share one atmospheric surface. */
+.map-card{position:relative!important;isolation:isolate!important;overflow:hidden!important;border:0!important;border-radius:22px!important;background:transparent!important;box-shadow:none!important;padding:18px!important}
+.map-card:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse at 10% 12%,rgba(255,196,65,.10),transparent 35%),radial-gradient(ellipse at 88% 75%,rgba(36,135,185,.12),transparent 38%),linear-gradient(135deg,rgba(35,40,48,.82),rgba(24,29,36,.68));background-size:140% 140%;animation:opsCommandAurora 17s ease-in-out infinite alternate}
+.map-card:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.20;background-image:radial-gradient(circle,rgba(255,218,128,.85) 0 1px,transparent 1.8px),linear-gradient(115deg,transparent 0 48%,rgba(255,213,105,.08) 49%,transparent 51%);background-size:47px 43px,100% 100%;animation:opsCommandDust 28s linear infinite}
+.map-title,.map-toolbar,.map-legend{position:relative;z-index:2}
+.map-title{padding:4px 3px 14px!important}
+.map-toolbar-enhanced{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;gap:10px!important}
+#mapSearch{background:rgba(19,23,29,.84)!important;border:1px solid rgba(211,174,82,.42)!important;color:#fff4d0!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;backdrop-filter:blur(12px)!important}
+#mapSearch::placeholder{color:#b9c0ca!important}
+.map-filter-tabs{background:rgba(21,25,31,.72)!important;border:1px solid rgba(214,174,70,.30)!important;backdrop-filter:blur(12px)!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important}
+.map-reset-btn{background:rgba(38,43,51,.74)!important;backdrop-filter:blur(10px)!important}
+#indiaMap.vector-india-map,#indiaMap.leaflet-container,#indiaMap{border:0!important;outline:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;overflow:hidden!important}
+#indiaMap:before{z-index:0!important;content:"";position:absolute;inset:-22%;pointer-events:none;background:radial-gradient(ellipse at 18% 35%,rgba(255,191,55,.13),transparent 28%),radial-gradient(ellipse at 82% 58%,rgba(40,154,211,.12),transparent 32%),repeating-radial-gradient(ellipse at 49% 48%,transparent 0 48px,rgba(255,211,93,.06) 49px 50px,transparent 51px 87px);animation:opsMapAtmosphere 24s ease-in-out infinite alternate}
+#indiaMap:after{z-index:0!important;content:"";position:absolute;inset:0;pointer-events:none;opacity:.24;background-image:radial-gradient(circle,rgba(255,225,150,.8) 0 1px,transparent 1.8px);background-size:61px 57px;animation:opsMapSparkDrift 30s linear infinite}
+#indiaMap .leaflet-map-pane,#indiaMap .leaflet-control-container{z-index:1}
+/* Popup has a fixed header and its own scroll viewport; animations never intercept interaction. */
+#indiaMap .leaflet-popup-pane{pointer-events:none!important;z-index:1100!important}
+#indiaMap .leaflet-popup-pane .leaflet-popup{pointer-events:auto!important;max-width:min(390px,calc(100vw - 24px))!important}
+#indiaMap .leaflet-popup-content-wrapper{overflow:hidden!important;border-radius:15px!important;border:1px solid #dfb64a!important;background:#fffdf8!important;box-shadow:0 18px 50px rgba(0,0,0,.48)!important}
+#indiaMap .leaflet-popup-content{width:340px!important;max-width:min(340px,calc(100vw - 62px))!important;min-width:0!important;max-height:none!important;height:auto!important;overflow:visible!important;margin:0!important;padding:0!important}
+#indiaMap .ops-city-popup{width:100%!important;max-height:min(72vh,580px)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;color:#17212b!important;background:#fffdf8!important;border-radius:14px!important;pointer-events:auto!important}
+#indiaMap .ops-city-popup-head{position:relative!important;top:auto!important;z-index:20!important;flex:0 0 auto!important;display:flex!important;align-items:flex-start!important;gap:10px!important;padding:13px 44px 11px 14px!important;background:#fffdf8!important;border-bottom:1px solid #e8dcc5!important;box-shadow:0 3px 9px rgba(32,36,42,.04)!important}
+#indiaMap .ops-city-popup-head h3{margin:0!important;padding:0!important;border:0!important;font-size:16px!important;line-height:1.35!important;color:#9b4608!important;overflow-wrap:anywhere!important}
+#indiaMap .ops-city-popup-close{position:absolute!important;right:8px!important;top:8px!important;z-index:10010!important;width:30px!important;height:30px!important;min-width:30px!important;border:1px solid #d8b65c!important;border-radius:9px!important;background:#fff1c7!important;color:#4c3200!important;font-size:22px!important;font-weight:900!important;line-height:1!important;display:grid!important;place-items:center!important;cursor:pointer!important;pointer-events:auto!important;touch-action:manipulation!important;box-shadow:0 2px 8px rgba(0,0,0,.08)!important}
+#indiaMap .ops-city-popup-close:hover{background:#f6d66e!important;transform:scale(1.04)}
+#indiaMap .ops-city-popup-scroll{position:relative!important;flex:1 1 auto!important;min-height:0!important;max-height:calc(min(72vh,580px) - 56px)!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important;padding:12px 14px 15px!important;scrollbar-width:thin!important;scrollbar-color:#b58a2b #eee5d2!important;pointer-events:auto!important}
+#indiaMap .ops-incident-scene{pointer-events:none!important;flex-shrink:0!important}
+#indiaMap .ops-city-popup-scroll .ops-popup-update{pointer-events:auto!important}
+#indiaMap .ops-city-popup-scroll details,#indiaMap .ops-city-popup-scroll summary{pointer-events:auto!important;touch-action:manipulation!important}
+#indiaMap .leaflet-popup-tip-container{pointer-events:none!important}
+#indiaMap .leaflet-popup-close-button{display:none!important}
+@keyframes opsCommandAurora{0%{background-position:0% 45%;filter:hue-rotate(0deg)}100%{background-position:100% 55%;filter:hue-rotate(8deg)}}
+@keyframes opsCommandDust{from{background-position:0 0,0 0}to{background-position:188px 172px,0 0}}
+@keyframes opsMapAtmosphere{0%{transform:translate3d(-1.5%,1%,0) scale(1);opacity:.7}100%{transform:translate3d(2%,-1.5%,0) scale(1.04);opacity:1}}
+@keyframes opsMapSparkDrift{from{background-position:0 0}to{background-position:183px 171px}}
+@media(max-width:520px){#indiaMap .leaflet-popup-content{width:calc(100vw - 64px)!important;max-width:calc(100vw - 64px)!important}#indiaMap .ops-city-popup{max-height:68vh!important}#indiaMap .ops-city-popup-scroll{max-height:calc(68vh - 56px)!important;padding:10px 11px 13px!important}#indiaMap .ops-city-popup-head{padding-left:11px!important}}
+@media(prefers-reduced-motion:reduce){.map-card:before,.map-card:after,#indiaMap:before,#indiaMap:after{animation:none!important}}
+</style>
+
 </body>
 </html>
+
+
+<style id="ops-map-overlay-and-popup-hard-fix">
+/* Full map canvas extends behind the translucent title/search/filter controls. */
+.map-card{position:relative!important;isolation:isolate!important;min-height:790px!important;padding:18px!important;overflow:hidden!important;border:0!important;border-radius:22px!important;background:transparent!important;box-shadow:none!important}
+.map-card:before{z-index:0!important}
+.map-card:after{z-index:0!important}
+.map-card>.map-title{position:relative!important;z-index:30!important;min-height:42px!important;padding:2px 4px 0!important;pointer-events:none}
+.map-card>.map-title>*{pointer-events:auto}
+.map-card>.map-toolbar-enhanced{position:absolute!important;z-index:30!important;top:64px!important;left:18px!important;right:18px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;padding:0!important;margin:0!important;pointer-events:none!important}
+.map-card>.map-toolbar-enhanced>*{pointer-events:auto!important}
+.map-card>.map-toolbar-enhanced #mapSearch{width:100%!important;min-height:42px!important;background:rgba(19,23,29,.66)!important;backdrop-filter:blur(9px)!important;border-color:rgba(218,180,78,.35)!important}
+.map-card>.map-toolbar-enhanced .map-filter-tabs{background:rgba(21,25,31,.55)!important;backdrop-filter:blur(7px)!important;border-color:rgba(214,174,70,.25)!important}
+.map-card>.map-toolbar-enhanced .map-reset-btn{align-self:flex-end!important;background:rgba(28,33,40,.58)!important}
+#indiaMap.vector-india-map,#indiaMap.leaflet-container,#indiaMap{position:absolute!important;inset:0!important;z-index:1!important;width:100%!important;height:100%!important;min-height:790px!important;margin:0!important;border:0!important;border-radius:22px!important;outline:0!important;box-shadow:none!important;background:transparent!important;overflow:hidden!important}
+.map-card>.map-title,.map-card>.map-toolbar-enhanced,.map-card>.ops-live-city-strip{isolation:isolate}
+.ops-live-city-strip{position:absolute!important;z-index:30!important;left:20px!important;right:20px!important;top:226px!important;display:flex!important;align-items:center!important;gap:10px!important;min-height:39px!important;padding:5px 9px!important;border:1px solid rgba(214,174,70,.22)!important;border-radius:12px!important;background:rgba(20,24,30,.48)!important;backdrop-filter:blur(6px)!important;pointer-events:auto!important}
+.ops-live-city-label{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;color:#f6d783;font-size:9px;font-weight:900;letter-spacing:.12em}
+.ops-live-city-label i{width:7px;height:7px;border-radius:50%;background:#4de0a2;box-shadow:0 0 0 0 #4de0a255;animation:opsCityLivePulse 1.7s infinite}
+.ops-live-city-items{display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#8f7131 transparent;padding:2px 0;flex:1}
+.ops-live-city-chip{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;padding:5px 8px;border:1px solid rgba(226,190,95,.28);border-radius:999px;background:rgba(37,42,48,.8);color:#f7f1df;font-size:10px;font-weight:750;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.ops-live-city-chip:hover{transform:translateY(-1px);border-color:#f4cf64;background:rgba(75,59,27,.9)}
+.ops-live-city-chip small{font-size:9px;color:#ffdc7a;background:#6c5424;border-radius:999px;padding:1px 5px}
+.ops-live-chip-dot{width:6px;height:6px;border-radius:50%;background:#f1c64f;box-shadow:0 0 8px currentColor;animation:opsCityLivePulse 1.8s infinite}
+.ops-live-city-chip.incident-roadblock .ops-live-chip-dot{background:#ff4d52}.ops-live-city-chip.incident-weather .ops-live-chip-dot{background:#56baff}.ops-live-city-chip.incident-vip .ops-live-chip-dot{background:#c5a0ff}
+.ops-live-city-empty{font-size:10px;color:#bac2ce;white-space:nowrap}
+@keyframes opsCityLivePulse{0%,100%{box-shadow:0 0 0 0 currentColor;opacity:1}50%{box-shadow:0 0 0 5px transparent;opacity:.72}}
+/* Fixed dialog sits above Leaflet and all animated layers; close remains clickable at all times. */
+.ops-incident-overlay{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(5,8,12,.66);backdrop-filter:blur(5px);pointer-events:auto}
+.ops-incident-overlay.is-open{display:flex!important;animation:opsDialogFade .16s ease-out}
+.ops-incident-dialog{position:relative;z-index:1;width:min(470px,calc(100vw - 28px));max-height:min(84vh,760px);display:flex;flex-direction:column;overflow:hidden;border:1px solid #d7ad42;border-radius:17px;background:#fffdf8;color:#17212b;box-shadow:0 24px 90px rgba(0,0,0,.6);pointer-events:auto;isolation:isolate}
+.ops-incident-dialog-head{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 auto;padding:14px 60px 12px 16px;background:#fffdf8;border-bottom:1px solid #eadfc8}
+.ops-incident-dialog-head h3{margin:2px 0 0;color:#9b4608;font:800 17px/1.3 system-ui,sans-serif;overflow-wrap:anywhere}
+.ops-dialog-eyebrow{font:800 9px/1.2 system-ui,sans-serif;letter-spacing:.14em;color:#9b7a2e}
+.ops-incident-dialog-close{position:absolute;right:10px;top:10px;z-index:2147483001;width:38px;height:38px;display:grid;place-items:center;border:1px solid #c49a34;border-radius:10px;background:#ffedb3;color:#392700;font:900 25px/1 system-ui,sans-serif;cursor:pointer;pointer-events:auto;touch-action:manipulation}
+.ops-incident-dialog-close:hover,.ops-incident-dialog-close:focus-visible{background:#ffd95b;outline:2px solid #9c6c13;outline-offset:2px}
+.ops-incident-dialog-scroll{min-height:0;flex:1 1 auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:12px 16px 18px;scrollbar-width:thin;scrollbar-color:#b58a2b #eee5d2;pointer-events:auto;user-select:text}
+.ops-incident-dialog-scroll .ops-incident-scene{pointer-events:none!important;margin:0 0 12px!important}
+.ops-incident-dialog-scroll .ops-popup-update{color:#17212b!important;pointer-events:auto!important}
+.ops-incident-dialog-scroll .ops-popup-update h4{color:#101820!important;line-height:1.4!important}
+.ops-incident-dialog-scroll .ops-popup-update p{color:#253342!important;line-height:1.6!important}
+.ops-incident-dialog-scroll .ops-popup-meta{color:#74664c!important}
+.ops-incident-dialog-scroll details,.ops-incident-dialog-scroll summary{pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer}
+body.ops-dialog-open{overflow:hidden!important}
+@keyframes opsDialogFade{from{opacity:0}to{opacity:1}}
+@media(max-width:700px){.map-card{min-height:760px!important;padding:12px!important}.map-card>.map-toolbar-enhanced{top:58px!important;left:12px!important;right:12px!important}.ops-live-city-strip{top:228px!important;left:12px!important;right:12px!important}.ops-live-city-label{font-size:8px}.ops-live-city-chip{font-size:9px;padding:5px 7px}#indiaMap.vector-india-map,#indiaMap.leaflet-container,#indiaMap{min-height:760px!important}.ops-incident-overlay{padding:8px}.ops-incident-dialog{width:calc(100vw - 16px);max-height:88vh}.ops-incident-dialog-head{padding-left:12px}.ops-incident-dialog-scroll{padding:10px 12px 15px}}
+@media(prefers-reduced-motion:reduce){.map-card:before,.map-card:after,#indiaMap:before,#indiaMap:after,.ops-live-city-label i,.ops-live-chip-dot{animation:none!important}}
+</style>
+<script id="ops-map-dialog-hardening">
+(function(){
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('opsIncidentOverlay')?.classList.contains('is-open')){e.preventDefault();e.stopImmediatePropagation();window.closeOpsIncidentPopup();}},true);
+ // Capture close-button interaction before Leaflet's map handlers can consume it.
+ document.addEventListener('click',function(e){const b=e.target&&e.target.closest&&e.target.closest('.ops-incident-dialog-close');if(b){e.preventDefault();e.stopPropagation();window.closeOpsIncidentPopup();}},true);
+ document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if(typeof refreshOpsLiveCityStrip==='function')refreshOpsLiveCityStrip()},200)});
+})();
+</script>
+
+<style id="ops-map-toolbar-flow-layout-v3">
+/* Keep the existing map canvas size, but move all controls into normal document flow above it. */
+.map-card{
+  position:relative!important; display:block!important; min-height:0!important;
+  height:auto!important; padding:18px!important; overflow:visible!important;
+  border:0!important; border-radius:22px!important; background:transparent!important; box-shadow:none!important;
+}
+.map-card:before,.map-card:after{position:absolute!important;inset:0!important;pointer-events:none!important;border-radius:22px!important;}
+.map-card>.map-title{position:relative!important;inset:auto!important;z-index:3!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:42px!important;padding:2px 4px 12px!important;pointer-events:auto!important;}
+.map-card>.map-toolbar-enhanced{
+  position:relative!important; inset:auto!important; z-index:4!important;
+  display:grid!important; grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-rows:auto auto!important; align-items:center!important;
+  gap:9px!important; width:100%!important; margin:0 0 12px!important;
+  padding:0!important; pointer-events:auto!important; background:transparent!important;
+}
+.map-card>.map-toolbar-enhanced #mapSearch{grid-column:1/-1!important;grid-row:1!important;width:100%!important;min-width:0!important;min-height:44px!important;box-sizing:border-box!important;}
+.map-card>.map-toolbar-enhanced .map-filter-tabs{grid-column:1!important;grid-row:2!important;display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:5px!important;min-width:0!important;padding:5px!important;margin:0!important;}
+.map-card>.map-toolbar-enhanced .map-filter-tab{flex:0 0 auto!important;min-height:34px!important;padding:8px 10px!important;}
+.map-card>.map-toolbar-enhanced .map-reset-btn{grid-column:2!important;grid-row:2!important;justify-self:end!important;align-self:stretch!important;white-space:nowrap!important;min-height:40px!important;margin:0!important;}
+/* Remove the city ticker completely; do not reserve any space for it. */
+#opsLiveCityStrip,.ops-live-city-strip{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;}
+/* Preserve the previous full-size map canvas dimensions; only its vertical position changes. */
+#indiaMap.vector-india-map,#indiaMap.leaflet-container,#indiaMap{
+  position:relative!important; inset:auto!important; display:block!important;
+  z-index:1!important; width:100%!important; height:790px!important; min-height:790px!important;
+  margin:0!important; box-sizing:border-box!important; border:0!important; border-radius:18px!important;
+  outline:0!important; box-shadow:none!important; background:transparent!important; overflow:hidden!important;
+}
+.map-card>.map-legend{position:relative!important;z-index:2!important;margin-top:10px!important;}
+@media(max-width:780px){
+ .map-card{padding:12px!important;}
+ .map-card>.map-title{align-items:flex-start!important;}
+ .map-card>.map-title h3{max-width:100%!important;}
+ .map-card>.map-title #mapStatus{max-width:45%!important;}
+ .map-card>.map-toolbar-enhanced{grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;}
+ .map-card>.map-toolbar-enhanced .map-filter-tabs{grid-column:1/-1!important;grid-row:2!important;}
+ .map-card>.map-toolbar-enhanced .map-reset-btn{grid-column:2!important;grid-row:3!important;}
+ #indiaMap.vector-india-map,#indiaMap.leaflet-container,#indiaMap{height:760px!important;min-height:760px!important;}
+}
+@media(max-width:480px){
+ .map-card>.map-title{flex-direction:column!important;gap:5px!important;}
+ .map-card>.map-title #mapStatus{max-width:100%!important;text-align:left!important;}
+ .map-card>.map-toolbar-enhanced{grid-template-columns:1fr!important;}
+ .map-card>.map-toolbar-enhanced #mapSearch{grid-column:1!important;grid-row:1!important;}
+ .map-card>.map-toolbar-enhanced .map-filter-tabs{grid-column:1!important;grid-row:2!important;}
+ .map-card>.map-toolbar-enhanced .map-filter-tab{flex:1 1 auto!important;}
+ .map-card>.map-toolbar-enhanced .map-reset-btn{grid-column:1!important;grid-row:3!important;justify-self:stretch!important;}
+}
+</style>
+
