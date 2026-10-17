@@ -42,6 +42,38 @@
 .ops-update-tooltip{font-weight:700}
 @keyframes opsMarkerPulse{0%{box-shadow:0 0 0 0 rgba(242,103,34,.65),0 0 10px rgba(242,103,34,.7)}75%{box-shadow:0 0 0 13px rgba(242,103,34,0),0 0 20px rgba(242,103,34,.9)}100%{box-shadow:0 0 0 0 rgba(242,103,34,0),0 0 10px rgba(242,103,34,.7)}}
 
+
+
+/* Map readability repair: dark slate geography, bright gold boundaries, high-contrast popups. */
+#indiaMap,.vector-india-map,.leaflet-container{background:#202831!important;color:#f6f2e8!important}
+#indiaMap{isolation:isolate;overflow:hidden;border-radius:16px}
+.leaflet-pane,.leaflet-control-container{z-index:auto}
+.leaflet-overlay-pane path{vector-effect:non-scaling-stroke}
+.india-state-label{color:#ffe4a0!important;text-shadow:0 1px 3px #111820,1px 0 2px #111820,-1px 0 2px #111820,0 -1px 2px #111820!important;font-size:10px!important;font-weight:800!important;letter-spacing:.25px!important;pointer-events:none!important}
+.india-district-label{display:none!important}
+.india-city-label,.leaflet-tooltip{background:#17202a!important;border:1px solid #f3bd45!important;color:#fff8e8!important;padding:4px 7px!important;border-radius:7px!important;box-shadow:0 4px 14px #0009!important;font-size:11px!important;font-weight:800!important;line-height:1.25!important;white-space:normal!important;max-width:170px!important;text-shadow:none!important;opacity:1!important}
+.leaflet-tooltip:before{border-top-color:#f3bd45!important}
+.leaflet-popup{max-width:min(390px,calc(100vw - 36px))!important}
+.leaflet-popup-content-wrapper{background:#fffdf8!important;color:#202832!important;border:1px solid #e7bd58!important;border-radius:15px!important;box-shadow:0 18px 48px #0006!important;opacity:1!important}
+.leaflet-popup-content{width:auto!important;max-width:min(340px,calc(100vw - 82px))!important;max-height:min(54vh,390px)!important;overflow-y:auto!important;overflow-x:hidden!important;margin:14px 16px!important;color:#202832!important;font-size:13px!important;line-height:1.5!important;opacity:1!important;overscroll-behavior:contain!important;overflow-wrap:anywhere!important}
+.leaflet-popup-tip{background:#fffdf8!important;border:1px solid #e7bd58!important}
+.leaflet-popup-close-button{color:#4b5560!important;font-size:22px!important;padding:7px 9px 0 0!important;z-index:3!important}
+.ops-city-popup{background:#fffdf8!important;color:#202832!important;opacity:1!important;min-width:0!important;overflow-wrap:anywhere!important}
+.ops-city-popup h3{position:sticky;top:-14px;z-index:2;background:#fffdf8!important;color:#a84e12!important;font-size:15px!important;font-weight:850!important;line-height:1.35!important;padding:2px 24px 10px 0!important;margin:0 0 7px!important;border-bottom:1px solid #eadfc9!important;overflow-wrap:anywhere!important}
+.ops-popup-update{border-top:1px solid #e9e1d4!important;padding:10px 0!important;color:#202832!important;background:#fffdf8!important;opacity:1!important}
+.ops-popup-update:first-of-type{border-top:0!important}
+.ops-popup-meta{font-size:10px!important;line-height:1.45!important;color:#626b75!important;font-weight:650!important;overflow-wrap:anywhere!important}
+.ops-popup-update h4{margin:5px 0 7px!important;color:#18212b!important;font-size:13px!important;font-weight:800!important;line-height:1.4!important;overflow-wrap:anywhere!important;white-space:normal!important}
+.ops-popup-update p{margin:6px 0!important;color:#303a45!important;font-size:12px!important;font-weight:450!important;line-height:1.55!important;white-space:pre-line!important;overflow-wrap:anywhere!important;opacity:1!important}
+.ops-popup-update b{color:#1b2631!important;font-weight:800!important}
+.ops-popup-update details{margin-top:9px!important;padding:9px 10px!important;background:#f5f0e5!important;border:1px solid #e7d5ac!important;border-radius:9px!important;color:#27313b!important;font-size:12px!important;line-height:1.5!important}
+.ops-popup-update summary{cursor:pointer!important;color:#9b4b0d!important;font-weight:800!important;line-height:1.45!important;overflow-wrap:anywhere!important}
+.ops-popup-update details p{color:#303a45!important}
+.fallback-map-popup{background:#fffdf8!important;color:#202832!important;border:1px solid #e7bd58!important;box-shadow:0 16px 40px #0007!important;border-radius:14px!important;max-width:min(360px,calc(100vw - 32px))!important;max-height:55vh!important;overflow:auto!important;z-index:20!important}
+.fallback-map-popup h3,.fallback-map-popup p,.fallback-map-popup small,.fallback-map-popup article{color:#202832!important;opacity:1!important;overflow-wrap:anywhere!important}
+.fallback-map-popup h3{color:#a84e12!important}
+@media(max-width:650px){.leaflet-popup-content{max-width:calc(100vw - 82px)!important;max-height:48vh!important;margin:12px!important}.leaflet-popup-content-wrapper{border-radius:12px!important}.ops-city-popup h3{font-size:14px!important}}
+
 </style>
 
 <style>
@@ -271,10 +303,394 @@ body.admin-mode .modal-backdrop{z-index:100010!important}
 <style>
 .fallback-map-shell{position:relative;width:100%;height:100%;min-height:420px;overflow:hidden;background:#dceef4;border-radius:14px}.fallback-map-shell svg{display:block;width:100%;height:100%;min-height:420px}.fallback-city-label{font-size:10px;fill:#4c514b;font-weight:700;paint-order:stroke;stroke:#f7f3e7;stroke-width:3px;stroke-linejoin:round}.fallback-update-marker{cursor:pointer;outline:none}.fallback-update-marker text{font:700 12px system-ui;fill:#a53616;paint-order:stroke;stroke:#fff8e9;stroke-width:4px;stroke-linejoin:round}.fallback-dot{fill:#e4471d;stroke:white;stroke-width:2}.fallback-pulse{fill:#f16a3d55;stroke:#e4471d;stroke-width:1;animation:opsPulse 1.8s infinite}.fallback-map-controls{position:absolute;z-index:3;top:12px;right:12px;display:flex;gap:5px}.fallback-map-controls button,.fallback-popup-close{border:1px solid #d7d0c2;background:#fffdf8;border-radius:8px;padding:7px 11px;font-weight:800;color:#473b2b;cursor:pointer}.fallback-map-note{position:absolute;bottom:8px;left:10px;right:10px;background:#fffdf0dc;border-radius:7px;padding:6px 9px;font-size:10px;color:#635c50}.fallback-map-popup{position:absolute;z-index:5;right:12px;bottom:42px;width:min(330px,calc(100% - 24px));max-height:65%;overflow:auto;padding:15px;background:#fffdf8;border:1px solid #e1d6c4;border-radius:13px;box-shadow:0 12px 32px #31210e33}.fallback-map-popup h3{margin:0 32px 10px 0;font-size:16px}.fallback-map-popup article{padding:10px 0;border-top:1px solid #eee4d4}.fallback-map-popup p{margin:5px 0;font-size:12px;white-space:pre-wrap}.fallback-map-popup small{color:#7c7161}.fallback-popup-close{position:absolute;right:10px;top:9px;padding:2px 9px;font-size:19px}
 </style>
+<style id="premiumLightGreyGoldRedesign">
+/* Premium light-grey + champagne-gold redesign layer. Existing HTML/JS/data logic intentionally preserved. */
+:root{--ink:#24272b;--muted:#72757b;--paper:#eeeff1;--white:#fff;--line:#dedfe2;--orange:#b98227;--orange2:#8d611b;--peach:#f7ecd5;--green:#237a58;--shadow:0 16px 42px rgba(45,39,28,.10);--gold:#d4ad58;--gold-light:#f6e6b9;--gold-deep:#8d611b}
+html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f3f4f5 0%,#e8e9eb 52%,#f5f1e7 100%);color:var(--ink)}
+.topbar{background:rgba(249,249,248,.92);border-bottom:1px solid #d9c89f;box-shadow:0 5px 24px #47371a0b}
+.brandmark{background:linear-gradient(145deg,#f5dfa0,#c39435 55%,#8e611b);color:#fffdf5;box-shadow:0 7px 20px #b78a3538;border:1px solid #f8e5ad}
+.brandname span{color:#a8761f}.brandsub{color:#77736a}
+.btn{border-color:#d9d5cb;background:linear-gradient(180deg,#fff,#f7f6f2);box-shadow:0 2px 5px #27201608}.btn:hover{border-color:#c7a04d;box-shadow:0 8px 22px #9c75231b}.btn.primary{background:linear-gradient(135deg,#f0d58d,#c19235);border-color:#bf9134;color:#33250c;box-shadow:inset 0 1px #fff8c9,0 5px 15px #a77b2b26}.btn.primary:hover{background:linear-gradient(135deg,#f7e3a7,#b78327)}.btn.dark{background:#343638;color:#f8e6b6;border-color:#343638}
+.layout{padding-top:20px}.hero{grid-template-columns:minmax(300px,.72fr) minmax(0,1.55fr);gap:18px;align-items:stretch}.hero-main{background:linear-gradient(135deg,#f8f8f6 0%,#e7e8e9 55%,#f3e8cb 100%);color:#25282b;border:1px solid #dfd5bd;box-shadow:0 12px 32px #51432b0d,inset 0 1px #fff;min-height:unset;padding:30px}.hero-main:before{border-color:#c8a45c35;box-shadow:0 0 0 35px #c8a45c0b,0 0 0 75px #c8a45c08}.hero-main:after{content:"";position:absolute;inset:-40%;pointer-events:none;background:conic-gradient(from 0deg,transparent 0 72%,#d9b55b16 79%,transparent 86%);animation:goldSweep 22s linear infinite;z-index:0}.hero-main>*{position:relative;z-index:1}.eyebrow{color:#9b6b1c}.hero h1{color:#25272a}.hero p{color:#66686b}.hero-quick .btn{background:#ffffffb8;color:#38352d;border-color:#d9d0bb}.hero-quick .btn.primary{background:linear-gradient(135deg,#f2d98e,#c19235);border-color:#c19235;color:#33250c}
+.hero-live-widget{background:linear-gradient(120deg,#343638,#4a453a)!important;border:1px solid #d5b568!important;box-shadow:0 10px 24px #3d2e171c!important}.hero-live-head span{color:#f2d38a!important}.hero-live-head b{color:#fff!important}.live-stat small{color:#d9d5c9!important}.live-stat strong{color:#f7df9d!important}.hero-mini-action{color:#f4d58d!important}
+.map-card{background:linear-gradient(145deg,#fff,#f5f2e9);border:1px solid #d8c79d;box-shadow:0 14px 36px #70512412;min-height:520px;padding:18px}.map-title h3{font-size:16px;color:#25272a}.map-title span{color:#8c6a2c}.map-toolbar{position:relative;z-index:5}.field,.map-toolbar input,.map-toolbar select{border-color:#d9d6cd;background:#fffefa}.field:focus,.map-toolbar input:focus,.map-toolbar select:focus{border-color:#c49a3e;box-shadow:0 0 0 3px #d4ad5825}.vector-india-map,#indiaMap{height:440px;min-height:420px;border-radius:13px;overflow:hidden;background:#e4e8e9!important;box-shadow:inset 0 0 0 1px #d9d1bd}.map-land{fill:#e9e4d7;stroke:#cbbd9d}.map-pin{fill:#b98227;filter:drop-shadow(0 3px 5px #9e712d55)}.map-pin:hover{fill:#805713}.map-legend{color:#777166}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0 24px}.stat{background:linear-gradient(145deg,#fff,#f9f7f1);border:1px solid #e0d8c6;box-shadow:0 7px 20px #30251508;transition:transform .22s,box-shadow .22s,border-color .22s}.stat:hover{transform:translateY(-3px);border-color:#d1ad5c;box-shadow:0 12px 28px #8e692019}.stat:after{background:linear-gradient(135deg,#f4e7c7,#e6d4a7)}.stat-icon{background:linear-gradient(145deg,#f8edce,#e8d09a);color:#8b611d;border:1px solid #eddbad}
+.section-head h2{color:#28292b}.city-grid{gap:15px}.city-card{border-color:#dfd9cc;box-shadow:0 7px 22px #30251508;background:linear-gradient(180deg,#fff,#fbfaf7)}.city-card:hover{border-color:#c9a34e;box-shadow:0 16px 32px #8260201c}.city-photo{background:linear-gradient(120deg,#e5e6e7,#e9d8ad 70%,#c49a45);border-bottom:1px solid #d7c69f}.city-photo:after{background:linear-gradient(90deg,#34302a22,transparent)}.pill{background:#f4e7c6;color:#805715}.pill.green{background:#e2f1e8;color:#267451}.pill.grey{background:#eeeff0;color:#62656a}.city-summary{color:#5f6266}.city-footer{border-color:#ebe5d9}.arrow{color:#9e711f}.empty{background:#fffefa;border-color:#d5c69f}
+.lower-grid{gap:17px}.panel,.form-card{background:linear-gradient(145deg,#fff,#faf8f2);border:1px solid #e0d8c6;box-shadow:0 8px 24px #30251508}.recent-item{background:#f4f3ef;border:1px solid #ebe6da}.recent-dot{background:#bd8a2c;box-shadow:0 0 0 4px #d4ad581e}.recent-item p,.panel-sub{color:#77736b}
+.modal-backdrop{background:#27251fc9}.modal{background:#faf9f5;border:1px solid #d8c18b;box-shadow:0 30px 100px #34271445}.modal-head{background:linear-gradient(120deg,#343638,#4c4537);border-bottom:3px solid #d3ad58}.modal-head .eyebrow{color:#f0d38c}.detail{background:#fffefa;border-color:#e2dac8}.warning{background:#fbf1d9;border-color:#e8d09a;color:#78561b}.admin-lock{background:linear-gradient(145deg,#fff,#f6f0e2)!important;border:1px solid #dfcfaa!important;box-shadow:0 20px 60px #4b381a12!important}.admin-lock .lockicon{background:linear-gradient(145deg,#f2dc9c,#c09232)!important;color:#35260b!important}.admin-head h1{color:#25272a}.form-group label{color:#605846}.form-group input,.form-group textarea,.form-group select{background:#fffefa;border-color:#ddd5c3}.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#c49a3e;box-shadow:0 0 0 3px #d4ad5825}.manage-item{background:#faf9f5;border-color:#e2dac8}.toast{background:#343638;border:1px solid #d4ad58;box-shadow:0 12px 34px #30251525}
+/* Keep creator watermark and butterfly effects visible against both pale and dark panels. */
+.creator-floater{right:22px;bottom:20px;filter:drop-shadow(0 2px 7px #fff8df)}#abhiCreatorMark{filter:drop-shadow(0 2px 7px #fff8df)!important}
+.creator-name,.creator-role,#abhiCreatorMark .abhiCreatorRole,#abhiCreatorMark .abhiCreatorName{color:#946516!important}
+.creator-name b,#abhiCreatorMark .abhiCreatorName b{color:#d5a83d!important}
+.creator-butterfly,.abhiButterfly{filter:drop-shadow(0 2px 5px #c3973c70)!important}
+@keyframes goldSweep{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes goldEdgePulse{0%,100%{box-shadow:0 0 0 0 #d4ad5800}50%{box-shadow:0 0 0 4px #d4ad581a}}
+.map-card{animation:widgetRise .6s ease both}.stat{animation:widgetRise .45s ease both}.stat:nth-child(2){animation-delay:.06s}.stat:nth-child(3){animation-delay:.12s}.stat:nth-child(4){animation-delay:.18s}
+@media(min-width:1250px){.hero{grid-template-columns:minmax(330px,.78fr) minmax(0,1.5fr)}.map-card{min-height:560px}#indiaMap,.vector-india-map{height:470px;min-height:450px}.hero-main{display:flex;flex-direction:column;justify-content:center}}
+@media(max-width:1050px){.hero{grid-template-columns:1fr}.map-card{min-height:unset}#indiaMap,.vector-india-map{height:430px;min-height:400px}}
+@media(max-width:650px){.hero-main{padding:23px 19px}.map-card{padding:12px}#indiaMap,.vector-india-map{height:380px;min-height:350px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.creator-floater{right:10px;bottom:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+
+</style>
+<style id="gold-graphite-readability-and-map-cleanup">
+/* Refined graphite + champagne-gold visual system. Existing app logic and metrics are untouched. */
+:root{--ink:#f2eee5;--muted:#b7b0a3;--paper:#171a1f;--white:#22262d;--line:#3b3d42;--orange:#d8b15d;--orange2:#f0ca78;--peach:#383126;--green:#65c79a;--shadow:0 16px 42px rgba(0,0,0,.28)}
+html{background:#171a1f;color-scheme:dark}body{background:radial-gradient(ellipse at 12% 0%,#29251d 0,#1b1e23 38%,#14171b 100%)!important;color:#f2eee5!important}
+.topbar{background:rgba(25,28,33,.96)!important;border-bottom:1px solid #5a4a2d!important;box-shadow:0 8px 24px #0002}
+.brandmark{background:linear-gradient(145deg,#f0d28b,#9b7029)!important;color:#211b10!important;box-shadow:0 0 22px #d8b15d25!important}
+.brandname,.section-head h2,.map-title h3,.panel h3,.admin-head h1,.form-card h3,.city-content strong{color:#f6f0e4!important}
+.brandname span,.arrow{color:#e4bf6c!important}.brandsub,.stat-label,.stat-note,.section-head p,.panel-sub,.city-count,.city-footer,.admin-note,.footer{color:#b7b0a3!important}
+.btn{background:#292d34!important;color:#f5f0e5!important;border-color:#4a4b4c!important}.btn:hover{border-color:#d8b15d!important;box-shadow:0 8px 24px #d8b15d1c!important}.btn.primary,.hero-quick .btn.primary{background:linear-gradient(135deg,#f0d28b,#b88936)!important;color:#211a0d!important;border-color:#e1bb67!important}.btn.dark{background:#14171b!important;color:#f4d88f!important;border-color:#6d572e!important}
+.hero-main{background:radial-gradient(circle at 82% 18%,#574525 0,#302a20 24%,#22262b 66%,#1b1e23 100%)!important;border:1px solid #65512e;box-shadow:0 18px 48px #0003}.hero-main:before{border-color:#d8b15d30!important;box-shadow:0 0 0 35px #d8b15d0b,0 0 0 75px #d8b15d07!important}.eyebrow{color:#f0cb78!important}.hero p{color:#ded8cb!important}
+.map-card,.panel,.form-card,.stat,.city-card,.admin-lock{background:linear-gradient(145deg,#272b32,#202329)!important;border-color:#49443a!important;color:#f2eee5!important;box-shadow:0 14px 38px #0003!important}.stat:after{background:#d8b15d!important;opacity:.08!important}.stat-icon{background:#3a3223!important;color:#f0cc7b!important}.stat-value{background:none!important;color:#f1d18a!important;-webkit-text-fill-color:#f1d18a!important}
+.field,.form-group input,.form-group textarea,.form-group select,.admin-lock input,.map-toolbar input,.map-toolbar select{background:#171a1f!important;color:#f5f0e5!important;border-color:#514a3d!important}.field::placeholder,.form-group input::placeholder,.form-group textarea::placeholder{color:#a59d90!important}.field:focus,.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#d8b15d!important;box-shadow:0 0 0 3px #d8b15d24!important}
+.city-photo{background:linear-gradient(115deg,#292a27,#4c3b20 70%,#9c742d)!important}.city-photo .city-name-overlay{color:#fff5db!important}.city-summary{color:#d1cabc!important}.pill{background:#4a3b22!important;color:#f4d58c!important}.pill.green{background:#1e4336!important;color:#91e0b9!important}.pill.grey{background:#34373d!important;color:#d0c9bc!important}.recent-item,.manage-item,.detail{background:#1a1d22!important;border-color:#41434a!important;color:#f2eee5!important}.recent-item p,.recent-item time,.detail label,.form-group label{color:#b9b1a4!important}.modal{background:#202329!important;color:#f2eee5!important}.modal-head{background:linear-gradient(120deg,#171a1f,#3b3020)!important;border-bottom:1px solid #6c542c}.modal-head p{color:#d0c7b7!important}.warning,.demo-warning{background:#3b2c19!important;border-color:#8b6a31!important;color:#f3d99b!important}.toast{background:#29251d!important;border:1px solid #d8b15d!important;color:#fff3d1!important}
+/* Keep the real geographic map, but remove district-label clutter at normal viewing scale. */
+.vector-india-map{background:#202831!important;border:1px solid #5b4a2d!important;box-shadow:inset 0 0 0 1px #d8b15d12!important}.leaflet-container{background:#202831!important;color:#f2eee5!important}.leaflet-control-zoom a,.leaflet-bar a{background:#24282f!important;color:#f0ce81!important;border-color:#5c5039!important}.leaflet-control-attribution{background:#191c20d9!important;color:#bcb4a5!important}.leaflet-control-attribution a{color:#e1bd6c!important}
+.india-state-label{font-size:10px!important;color:#f0d99e!important;text-shadow:0 1px 3px #000,1px 0 2px #000,-1px 0 2px #000,0 -1px 2px #000!important;font-weight:800!important;letter-spacing:.25px!important}.india-district-label{display:none!important}.india-city-label{background:#24211b!important;border:1px solid #d2aa56!important;color:#fff0c5!important;padding:2px 5px!important;border-radius:5px!important;box-shadow:0 2px 8px #0008!important;font-size:10px!important;font-weight:700!important}.leaflet-tooltip{background:#24211b!important;border:1px solid #d2aa56!important;color:#fff0c5!important;box-shadow:0 2px 8px #0008!important}.leaflet-tooltip:before{border-top-color:#d2aa56!important}
+.map-legend{color:#d0c7b7!important}.legend-dot{background:#e0b75c!important;box-shadow:0 0 0 4px #e0b75c22!important}.map-load-error{background:#202329!important;color:#f2eee5!important}
+/* Restore visibility of the gold creator watermark and butterfly animation on dark surfaces. */
+.creator-floater,#abhiCreatorMark{opacity:1!important;filter:drop-shadow(0 2px 10px #0009)!important}.creator-name,#abhiCreatorMark .abhiCreatorName{color:#f0cb70!important;-webkit-text-stroke:.35px #fff0b7!important;text-shadow:0 1px 0 #6b4c17,0 2px 0 #5a4117,0 0 14px #d8b15d8c!important}.creator-role,#abhiCreatorMark .abhiCreatorRole{color:#e4c477!important;text-shadow:0 1px 3px #000!important}.creator-name b,#abhiCreatorMark .abhiCreatorName b{color:#ffe7a0!important;text-shadow:0 0 8px #f4d57c,0 0 18px #d8a944!important}.creator-butterfly,.abhiButterfly{filter:drop-shadow(0 2px 7px #e7bd5b99)!important}.creator-hover-card,#abhiButterflyPopup{background:linear-gradient(135deg,#28241bfa,#40331df5)!important;color:#ffe8ac!important;border-color:#d8b15d!important}.creator-hover-card small,#abhiButterflyPopup small{color:#d5bd83!important}
+/* Gold focus and interaction cues; motion remains subtle and respects reduced-motion settings. */
+.city-card:hover,.stat:hover,.panel:hover,.form-card:hover{border-color:#b8944d!important;box-shadow:0 18px 42px #0005,0 0 0 1px #d8b15d18!important}.map-pin{fill:#d8b15d!important;stroke:#201d17!important;filter:drop-shadow(0 2px 5px #d8b15d55)!important}.map-pin:hover{fill:#ffe4a0!important}.pulse{background:#79d9a5!important}.status{color:#8bd9ae!important}
+@media(prefers-reduced-motion:reduce){.creator-floater,.creator-butterfly,.abhiButterfly,.pulse{animation:none!important}}
+</style>
+
+<style id="ops-command-structure-refresh">
+/* Structural redesign: graphite command rail + readable high-contrast gold system. Original data/logic untouched. */
+:root{--ink:#f5f3ee;--muted:#c0c5ce;--paper:#171a20;--white:#222832;--line:#414956;--orange:#e1b95f;--orange2:#f1d48b;--peach:#3a3326;--green:#63d5a0;--shadow:0 14px 38px #0005}
+html,body{background:#171a20!important;color:#f5f3ee!important}body{font-size:14px;line-height:1.55;background:radial-gradient(ellipse at 75% -15%,#3b3325 0,#20242b 36%,#15181e 78%)!important}
+/* New fixed navigation rail */
+.ops-sidebar{position:fixed;z-index:90;left:0;top:0;bottom:0;width:238px;padding:23px 15px 18px;background:linear-gradient(180deg,#20242b 0%,#191c22 100%);border-right:1px solid #655332;box-shadow:10px 0 36px #0002;display:flex;flex-direction:column;gap:7px}
+.ops-side-brand{display:flex;align-items:center;gap:11px;padding:3px 7px 26px;border-bottom:1px solid #ffffff12;margin-bottom:12px}.ops-brand-emblem{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#f6df9c,#bd8a35);color:#211a0e;font-size:22px;font-weight:900;box-shadow:0 4px 20px #d8b15d25}.ops-side-brand strong{display:block;font-size:12px;letter-spacing:.09em;color:#f5d98e}.ops-side-brand small{display:block;font-size:9px;letter-spacing:.16em;color:#aeb5bf;margin-top:3px}.ops-nav-label{font-size:9px;font-weight:800;letter-spacing:.17em;color:#9ba3ae;padding:10px 11px 5px}.ops-nav-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border:1px solid transparent;border-radius:11px;background:transparent;color:#e5e8ed;text-align:left;font-size:12px;font-weight:650;transition:background .2s,border-color .2s,transform .2s}.ops-nav-item span{width:20px;text-align:center;color:#e1b95f;font-size:18px}.ops-nav-item:hover{background:#ffffff0a;border-color:#6b5935;transform:translateX(2px)}.ops-nav-item.active{background:linear-gradient(100deg,#d9b15a25,#d9b15a08);border-color:#a98743;color:#ffe7aa;box-shadow:inset 3px 0 #e1b95f}.ops-side-divider{height:1px;background:#ffffff14;margin:12px 6px}.ops-side-status{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 10px;border:1px solid #414956;border-radius:12px;background:#ffffff05}.ops-side-status i{width:8px;height:8px;border-radius:50%;background:#63d5a0;box-shadow:0 0 0 5px #63d5a018;animation:opsPulse 2.1s infinite}.ops-side-status strong,.ops-side-status small{display:block}.ops-side-status strong{font-size:11px;color:#f4f1e9}.ops-side-status small{font-size:10px;color:#aeb5bf;margin-top:2px}.ops-side-watermark{position:relative;overflow:hidden;text-align:center;padding:16px 4px 4px;color:#e8c36f}.ops-side-watermark:before,.ops-side-watermark:after{content:'✧';position:absolute;color:#e8c36f88;font-size:22px;animation:opsWing 3.5s ease-in-out infinite}.ops-side-watermark:before{left:16px;top:15px}.ops-side-watermark:after{right:16px;top:15px;animation-delay:-1.7s}.ops-side-watermark strong{display:block;font-family:'Brush Script MT','Segoe Script',cursive;font-size:20px;font-weight:600;text-shadow:0 0 12px #e1b95f45}.ops-side-watermark small{display:block;margin-top:4px;font-size:8px;letter-spacing:.2em;color:#b9a575}
+.app{margin-left:238px;min-height:100vh}.topbar{height:70px;padding:0 clamp(18px,2.4vw,38px)!important;background:#1b1f26f5!important;border-bottom:1px solid #51452e!important;box-shadow:0 7px 24px #0002}.brandmark{display:none!important}.brandname{font-size:15px!important;color:#f4d88f!important;letter-spacing:.02em!important}.brandname span{color:#fff!important}.brandsub{color:#c0c5ce!important;letter-spacing:.15em}.layout{width:100%!important;padding:23px clamp(16px,2vw,32px) 48px!important;max-width:1800px!important}
+/* Rebuilt dashboard hierarchy: overview banner + dominant map, metrics, then working directory */
+.hero{grid-template-columns:minmax(0,.8fr) minmax(0,1.45fr)!important;gap:16px!important;align-items:stretch!important}.hero-main{min-height:450px!important;padding:30px!important;background:linear-gradient(145deg,#282d35,#22262d 62%,#3a3020)!important;border:1px solid #62512f!important;border-radius:20px!important;box-shadow:0 18px 45px #0003!important}.hero h1{font-size:clamp(29px,2.7vw,43px)!important;line-height:1.1!important;letter-spacing:-.035em!important;color:#fff!important}.hero p{font-size:14px!important;line-height:1.75!important;color:#e0e4ea!important}.eyebrow{color:#f0cf7e!important}.hero-live-widget{max-width:none!important;margin-top:24px!important;background:#171b22aa!important;border-color:#8a713b!important}.hero-live-head{font-size:10px!important}.hero-live-head b{color:#f4f0e7!important}.live-stat small{font-size:10px!important;color:#c5ccd5!important}.live-stat strong{font-size:21px!important;color:#f5d98e!important}.live-ticker{font-size:11px!important;color:#e0e4ea!important}.hero-mini-action{font-size:11px!important;color:#f4d88f!important}
+.map-card{min-height:450px!important;padding:18px!important;border-radius:20px!important;background:#20252d!important;border:1px solid #62512f!important;box-shadow:0 18px 45px #0003!important}.map-title h3{font-size:16px!important;color:#f5f2eb!important}.map-title span{color:#c0c5ce!important;font-size:10px!important}.map-toolbar{gap:8px!important;margin:12px 0!important}.vector-india-map{height:355px!important;min-height:355px!important;background:#252d35!important;border:1px solid #4c5661!important;border-radius:13px!important;overflow:hidden!important}.leaflet-container{background:#252d35!important;color:#f5f3ee!important;font-family:Inter,system-ui,sans-serif!important}.leaflet-control-zoom a,.leaflet-bar a{background:#20252d!important;color:#f0d184!important;border-color:#535b65!important}.leaflet-control-attribution{background:#171b21e8!important;color:#d3d7dd!important}.leaflet-control-attribution a{color:#f0d184!important}
+/* map clarity: avoid label collisions; only show city labels at close zoom, preserve marker popups and filters */
+.india-district-label{display:none!important}.india-state-label{font-size:10px!important;color:#d4dbe4!important;text-shadow:0 1px 3px #111,1px 0 2px #111,-1px 0 2px #111!important;font-weight:700!important;letter-spacing:.15px!important;pointer-events:none!important}.india-city-label,.leaflet-tooltip{background:#171b21!important;border:1px solid #c5a04f!important;color:#fff1c9!important;padding:3px 6px!important;border-radius:6px!important;box-shadow:0 3px 10px #0008!important;font-size:11px!important;font-weight:750!important}.leaflet-tooltip:before{border-top-color:#c5a04f!important}.map-legend{font-size:11px!important;line-height:1.6!important;color:#c6ccd4!important}.legend-dot{background:#e1b95f!important;box-shadow:0 0 0 4px #e1b95f20!important}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:17px 0 25px!important}.stat,.panel,.form-card,.city-card,.admin-lock{background:linear-gradient(145deg,#252a32,#20242b)!important;border:1px solid #414956!important;color:#f5f3ee!important;box-shadow:0 10px 28px #0002!important}.stat{padding:18px!important;border-radius:15px!important;min-width:0}.stat-label{font-size:11px!important;color:#c5ccd5!important}.stat-value{font-size:30px!important;color:#f1d184!important;-webkit-text-fill-color:#f1d184!important}.stat-note{color:#aeb7c2!important}.stat-icon{background:#423722!important;color:#f4d88f!important}.stat:after{background:#e1b95f!important;opacity:.07!important}.section-head{margin:25px 0 14px!important;align-items:center!important}.section-head h2{font-size:23px!important;color:#f5f3ee!important;letter-spacing:-.025em!important}.section-head p,.panel-sub{color:#c0c7d0!important;font-size:12px!important}.field,.form-group input,.form-group textarea,.form-group select,.admin-lock input,.map-toolbar input,.map-toolbar select{background:#171b22!important;color:#f5f3ee!important;border:1px solid #4b5561!important;border-radius:9px!important}.field::placeholder,.form-group input::placeholder,.form-group textarea::placeholder,.map-toolbar input::placeholder{color:#aab3bf!important;opacity:1!important}.field:focus,.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#e1b95f!important;box-shadow:0 0 0 3px #e1b95f20!important}.btn{background:#2b3038!important;color:#f5f3ee!important;border-color:#505762!important}.btn.primary,.hero-quick .btn.primary{background:linear-gradient(135deg,#f2d88f,#c89b43)!important;color:#211a0d!important;border-color:#f2d88f!important}.btn.dark{background:#11151a!important;color:#f4d88f!important;border-color:#7e6533!important}.hero-quick .btn{background:#ffffff0d!important;color:#f4f2ec!important;border-color:#ffffff2a!important}.hero-quick .btn.primary{color:#211a0d!important}.city-content strong,.brandname,.section-head h2,.map-title h3,.panel h3,.admin-head h1,.form-card h3{color:#f5f3ee!important}.city-summary,.recent-item p,.recent-item time,.detail,.detail label,.form-group label,.admin-note,.footer{color:#c5ccd5!important}.city-photo{background:linear-gradient(120deg,#2a2e34,#5a4625)!important}.city-photo .city-name-overlay{color:#fff4d4!important}.pill{background:#4b3b20!important;color:#f5d98e!important}.pill.green{background:#1d4637!important;color:#a4edc7!important}.pill.grey{background:#363c45!important;color:#d9dee5!important}.recent-item,.manage-item,.detail{background:#1b2027!important;border-color:#414956!important;color:#f5f3ee!important}.modal{background:#222730!important;color:#f5f3ee!important;border:1px solid #6a5734!important}.modal-head{background:linear-gradient(120deg,#1b2027,#3a3020)!important;border-bottom:1px solid #6a5734!important}.modal-head p{color:#c5ccd5!important}.warning,.demo-warning{background:#3a2d1b!important;border-color:#97773a!important;color:#f6dfa0!important}.toast{background:#242930!important;border:1px solid #d8b15d!important;color:#fff3d1!important}.footer{text-align:center!important;padding:20px 0!important;border-top:1px solid #ffffff12!important;margin-top:30px!important}
+/* Keep the name visible and restore butterfly motion independently of the old watermark styles */
+#abhiCreatorMark{position:fixed!important;right:20px!important;bottom:18px!important;z-index:2147483000!important;display:flex!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;filter:drop-shadow(0 3px 12px #000)!important;padding:10px 14px!important;border:1px solid #a98743!important;border-radius:14px!important;background:linear-gradient(135deg,#252a31ee,#171a20ee)!important;backdrop-filter:blur(10px)!important;align-items:flex-end!important;gap:3px!important}.abhiCreatorRole{color:#e2c67f!important;font-size:9px!important;letter-spacing:.16em!important;text-shadow:0 1px 4px #000!important}.abhiCreatorName{font-family:'Brush Script MT','Segoe Script',cursive!important;font-size:23px!important;color:#f3d17d!important;text-shadow:0 0 12px #e1b95f50!important;line-height:1.1!important}.abhiCreatorName b{color:#fff0b7!important}#abhiButterflyLayer{position:fixed!important;inset:0!important;z-index:2147482999!important;pointer-events:none!important;overflow:hidden!important}.abhiButterfly{position:absolute!important;display:block!important;opacity:0;filter:drop-shadow(0 2px 8px #e8bd5d99)!important;animation:abhiFlight var(--abhiDuration,2.6s) cubic-bezier(.18,.65,.3,1) forwards!important;will-change:transform,opacity}.abhiButterfly svg{display:block!important;overflow:visible!important;transform-origin:50% 50%;animation:abhiWing .2s ease-in-out infinite alternate!important}@keyframes abhiFlight{0%{opacity:0;transform:translate(0,0) scale(.35) rotate(0)}12%{opacity:1}75%{opacity:.95}100%{opacity:0;transform:translate(var(--abhiDx),var(--abhiDy)) scale(1.1) rotate(var(--abhiRot))}}@keyframes abhiWing{from{transform:scaleX(.72) rotateY(0)}to{transform:scaleX(1.08) rotateY(35deg)}}@keyframes opsPulse{50%{box-shadow:0 0 0 9px #63d5a000}}@keyframes opsWing{0%,100%{transform:translateY(0) rotate(-12deg);opacity:.55}50%{transform:translateY(-5px) rotate(15deg);opacity:1}}
+#abhiButterflyPopup{background:linear-gradient(135deg,#252a31f7,#40331df5)!important;color:#ffe8ac!important;border:1px solid #d8b15d!important;box-shadow:0 12px 34px #0008!important}#abhiButterflyPopup small{color:#e3d1a3!important}
+@media(max-width:1100px){.ops-sidebar{width:205px}.app{margin-left:205px}.hero{grid-template-columns:1fr!important}.hero-main{min-height:0!important}.map-card{min-height:0!important}.vector-india-map{height:390px!important;min-height:390px!important}}
+@media(max-width:760px){.ops-sidebar{position:sticky;top:0;bottom:auto;width:100%;height:auto;padding:9px 10px;display:flex;flex-direction:row;align-items:center;overflow-x:auto;gap:5px;border-right:0;border-bottom:1px solid #655332}.ops-side-brand{padding:0 8px 0 0;margin:0;border:0;flex-shrink:0}.ops-brand-emblem{width:32px;height:32px}.ops-side-brand strong{font-size:10px}.ops-side-brand small,.ops-nav-label,.ops-side-divider,.ops-side-status,.ops-side-watermark{display:none}.ops-nav-item{width:auto;white-space:nowrap;padding:8px 10px;font-size:11px}.ops-nav-item span{font-size:15px;width:auto}.app{margin-left:0}.topbar{position:relative!important;padding:12px 14px!important;height:auto!important;gap:10px;flex-wrap:wrap}.topactions{gap:6px;flex-wrap:wrap}.status{margin-right:0}.layout{padding:14px 12px 32px!important}.hero-main{padding:22px!important}.hero h1{font-size:30px!important}.map-card{padding:12px!important}.vector-india-map{height:340px!important;min-height:340px!important}.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}.stat{padding:14px!important}.stat-value{font-size:25px!important}.section-head{align-items:flex-start!important;flex-direction:column}.filters{width:100%}.field{min-width:0;flex:1}.lower-grid{grid-template-columns:1fr!important}#abhiCreatorMark{right:10px!important;bottom:10px!important;transform:scale(.86);transform-origin:bottom right}}
+@media(prefers-reduced-motion:reduce){.ops-side-status i,.ops-side-watermark:before,.ops-side-watermark:after{animation:none!important}.abhiButterfly{animation-duration:.01ms!important}}
+</style>
+
+<style id="bright-gold-single-page-redesign">
+:root{
+ --ink:#F7F4EC!important;--muted:#C3C8D0!important;--paper:#17191E!important;--white:#22252B!important;--line:#41454D!important;
+ --orange:#FFC629!important;--orange2:#F0A900!important;--peach:#3A3020!important;--green:#45C995!important;
+ --shadow:0 14px 34px rgba(0,0,0,.28)!important;
+ --gold-bright:#FFD447;--gold-hot:#FFB800;--gold-soft:#FFE69A;--panel:#22252B;--panel2:#292D34;
+}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:#17191e!important;color:#f7f4ec!important;font-size:14px!important;line-height:1.55!important}
+/* Single-page composition: remove the side rail completely and reclaim its space. */
+.ops-sidebar{display:none!important}
+.app,.app.has-sidebar,.app.with-sidebar{margin-left:0!important;padding-left:0!important;width:100%!important;max-width:none!important}
+.topbar{position:sticky!important;top:0!important;z-index:100!important;height:auto!important;min-height:76px!important;padding:12px clamp(16px,3vw,48px)!important;gap:18px!important;flex-wrap:wrap!important;background:rgba(25,27,32,.94)!important;border-bottom:1px solid #8e6c19!important;box-shadow:0 8px 28px #0005!important;backdrop-filter:blur(18px)!important}
+.brand{gap:12px!important}.brandmark{background:linear-gradient(145deg,#ffe78a,#ffb800 55%,#a86b00)!important;color:#17130a!important;box-shadow:0 0 0 1px #ffe7a4,0 0 24px #ffbd2638!important}.brandname{color:#ffe28a!important}.brandsub{color:#c8cbd1!important}
+.topactions{display:flex!important;align-items:center!important;gap:9px!important;flex-wrap:wrap!important}.status{color:#f8dfa0!important}.pulse{background:#42d69b!important;box-shadow:0 0 0 4px #42d69b20!important}
+.layout{width:min(100%,1840px)!important;max-width:1840px!important;margin:0 auto!important;padding:24px clamp(14px,2.5vw,42px) 54px!important}
+/* Give the first screen a clean editorial hierarchy instead of a sidebar-driven layout. */
+.hero{display:grid!important;grid-template-columns:minmax(290px,.78fr) minmax(0,1.5fr)!important;gap:18px!important;align-items:stretch!important;margin-bottom:20px!important}
+.hero-main,.map-card,.stat,.panel,.form-card,.admin-lock,.admin-head,.city-card,.section-head,.admin-grid>*,.form-card{background:#22252b!important;color:#f7f4ec!important;border:1px solid #444850!important;box-shadow:0 12px 32px #0003!important}
+.hero-main{position:relative!important;overflow:hidden!important;border-radius:20px!important;padding:clamp(22px,3vw,42px)!important;background:radial-gradient(ellipse at 100% 0%,#65480f55,transparent 48%),linear-gradient(145deg,#292c32,#1e2025)!important}
+.hero-main:after{content:"";position:absolute;right:-100px;bottom:-130px;width:320px;height:320px;border:1px solid #ffc62924;border-radius:50%;box-shadow:0 0 0 28px #ffc62909,0 0 0 58px #ffc62907;pointer-events:none}
+.eyebrow{color:#ffd447!important;letter-spacing:.16em!important;font-weight:850!important}
+.hero h1,.admin-head h1{color:#fff9e9!important;letter-spacing:-.045em!important;line-height:1.07!important;text-wrap:balance!important}
+.hero h1{font-size:clamp(30px,3vw,48px)!important}.hero-main p{color:#d0d3d9!important;max-width:58ch!important;font-size:15px!important}
+.btn,.hero-mini-action{border:1px solid #5b6069!important;background:#2b2e35!important;color:#fff7df!important;border-radius:10px!important;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important}
+.btn:hover,.hero-mini-action:hover{transform:translateY(-2px)!important;border-color:#ffd447!important;box-shadow:0 8px 22px #ffbf2726!important}
+.btn.primary{background:linear-gradient(135deg,#ffe98e 0%,#ffc629 42%,#e6a400 100%)!important;border:1px solid #ffe58b!important;color:#241a05!important;font-weight:850!important;box-shadow:0 4px 18px #ffbf2730!important}
+/* Map panel: clean contrast, fewer competing decorative effects, clear tools. */
+.map-card{border-radius:20px!important;padding:17px!important;min-width:0!important;background:linear-gradient(145deg,#292c32,#202329)!important;border-color:#8d6a1d!important;overflow:hidden!important}
+.map-title h3,.panel h3,.section-head h2,.form-card h3{color:#fff5d9!important}
+#mapStatus{color:#ffdb70!important;font-weight:800!important;letter-spacing:.08em!important}
+.map-toolbar{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:12px 0!important}
+input,select,textarea,.field,.map-toolbar input,.map-toolbar select{background:#15171b!important;color:#f9f5e9!important;border:1px solid #555a63!important;border-radius:9px!important;min-height:40px!important;outline:none!important}
+input::placeholder,textarea::placeholder{color:#aeb4bd!important;opacity:1!important}
+input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shadow:0 0 0 3px #ffc62924!important}
+.vector-india-map,#indiaMap{background:radial-gradient(ellipse at 50% 45%,#343941,#1b1e23 74%)!important;border:1px solid #4d5159!important;border-radius:14px!important;min-height:440px!important;height:clamp(390px,43vw,620px)!important;overflow:hidden!important}
+/* Prevent map labels and paths from visually fighting each other. */
+#indiaMap svg{max-width:100%!important;max-height:100%!important}
+#indiaMap text{paint-order:stroke!important;stroke:#1b1e23!important;stroke-width:2px!important;stroke-linejoin:round!important;fill:#fff0bd!important;font-weight:650!important}
+#indiaMap .district-label,#indiaMap [class*="district-label"]{opacity:.48!important;font-size:9px!important}
+.map-legend{color:#c8cdd5!important;font-size:12px!important;gap:12px!important;flex-wrap:wrap!important}
+.stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;margin:18px 0 26px!important}
+.stat{position:relative!important;overflow:hidden!important;border-radius:15px!important;padding:19px!important;background:linear-gradient(145deg,#292c32,#202329)!important}
+.stat:after{content:"";position:absolute;right:-24px;bottom:-40px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,#ffc62916,transparent 70%);pointer-events:none}
+.stat-icon{background:#ffc6291c!important;color:#ffd447!important;border:1px solid #ffc62948!important;border-radius:11px!important}
+.stat-label,.stat-note{color:#c7ccd3!important}.stat-value{color:#fff4d2!important;font-weight:850!important;font-variant-numeric:tabular-nums!important}
+.section-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;flex-wrap:wrap!important;padding:18px 20px!important;border-radius:16px!important;margin:24px 0 14px!important;background:#22252b!important}
+.section-head h2{margin:0!important;font-size:clamp(20px,2vw,27px)!important}.section-head p,.panel-sub{color:#c1c6ce!important}
+.filters{display:flex!important;gap:8px!important;flex-wrap:wrap!important}.field{min-width:150px!important;padding:9px 12px!important}
+.city-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;gap:14px!important}
+.city-card{border-radius:14px!important;overflow:hidden!important;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important}.city-card:hover{transform:translateY(-3px)!important;border-color:#ffc629!important;box-shadow:0 14px 28px #0004!important}
+.lower-grid{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;gap:16px!important;margin-top:22px!important}
+.panel,.form-card{border-radius:16px!important;padding:20px!important}.recent-item{border-color:#3d424a!important}.recent-item strong{color:#fff0bd!important}.recent-item p{color:#c2c8d0!important}
+/* Command center remains on the same page, with clear full-width forms. */
+.admin-shell{margin-top:28px!important}.admin-lock{max-width:560px!important;margin:26px auto!important;padding:clamp(22px,4vw,40px)!important;border-radius:18px!important}.admin-lock h2{color:#fff2c8!important}.admin-lock p,.demo-warning,.admin-note{color:#c4cad2!important}.admin-grid{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:16px!important}.admin-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;flex-wrap:wrap!important;padding:22px!important;border-radius:16px!important;margin-bottom:16px!important}.form-group label{color:#ffe5a0!important;font-weight:750!important}.form-group.full{min-width:0!important}.form-grid{gap:14px!important}
+/* Creator signature and bright gold butterfly animation remain visible without a sidebar. */
+#creatorToast,#abhiCreatorMark,.creator-floater{z-index:10020!important}
+#creatorToast,.creator-floater{color:#ffd447!important;text-shadow:0 1px 3px #000,0 0 16px #ffbf2766!important}
+.creator-name,#abhiCreatorMark .abhiCreatorName{color:#ffd447!important;-webkit-text-stroke:.25px #fff1b5!important;text-shadow:0 1px 0 #674900,0 0 10px #ffbd27a6,0 0 24px #ffbd274a!important}
+.creator-role,#abhiCreatorMark .abhiCreatorRole{color:#ffe7a0!important;text-shadow:0 1px 4px #000!important}
+.creator-butterfly,.abhiButterfly{filter:drop-shadow(0 0 8px #ffca3a)!important}
+.creator-butterfly-layer{z-index:10030!important;pointer-events:none!important}
+@keyframes brightGoldShimmer{0%,100%{box-shadow:0 0 0 #ffc62900}50%{box-shadow:0 0 22px #ffc62920}}
+.stat:hover,.panel:hover{border-color:#8b6a24!important;animation:brightGoldShimmer 2.4s ease-in-out infinite}
+@media(max-width:1050px){.hero{grid-template-columns:1fr!important}.map-card{min-height:0!important}.vector-india-map,#indiaMap{height:440px!important;min-height:360px!important}.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}.admin-grid{grid-template-columns:1fr!important}}
+@media(max-width:700px){.topbar{align-items:flex-start!important}.topactions{width:100%!important}.layout{padding:14px 12px 34px!important}.hero-main{padding:23px!important}.hero h1{font-size:32px!important}.vector-india-map,#indiaMap{height:360px!important;min-height:320px!important}.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.stat{padding:13px!important}.stat-value{font-size:26px!important}.lower-grid{grid-template-columns:1fr!important}.city-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))!important}.section-head{padding:14px!important}.filters{width:100%!important}.field{min-width:0!important;flex:1 1 130px!important}#abhiCreatorMark{right:12px!important;bottom:12px!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+
+
+<style id="livePulseWidgetRefinement">
+/* Refined live pulse: clear hierarchy, legible ticker, gold live indicators, responsive layout. */
+.hero-live-widget{width:100%;max-width:none!important;box-sizing:border-box;padding:16px 17px 15px!important;border:1px solid #b8892d!important;border-radius:18px!important;background:radial-gradient(ellipse at 0% 0%,#d8a83b16,transparent 54%),linear-gradient(145deg,#1b2028f5,#15191f)!important;box-shadow:0 12px 30px #0003,inset 0 1px 0 #ffffff0c,0 0 0 1px #f5ca6020!important;isolation:isolate}
+.hero-live-widget:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(120deg,#ffe18b,#9e7126 38%,#f8d36a 68%,#6e511f);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.68}
+.hero-live-widget:after{width:36%;background:linear-gradient(90deg,transparent,#ffd96d20,transparent);animation:widgetShimmer 5.8s ease-in-out infinite}
+.hero-live-head{position:relative;z-index:1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 12px;font-size:10px!important;letter-spacing:.13em!important;color:#ffdc79!important}
+.hero-live-head span{display:flex;align-items:center;gap:1px}
+.hero-live-head b{display:inline-flex;align-items:center;gap:6px;font-size:10px!important;color:#f4f6f8!important;letter-spacing:.015em!important;background:#ffffff0a;border:1px solid #ffffff12;border-radius:999px;padding:5px 8px}
+.hero-live-head b:before{content:"";width:5px;height:5px;border-radius:50%;background:#48d597;box-shadow:0 0 0 4px #48d59718;animation:liveDotGlow 1.8s infinite}
+.hero-live-content{display:grid!important;grid-template-columns:76px minmax(0,1fr)!important;align-items:center!important;gap:12px!important;margin-top:12px!important;position:relative;z-index:1}
+.hero-mini-map{width:76px!important;height:94px!important;filter:drop-shadow(0 4px 12px #dca73b30)!important;cursor:pointer;transition:transform .25s ease,filter .25s ease}
+.hero-mini-map:hover{transform:translateY(-2px) scale(1.045);filter:drop-shadow(0 5px 15px #ffcf5d50)!important}
+.mini-india-land{fill:url(#miniLand);stroke:#ffe8a0;stroke-width:1.9;filter:drop-shadow(0 0 5px #f3bd4540)}
+.mini-india-line{stroke:#fff4d4;stroke-width:.9;opacity:.78}
+.mini-pin{fill:#fff7d8;stroke:#f4b92f;stroke-width:2.4;filter:drop-shadow(0 0 4px #ffc94a);animation:miniPinPulse 1.8s ease-in-out infinite}
+.hero-live-side{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important}
+.live-stat{min-width:0;padding:9px 10px 8px;border:1px solid #ffffff13;border-radius:11px;background:linear-gradient(145deg,#ffffff0b,#ffffff04);text-align:left}
+.live-stat-button{display:block;width:100%;font:inherit;color:inherit;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.live-stat-button:hover,.live-stat-button:focus-visible{transform:translateY(-2px);border-color:#eac45b80;background:#e8b94812;outline:none}
+.live-stat small{display:flex!important;justify-content:space-between;align-items:center;gap:5px;font-size:10px!important;line-height:1.35;color:#c8ced8!important;white-space:normal}
+.live-stat small span{color:#f6cf64;opacity:.85}
+.live-stat strong{display:block;font-size:25px!important;line-height:1.18!important;font-weight:850!important;color:#ffd75d!important;text-shadow:0 0 18px #f6c64b20;letter-spacing:-.04em}
+.live-ticker{grid-column:1/-1;display:flex;align-items:flex-start;gap:8px;min-width:0;min-height:36px;padding:9px 10px;border:1px solid #ffffff10;border-radius:10px;background:#080b101f;color:#e8ebf0!important;font-size:11px!important;line-height:1.45;white-space:normal!important;overflow:hidden!important;text-overflow:clip!important}
+.live-ticker #heroLiveTicker{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;min-width:0;transition:opacity .22s ease}
+.ticker-orb{margin-top:5px;width:6px!important;height:6px!important;flex-shrink:0;background:#ffd34e!important;box-shadow:0 0 0 4px #ffd34e1d,0 0 12px #ffd34e55!important;animation:liveDotGlow 1.5s infinite}
+.hero-mini-action{grid-column:1/-1!important;display:flex!important;align-items:center;gap:8px;justify-self:stretch!important;width:100%;padding:10px 12px!important;border:1px solid #e6bd4d!important;border-radius:10px!important;background:linear-gradient(105deg,#ffdf77,#e9b638 55%,#c78b1e)!important;color:#231a09!important;font-size:11px!important;font-weight:850!important;box-shadow:0 5px 16px #d8a32922,inset 0 1px 0 #fff4bf!important;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease!important}
+.hero-mini-action:hover{transform:translateY(-2px)!important;filter:brightness(1.07);box-shadow:0 9px 20px #d8a32938!important}
+.hero-mini-action .action-icon{font-size:15px}.hero-mini-action .action-arrow{margin-left:auto;font-size:14px;transition:transform .2s ease}.hero-mini-action:hover .action-arrow{transform:translate(2px,-2px)}
+@keyframes liveDotGlow{0%,100%{opacity:1;box-shadow:0 0 0 3px #48d59716,0 0 9px #48d59745}50%{opacity:.7;box-shadow:0 0 0 7px #48d59700,0 0 14px #48d59770}}
+@media(min-width:1051px){.hero-main{display:flex;flex-direction:column}.hero-live-widget{margin-top:auto!important;transform:translateY(-2px)}}
+@media(max-width:650px){.hero-live-widget{padding:13px!important}.hero-live-content{grid-template-columns:56px minmax(0,1fr)!important;gap:9px!important}.hero-mini-map{width:56px!important;height:78px!important}.hero-live-side{gap:7px!important}.live-stat{padding:8px!important}.live-stat small{font-size:9px!important}.live-stat strong{font-size:22px!important}.live-ticker{font-size:10px!important;min-height:38px}.hero-live-head{font-size:9px!important}.hero-live-head b{font-size:9px!important}}
+@media(prefers-reduced-motion:reduce){.hero-live-widget:after,.live-signal,.ticker-orb,.mini-pin{animation:none!important}}
+</style>
+
+
+<style id="ops-popup-layout-emergency-fix">
+/* Final popup sizing fix: prevent Leaflet popup content from collapsing into a narrow column. */
+.leaflet-container .leaflet-popup { width:auto !important; max-width:min(390px, calc(100vw - 28px)) !important; }
+.leaflet-container .leaflet-popup-content-wrapper { width:auto !important; min-width:0 !important; box-sizing:border-box !important; }
+.leaflet-container .leaflet-popup-content {
+  display:block !important;
+  width:300px !important;
+  min-width:260px !important;
+  max-width:min(340px, calc(100vw - 76px)) !important;
+  box-sizing:border-box !important;
+  writing-mode:horizontal-tb !important;
+  text-orientation:mixed !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  white-space:normal !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  max-height:min(52vh, 360px) !important;
+  margin:14px 16px !important;
+  padding:0 !important;
+  line-height:1.5 !important;
+}
+.leaflet-container .ops-city-popup,
+.leaflet-container .ops-city-popup * {
+  writing-mode:horizontal-tb !important;
+  text-orientation:mixed !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  white-space:normal;
+  box-sizing:border-box;
+}
+.leaflet-container .ops-city-popup { width:100% !important; min-width:0 !important; }
+.leaflet-container .ops-city-popup h3 { display:block !important; width:100% !important; line-height:1.35 !important; }
+.leaflet-container .ops-popup-update p,
+.leaflet-container .ops-popup-update h4,
+.leaflet-container .ops-popup-meta,
+.leaflet-container .ops-popup-update summary { display:block !important; max-width:100% !important; }
+@media (max-width: 520px) {
+  .leaflet-container .leaflet-popup { max-width:calc(100vw - 22px) !important; }
+  .leaflet-container .leaflet-popup-content { width:calc(100vw - 76px) !important; min-width:0 !important; max-width:calc(100vw - 76px) !important; max-height:48vh !important; margin:12px !important; }
+}
+</style>
+
+
+<style id="ops-popup-final-contrast-fix">
+/* High-contrast readable map popups: solid surfaces, no faded/washed-out text. */
+.leaflet-container .leaflet-popup-content-wrapper,
+.leaflet-container .leaflet-popup-tip {
+  background: #fffdf8 !important;
+  color: #17212b !important;
+  opacity: 1 !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.38) !important;
+  border: 1px solid #e7bd58 !important;
+}
+.leaflet-container .leaflet-popup-content-wrapper { border-radius: 14px !important; }
+.leaflet-container .leaflet-popup-content {
+  width: 320px !important;
+  min-width: 0 !important;
+  max-width: min(320px, calc(100vw - 84px)) !important;
+  max-height: min(54vh, 390px) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  margin: 14px 16px !important;
+  padding: 0 !important;
+  color: #17212b !important;
+  background: transparent !important;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: currentColor;
+  scrollbar-color: #b58a2b #eee5d2;
+}
+.leaflet-container .ops-city-popup,
+.leaflet-container .ops-city-popup * {
+  box-sizing: border-box !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+.leaflet-container .ops-city-popup { width: 100% !important; min-width: 0 !important; color: #17212b !important; }
+.leaflet-container .ops-city-popup h3 {
+  margin: 0 0 12px !important; padding: 0 0 10px !important;
+  border-bottom: 1px solid #e8dcc5 !important;
+  color: #9b4608 !important; font-size: 17px !important; font-weight: 800 !important;
+  line-height: 1.35 !important; letter-spacing: 0 !important;
+}
+.leaflet-container .ops-popup-update { padding: 12px 0 !important; border-top: 1px solid #e7dfd0 !important; }
+.leaflet-container .ops-popup-meta { color: #596575 !important; font-size: 11px !important; font-weight: 700 !important; line-height: 1.5 !important; margin-bottom: 8px !important; }
+.leaflet-container .ops-popup-update h4 { color: #17212b !important; font-size: 15px !important; font-weight: 800 !important; line-height: 1.45 !important; margin: 7px 0 9px !important; }
+.leaflet-container .ops-popup-update p { color: #263442 !important; font-size: 14px !important; font-weight: 500 !important; line-height: 1.65 !important; margin: 8px 0 !important; opacity: 1 !important; }
+.leaflet-container .ops-popup-update b { color: #17212b !important; font-weight: 800 !important; }
+.leaflet-container .ops-popup-update details { background: #f6f0e3 !important; color: #263442 !important; border: 1px solid #e5d2a7 !important; border-radius: 9px !important; padding: 10px 11px !important; margin-top: 10px !important; font-size: 13px !important; line-height: 1.6 !important; }
+.leaflet-container .ops-popup-update summary { color: #8b3d08 !important; font-size: 13px !important; font-weight: 800 !important; cursor: pointer !important; }
+.leaflet-container .ops-popup-update details p { color: #263442 !important; }
+.leaflet-container .leaflet-popup-close-button { color: #34404b !important; font-size: 22px !important; font-weight: 800 !important; padding: 7px 8px 0 0 !important; z-index: 5 !important; }
+.leaflet-container .leaflet-popup-close-button:hover { color: #9b4608 !important; }
+.leaflet-container ::selection { background: #f3d477 !important; color: #17212b !important; }
+@media (max-width: 520px) {
+ .leaflet-container .leaflet-popup { max-width: calc(100vw - 20px) !important; }
+ .leaflet-container .leaflet-popup-content { width: calc(100vw - 76px) !important; max-width: calc(100vw - 76px) !important; max-height: 48vh !important; margin: 12px !important; font-size: 13px !important; }
+ .leaflet-container .ops-popup-update p { font-size: 13px !important; }
+}
+</style>
+
+
+<style id="ops-popup-overlap-and-sop-steps-fix">
+/* Keep city markers and their labels below the popup, so nothing draws over popup text. */
+#indiaMap .leaflet-pane.publishedUpdatePane { z-index:640 !important; }
+#indiaMap .leaflet-popup-pane { z-index:1100 !important; pointer-events:none; }
+#indiaMap .leaflet-popup-pane .leaflet-popup { pointer-events:auto; z-index:1100 !important; }
+#indiaMap .leaflet-tooltip-pane { z-index:700 !important; }
+#indiaMap .ops-update-marker-label { pointer-events:none !important; }
+#indiaMap .leaflet-popup-content-wrapper { overflow:hidden !important; }
+#indiaMap .leaflet-popup-content { width:320px !important; max-width:min(320px,calc(100vw - 88px)) !important; max-height:min(56vh,420px) !important; overflow-x:hidden !important; overflow-y:auto !important; scrollbar-gutter:stable; }
+#indiaMap .ops-city-popup { width:100% !important; min-width:0 !important; }
+#indiaMap .ops-popup-update { padding:13px 0 !important; }
+#indiaMap .ops-sop-details { margin-top:12px !important; padding:11px 12px !important; background:#f7f0df !important; border:1px solid #e5d2a7 !important; border-radius:11px !important; }
+#indiaMap .ops-sop-details summary { display:flex !important; align-items:center !important; gap:8px !important; color:#7e4b08 !important; font-size:13px !important; font-weight:800 !important; cursor:pointer !important; }
+#indiaMap .ops-sop-intro { margin:9px 0 7px !important; color:#4d5662 !important; font-size:12px !important; line-height:1.5 !important; }
+#indiaMap .ops-sop-steps { margin:8px 0 0 !important; padding:0 !important; list-style:none !important; counter-reset:sop-step !important; display:grid !important; gap:8px !important; }
+#indiaMap .ops-sop-steps li { counter-increment:sop-step !important; position:relative !important; margin:0 !important; padding:9px 10px 9px 38px !important; border:1px solid #e9dfc8 !important; border-radius:8px !important; background:#fffdf8 !important; color:#202b37 !important; font-size:13px !important; font-weight:500 !important; line-height:1.55 !important; }
+#indiaMap .ops-sop-steps li:before { content:counter(sop-step) !important; position:absolute !important; left:10px !important; top:9px !important; width:20px !important; height:20px !important; display:grid !important; place-items:center !important; border-radius:50% !important; background:#d7a638 !important; color:#241a08 !important; font-size:11px !important; font-weight:900 !important; }
+#indiaMap .ops-sop-important { padding:9px 10px !important; border-left:3px solid #d69b22 !important; background:#fff7df !important; border-radius:4px 8px 8px 4px !important; }
+.fallback-map-popup { z-index:1200 !important; }
+.fallback-map-popup .ops-sop-details { margin-top:10px; padding:10px; background:#f7f0df; border:1px solid #e5d2a7; border-radius:10px; }
+.fallback-map-popup .ops-sop-intro { margin:8px 0; font-size:12px; line-height:1.5; color:#4d5662; }
+.fallback-map-popup .ops-sop-steps { margin:8px 0 0; padding:0; list-style:none; counter-reset:sop-step; display:grid; gap:7px; }
+.fallback-map-popup .ops-sop-steps li { counter-increment:sop-step; position:relative; padding:8px 9px 8px 35px; border:1px solid #e9dfc8; border-radius:8px; background:#fffdf8; color:#202b37; font-size:12px; line-height:1.5; }
+.fallback-map-popup .ops-sop-steps li:before { content:counter(sop-step); position:absolute; left:8px; top:8px; width:19px; height:19px; display:grid; place-items:center; border-radius:50%; background:#d7a638; color:#241a08; font-size:10px; font-weight:900; }
+@media(max-width:520px){#indiaMap .leaflet-popup-content{width:calc(100vw - 88px)!important;max-width:calc(100vw - 88px)!important;max-height:48vh!important}#indiaMap .ops-sop-steps li{font-size:12px!important}}
+</style>
+
+
+<style id="livePulseImmersiveEnhancement">
+/* Interactive live pulse: visual energy without fabricating operational data. */
+.hero-main{position:relative;isolation:isolate;overflow:hidden}
+.hero-main:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 88% 7%,#ffd04a18,transparent 31%),linear-gradient(115deg,transparent 60%,#e9b83c08);background-size:100% 100%;animation:heroAmbientGlow 9s ease-in-out infinite alternate}
+@keyframes heroAmbientGlow{from{opacity:.45;filter:hue-rotate(-5deg)}to{opacity:1;filter:hue-rotate(8deg)}}
+.hero-live-widget{transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease}
+.hero-live-widget:hover{border-color:#f4ce60!important;box-shadow:0 14px 36px #0005,0 0 0 1px #ffd75d25,0 0 26px #f4bf3c12!important}
+.hero-live-head b{transition:background .2s ease,border-color .2s ease}
+.hero-live-widget:hover .hero-live-head b{background:#ffd44712;border-color:#ffd44732}
+.hero-mini-map{cursor:pointer;outline:none}
+.hero-mini-map:focus-visible{outline:2px solid #ffd447;outline-offset:4px;border-radius:8px}
+.mini-india-line{stroke-dasharray:3 4;animation:miniRouteFlow 12s linear infinite}
+@keyframes miniRouteFlow{to{stroke-dashoffset:-56}}
+.mini-pin{transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 0 5px #ffd34eaa)}
+.pulse-live-footer{display:grid;grid-template-columns:minmax(70px,1fr) auto auto;align-items:center;gap:10px;margin-top:11px;padding-top:10px;border-top:1px solid #ffffff12;position:relative;z-index:2}
+.pulse-signal-visual{height:21px;display:flex;align-items:center;gap:3px;min-width:0;overflow:hidden}
+.pulse-signal-visual span{display:block;width:4px;min-width:3px;height:var(--h,8px);border-radius:5px;background:linear-gradient(180deg,#ffe58a,#d69a21);box-shadow:0 0 8px #ffd4472a;animation:signalEqualize var(--d, .9s) ease-in-out infinite alternate;animation-delay:var(--delay,0s);transform-origin:center}
+.pulse-signal-visual span:nth-child(1){--h:7px;--d:.6s;--delay:-.3s}.pulse-signal-visual span:nth-child(2){--h:14px;--d:.8s;--delay:-.7s}.pulse-signal-visual span:nth-child(3){--h:10px;--d:.55s;--delay:-.1s}.pulse-signal-visual span:nth-child(4){--h:18px;--d:.95s;--delay:-.6s}.pulse-signal-visual span:nth-child(5){--h:12px;--d:.7s;--delay:-.4s}.pulse-signal-visual span:nth-child(6){--h:8px;--d:.65s;--delay:-.2s}.pulse-signal-visual span:nth-child(7){--h:17px;--d:.85s;--delay:-.8s}.pulse-signal-visual span:nth-child(8){--h:11px;--d:.6s;--delay:-.1s}.pulse-signal-visual span:nth-child(9){--h:19px;--d:.9s;--delay:-.5s}.pulse-signal-visual span:nth-child(10){--h:9px;--d:.7s;--delay:-.3s}.pulse-signal-visual span:nth-child(11){--h:15px;--d:.8s;--delay:-.7s}.pulse-signal-visual span:nth-child(12){--h:6px;--d:.65s;--delay:-.2s}
+@keyframes signalEqualize{from{height:3px;opacity:.55}to{height:var(--h,12px);opacity:1}}
+.pulse-footer-meta{display:flex;flex-direction:column;align-items:flex-end;gap:2px;white-space:nowrap}.pulse-footer-label{display:flex;align-items:center;gap:5px;color:#c8cdd5;font-size:8px;font-weight:800;letter-spacing:.11em}.pulse-footer-label i{width:5px;height:5px;border-radius:50%;background:#52dda0;box-shadow:0 0 8px #52dda0a0;animation:signalBlink 1.8s infinite}.pulse-footer-meta strong{font-size:11px;letter-spacing:.06em;color:#ffdc79;font-variant-numeric:tabular-nums}
+.pulse-motion-toggle{display:inline-flex;align-items:center;gap:5px;border:1px solid #ffffff1a;border-radius:8px;padding:6px 8px;background:#ffffff08;color:#e2e6eb;font-size:9px;font-weight:750;white-space:nowrap;cursor:pointer;transition:all .2s ease}.pulse-motion-toggle:hover,.pulse-motion-toggle:focus-visible{border-color:#e8bd4f;color:#ffdf82;background:#e8bd4f12;outline:none}.pulse-motion-toggle span{color:#ffd447;font-size:10px}
+.hero-live-widget.motion-paused:before,.hero-live-widget.motion-paused:after,.hero-live-widget.motion-paused .mini-india-line,.hero-live-widget.motion-paused .mini-pin,.hero-live-widget.motion-paused .live-signal,.hero-live-widget.motion-paused .ticker-orb,.hero-live-widget.motion-paused .hero-live-head b:before,.hero-live-widget.motion-paused .pulse-signal-visual span,.hero-main.motion-paused:before{animation-play-state:paused!important}
+.hero-live-widget.motion-paused .pulse-signal-visual span{height:4px!important;opacity:.65}
+@media(max-width:520px){.pulse-live-footer{grid-template-columns:1fr auto;gap:8px}.pulse-signal-visual{grid-column:1/-1;grid-row:2;height:16px}.pulse-footer-meta{align-items:flex-start}.pulse-motion-toggle{justify-self:end}}
+@media(prefers-reduced-motion:reduce){.hero-main:before,.mini-india-line,.pulse-signal-visual span{animation:none!important}.hero-live-widget{transition:none!important}}
+</style>
+
+
+<style id="hero-compact-premium-refinement">
+/* Compact the hero on every viewport: eliminate artificial vertical gaps and add useful interactive content. */
+.hero{align-items:start!important;gap:18px!important}
+.hero-main{height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;align-self:start!important;gap:0!important;padding:clamp(20px,2.5vw,34px)!important}
+.hero-main .hero-live-widget{margin-top:22px!important;transform:none!important;flex:0 0 auto!important}
+.hero-main .hero-quick{margin-top:19px!important}
+.hero-feature-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:20px;position:relative;z-index:2}
+.hero-feature{display:flex;align-items:center;gap:9px;min-width:0;text-align:left;padding:10px 9px;border:1px solid #ffffff1b;border-radius:12px;background:linear-gradient(140deg,#ffffff0c,#ffffff04);color:#f5f2e9;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
+.hero-feature:hover,.hero-feature:focus-visible{transform:translateY(-2px);border-color:#eac45b99;background:#e8b94812;box-shadow:0 8px 22px #0002;outline:none}
+.hero-feature-icon{display:grid;place-items:center;flex:0 0 29px;width:29px;height:29px;border-radius:9px;background:linear-gradient(140deg,#ffe28a,#bf8b25);color:#2a200b;font-size:17px;font-weight:900;box-shadow:0 3px 12px #e7b74120}
+.hero-feature>span:nth-child(2){display:flex;flex-direction:column;min-width:0;gap:2px}
+.hero-feature b{font-size:10px;line-height:1.25;color:#fff1c3;white-space:normal}
+.hero-feature small{font-size:9px;line-height:1.3;color:#c8ccd3}
+.hero-feature-arrow{margin-left:auto;color:#f4ca59;font-size:12px;align-self:flex-start;transition:transform .2s}
+.hero-feature:hover .hero-feature-arrow{transform:translate(2px,-2px)}
+.hero-live-widget{position:relative!important;margin-top:20px!important;animation:heroWidgetEnter .55s ease both}
+@keyframes heroWidgetEnter{from{opacity:.65;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero-live-widget:after{pointer-events:none}
+@media(min-width:1051px){.hero-main{min-height:0!important}.hero-live-widget{margin-top:20px!important;transform:none!important}}
+@media(max-width:760px){.hero-main{min-height:0!important;padding:22px 19px!important}.hero-feature-strip{grid-template-columns:1fr;gap:7px;margin-top:16px}.hero-feature{padding:9px 10px}.hero-feature b{font-size:11px}.hero-feature small{font-size:10px}.hero-main .hero-live-widget{margin-top:16px!important}.hero h1{font-size:clamp(29px,8vw,39px)!important;line-height:1.06!important}.hero p{font-size:13px!important;line-height:1.6!important}.hero-quick{margin-top:16px!important}.hero-quick .btn{flex:1 1 140px}}
+@media(prefers-reduced-motion:reduce){.hero-feature,.hero-live-widget{animation:none!important;transition:none!important}}
+</style>
+
 </head>
 <body>
 
 <div class="app">
+<aside class="ops-sidebar" aria-label="Primary navigation">
+  <div class="ops-side-brand"><div class="ops-brand-emblem">R</div><div><strong>OPS COMMAND</strong><small>INDIA NETWORK</small></div></div>
+  <div class="ops-nav-label">WORKSPACE</div>
+  <button class="ops-nav-item active" onclick="showAgent();window.scrollTo({top:0,behavior:'smooth'})"><span>◫</span> Overview</button>
+  <button class="ops-nav-item" onclick="showAgent();document.getElementById('citySection').scrollIntoView({behavior:'smooth'})"><span>⌖</span> City updates</button>
+  <button class="ops-nav-item" onclick="showAgent();document.getElementById('indiaMap').scrollIntoView({behavior:'smooth',block:'center'})"><span>◎</span> Live map</button>
+  <button class="ops-nav-item" onclick="showAgent();document.getElementById('recentList').scrollIntoView({behavior:'smooth',block:'center'})"><span>≋</span> Recent activity</button>
+  <div class="ops-side-divider"></div>
+  <div class="ops-nav-label">ADMINISTRATION</div>
+  <button class="ops-nav-item" onclick="showAdminLogin()"><span>⌘</span> Command center</button>
+  <div class="ops-side-status"><i></i><div><strong>Operations board</strong><small>Live sync enabled</small></div></div>
+  <div class="ops-side-watermark"><span class="ops-butterfly-mark">❧</span><strong>Abhijith Prassad</strong><small>CREATOR · ADMIN</small></div>
+</aside>
 <header class="topbar">
  <div class="brand"><div class="brandmark">M</div><div><div class="brandname" style="font-size:15px;letter-spacing:-.025em">Roadblock &amp; Weather</div><div class="brandsub">Disruption Ops Command</div></div></div>
  <div class="topactions"><div class="status"><span class="pulse"></span><span id="liveLabel">Updates board</span></div><button class="btn" id="agentHomeBtn" onclick="showAgent()">Agent view</button><button class="btn primary" id="adminEntryBtn" onclick="showAdminLogin()">⌘ Command Center</button></div>
@@ -283,22 +699,43 @@ body.admin-mode .modal-backdrop{z-index:100010!important}
 <section class="agent-shell" id="agentShell">
  <div class="hero">
   <div class="hero-main"><div class="eyebrow">Workforce update network</div><h1>Every city. Every update.<br>One clear source.</h1><p>View active operational updates by city, check effective windows, and follow the latest SOP without searching through email threads.</p><div class="hero-quick"><button class="btn primary" onclick="document.getElementById('citySection').scrollIntoView({behavior:'smooth'})">Explore city updates ↓</button><button class="btn" onclick="openLatest()">View latest update ↗</button></div>
+   <div class="hero-feature-strip" aria-label="Quick operational tools">
+    <button type="button" class="hero-feature" onclick="document.getElementById('citySection').scrollIntoView({behavior:'smooth'})"><span class="hero-feature-icon">⌕</span><span><b>City intelligence</b><small>Browse updates by location</small></span><span class="hero-feature-arrow">↗</span></button>
+    <button type="button" class="hero-feature" onclick="openLatest()"><span class="hero-feature-icon">◷</span><span><b>Effective windows</b><small>Check latest update timing</small></span><span class="hero-feature-arrow">↗</span></button>
+    <button type="button" class="hero-feature" onclick="jumpToLiveMap()"><span class="hero-feature-icon">⌖</span><span><b>India live map</b><small>Explore city coverage</small></span><span class="hero-feature-arrow">↗</span></button>
+   </div>
    <div class="hero-live-widget" aria-label="Live operations overview">
     <div class="hero-live-head"><span><i class="live-signal"></i> LIVE OPERATIONS PULSE</span><b id="heroLiveCount">0 cities reporting</b></div>
     <div class="hero-live-content">
-     <svg class="hero-mini-map" viewBox="0 0 180 190" role="img" aria-label="Stylized India mini map with active update locations">
+     <svg class="hero-mini-map" viewBox="0 0 180 190" role="button" tabindex="0" aria-label="Explore the live India operations map" title="Click to explore the live map" onclick="jumpToLiveMap()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();jumpToLiveMap()}">
       <defs><linearGradient id="miniLand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d991"/><stop offset="1" stop-color="#bd7a25"/></linearGradient></defs>
       <path class="mini-india-land" d="M47 9 L67 15 79 27 99 28 109 42 128 47 139 65 132 82 119 91 113 111 103 128 96 151 83 179 72 155 63 137 55 116 42 103 35 86 25 76 29 58 19 46 29 29Z"/>
       <path class="mini-india-line" d="M48 35L91 43 124 63M35 75L77 78 119 91M53 111L91 105 110 128M65 137L96 151M67 15L63 55 77 78 72 113 83 179M99 28L91 65 119 91"/>
       <g id="heroMiniPins"><circle cx="83" cy="179" r="4" class="mini-pin"/><circle cx="91" cy="105" r="4" class="mini-pin"/><circle cx="91" cy="43" r="4" class="mini-pin"/></g>
      </svg>
-     <div class="hero-live-side"><div class="live-stat"><small>Published updates</small><strong id="heroLiveUpdates">0</strong></div><div class="live-stat"><small>Active now</small><strong id="heroLiveActive">0</strong></div><div class="live-ticker"><span class="ticker-orb"></span><span id="heroLiveTicker">Monitoring city updates…</span></div><button class="hero-mini-action" onclick="document.getElementById('indiaMap').scrollIntoView({behavior:'smooth',block:'center'})">Explore live map <span>↗</span></button></div>
+     <div class="hero-live-side"><button type="button" class="live-stat live-stat-button" title="View published city updates" onclick="jumpToCityUpdates()"><small>Published updates <span>↗</span></small><strong id="heroLiveUpdates">0</strong></button><button type="button" class="live-stat live-stat-button" title="View active operations" onclick="jumpToCityUpdates(true)"><small>Active now <span>↗</span></small><strong id="heroLiveActive">0</strong></button><div class="live-ticker"><span class="ticker-orb"></span><span id="heroLiveTicker">Monitoring city updates…</span></div><button class="hero-mini-action" onclick="jumpToLiveMap()"><span class="action-icon">⌖</span> Explore live map <span class="action-arrow">↗</span></button></div>
+    </div>
+    <div class="pulse-live-footer">
+      <div class="pulse-signal-visual" aria-label="Animated live signal indicator"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="pulse-footer-meta"><span class="pulse-footer-label"><i></i> SIGNAL MONITOR</span><strong id="heroLiveClock">--:--:--</strong></div>
+      <button type="button" id="pulseMotionToggle" class="pulse-motion-toggle" aria-pressed="false" title="Pause decorative animations"><span>Ⅱ</span> Pause effects</button>
     </div>
    </div>
   </div>
   <div class="map-card">
-   <div class="map-title"><h3>India · District & City Operations Map</h3><span id="mapStatus">LOADING GEOGRAPHIC BOUNDARIES…</span></div>
-   <div class="map-toolbar"><input id="mapSearch" type="search" placeholder="Search city, district or state…" aria-label="Search city, district or state" oninput="filterMapSearch(this.value)"><select id="mapLayerMode" aria-label="Map display mode" onchange="changeMapMode(this.value)"><option value="operations">Operations coverage</option><option value="districts">District boundaries</option><option value="states">State boundaries</option></select><button class="btn" type="button" onclick="resetIndiaMap()">Reset map</button></div>
+   <div class="map-title"><h3><span class="map-title-tabicon" aria-hidden="true">▤</span><span class="map-title-shine" aria-hidden="true">✦</span> India · District & City Operations Map</h3><span id="mapStatus">LOADING GEOGRAPHIC BOUNDARIES…</span></div>
+   <div class="map-toolbar map-toolbar-enhanced">
+    <input id="mapSearch" type="search" placeholder="Search a city, district or state…" aria-label="Search city, district or state" oninput="filterMapSearch(this.value)">
+    <div class="map-filter-tabs" role="group" aria-label="Filter map updates">
+     <button type="button" class="map-filter-tab active" data-map-filter="all" onclick="setMapUpdateFilter('all',this)"><span>▤</span> All updates</button>
+     <button type="button" class="map-filter-tab" data-map-filter="active" onclick="setMapUpdateFilter('active',this)"><span>◉</span> Active now</button>
+     <button type="button" class="map-filter-tab" data-map-filter="upcoming" onclick="setMapUpdateFilter('upcoming',this)"><span>◷</span> Upcoming</button>
+     <button type="button" class="map-filter-tab" data-map-filter="high" onclick="setMapUpdateFilter('high',this)"><span>⚠</span> High impact</button>
+     <button type="button" class="map-filter-tab" data-map-filter="roadblock" onclick="setMapUpdateFilter('roadblock',this)"><span>⛔</span> Roadblocks</button>
+     <button type="button" class="map-filter-tab" data-map-filter="weather" onclick="setMapUpdateFilter('weather',this)"><span>☂</span> Weather</button>
+    </div>
+    <button class="btn map-reset-btn" type="button" onclick="resetIndiaMap()"><span aria-hidden="true">⟳</span> Reset view</button>
+   </div>
    <div id="indiaMap" class="vector-india-map" role="application" aria-label="Interactive India district map; only cities with published updates have indicators"></div>
    </div></div>
    <div class="map-legend"><span><i class="legend-dot"></i>Published update city</span><span><i class="legend-line"></i>Illustrative hub route</span><span>District map works without raster tiles or API keys · Click a district or city marker for details</span></div>
@@ -595,8 +1032,9 @@ function showAdminDashboard(){
 
 const OPS_CITY_COORDS={"Delhi":[28.6139,77.209],"New Delhi":[28.6139,77.209],"Mumbai":[19.076,72.8777],"Kolkata":[22.5726,88.3639],"Hyderabad":[17.385,78.4867],"Bengaluru":[12.9716,77.5946],"Bangalore":[12.9716,77.5946],"Chennai":[13.0827,80.2707],"Pune":[18.5204,73.8567],"Ahmedabad":[23.0225,72.5714],"Jaipur":[26.9124,75.7873],"Lucknow":[26.8467,80.9462],"Coimbatore":[11.0168,76.9558],"Kochi":[9.9312,76.2673],"Ernakulam":[9.9816,76.2999],"Kozhikode":[11.2588,75.7804],"Calicut":[11.2588,75.7804],"Thrissur":[10.5276,76.2144],"Alappuzha":[9.4981,76.3388],"Cherthala":[9.684,76.3355],"Thiruvananthapuram":[8.5241,76.9366],"Trivandrum":[8.5241,76.9366],"Kollam":[8.8932,76.6141],"Palakkad":[10.7867,76.6548],"Kannur":[11.8745,75.3704],"Kasaragod":[12.4996,74.9869],"Kottayam":[9.5916,76.5222],"Pathanamthitta":[9.2648,76.787],"Malappuram":[11.051,76.0711],"Vijayawada":[16.5062,80.648],"Visakhapatnam":[17.6868,83.2185],"Nagpur":[21.1458,79.0882],"Indore":[22.7196,75.8577],"Bhopal":[23.2599,77.4126],"Patna":[25.5941,85.1376],"Ranchi":[23.3441,85.3096],"Bhubaneswar":[20.2961,85.8245],"Guwahati":[26.1445,91.7362],"Chandigarh":[30.7333,76.7794],"Amritsar":[31.634,74.8723],"Ludhiana":[30.901,75.8573],"Dehradun":[30.3165,78.0322],"Srinagar":[34.0837,74.7973],"Jammu":[32.7266,74.857],"Raipur":[21.2514,81.6296],"Gurugram":[28.4595,77.0266],"Noida":[28.5355,77.391],"Faridabad":[28.4089,77.3178],"Surat":[21.1702,72.8311],"Vadodara":[22.3072,73.1812],"Rajkot":[22.3039,70.8022],"Jodhpur":[26.2389,73.0243],"Udaipur":[24.5854,73.7125],"Agra":[27.1767,78.0081],"Varanasi":[25.3176,82.9739],"Kanpur":[26.4499,80.3319],"Prayagraj":[25.4358,81.8463],"Meerut":[28.9845,77.7064],"Howrah":[22.5958,88.2636],"Siliguri":[26.7271,88.3953],"Madurai":[9.9252,78.1198],"Tiruchirappalli":[10.7905,78.7047],"Salem":[11.6643,78.146],"Erode":[11.341,77.7172],"Tiruppur":[11.1085,77.3411],"Mysuru":[12.2958,76.6394],"Mangalore":[12.9141,74.856],"Hubballi":[15.3647,75.124],"Warangal":[17.9689,79.5941],"Jabalpur":[23.1815,79.9864],"Jubbulpore":[23.1815,79.9864],"Jalpaiguri":[26.5215,88.7196],"Kullu":[31.9579,77.1095],"Kulu":[31.9579,77.1095],"Jalpaiguri, West Bengal":[26.5215,88.7196],"Kullu, Himachal Pradesh":[31.9579,77.1095]};
 let opsMap=null,opsDistricts=null,opsMarkers=null,opsDistrictLabels=null,opsStateLabels=null,opsCityLabels=null;
+let opsMapUpdateFilter="all";
 function opsName(f){const p=f.properties||{};return p.district||p.DISTRICT||p.dtname||p.NAME_2||p.name||p.NAME||p.Dist_Name||p.st_nm||p.ST_NM||'Administrative boundary'}
-function opsStyle(f){const n=opsName(f).toLowerCase();const hit=updates.some(u=>(String(u.areas||'')+' '+String(u.city||'')).toLowerCase().includes(n)&&n.length>2);const pal=['#f5d7b8','#f4e4a9','#d7e8c6','#c9e4e8','#d9d3f0','#f0d3d9','#e7dfc7','#cfe1d4','#e7d4bb','#d4e0f4'];let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return{color:'#fffdf8',weight:.8,opacity:1,fillColor:hit?'#ed8b37':pal[h%pal.length],fillOpacity:hit?.98:.88}}
+function opsStyle(f){const n=opsName(f).toLowerCase();const hit=updates.some(u=>(String(u.areas||'')+' '+String(u.city||'')).toLowerCase().includes(n)&&n.length>2);const pal=['#34404b','#3d4853','#46515b','#394752','#4a535d','#303d48','#505861','#3a454f'];let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return{color:hit?'#ffd56a':'#d6bd83',weight:hit?1.8:1.1,opacity:1,fillColor:hit?'#c87924':pal[h%pal.length],fillOpacity:hit?.94:.9}}
 function opsCoords(city){
  const raw=String(city||'').trim();
  if(!raw)return null;
@@ -622,7 +1060,7 @@ function renderNoApiMap(reason){
  el.innerHTML=`<div class="fallback-map-shell"><div class="fallback-map-controls"><button type="button" data-z="in" aria-label="Zoom in">＋</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset">Reset</button></div><svg id="fallbackIndiaSvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Interactive schematic India map with city labels and update indicators"><defs><pattern id="fallbackGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#b6d5df" stroke-width=".7"/></pattern></defs><rect width="100%" height="100%" fill="#dceef4"/><rect width="100%" height="100%" fill="url(#fallbackGrid)"/><g id="fallbackMapGroup"><polygon points="${outline}" fill="#e8d7a9" stroke="#ae9b6c" stroke-width="2.5"/><path d="M240 150 L310 235 L390 210 L450 280 L550 245 M300 310 L420 350 L510 330 L600 390 M220 420 L350 430 L440 480 L520 530 M500 150 L530 230 L610 270 L680 300" fill="none" stroke="#c4b27f" stroke-width="1.4" stroke-dasharray="5 4"/>${labels}${markers}</g></svg><div class="fallback-map-note">Schematic India view · city positions are approximate · update markers are interactive. Geographic boundary service unavailable.</div><div id="fallbackMapPopup" class="fallback-map-popup" hidden></div></div>`;
  const group=document.getElementById('fallbackMapGroup');
  el.querySelectorAll('[data-z]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.z==='in')fallbackMapZoom=Math.min(2.5,fallbackMapZoom+.25);else if(b.dataset.z==='out')fallbackMapZoom=Math.max(1,fallbackMapZoom-.25);else fallbackMapZoom=1;group.setAttribute('transform',`translate(${W*(1-fallbackMapZoom)/2} ${H*(1-fallbackMapZoom)/2}) scale(${fallbackMapZoom})`)}));
- const open=g=>{const pop=document.getElementById('fallbackMapPopup');if(!pop)return;pop.hidden=false;pop.innerHTML=`<button type="button" class="fallback-popup-close" aria-label="Close">×</button><h3>${esc(g.city)} · Updates</h3>`+g.records.map(u=>`<article><strong>${esc(u.title||g.city+' update')}</strong><p>${esc(u.summary||u.reason||'See SOP for instructions.')}</p><small>${esc(u.from||'Date not specified')}${u.to?' – '+esc(u.to):''}</small><details><summary>View SOP</summary><p>${esc(u.sop||u.sopInstructions||'No SOP supplied.')}</p></details></article>`).join('');pop.querySelector('.fallback-popup-close').onclick=()=>pop.hidden=true};
+ const open=g=>{const pop=document.getElementById('fallbackMapPopup');if(!pop)return;pop.hidden=false;pop.innerHTML=`<button type="button" class="fallback-popup-close" aria-label="Close">×</button><h3>${esc(g.city)} · Updates</h3>`+g.records.map(u=>`<article><strong>${esc(u.title||g.city+' update')}</strong><p>${esc(u.summary||u.reason||'See SOP for instructions.')}</p><small>${esc(u.from||'Date not specified')}${u.to?' – '+esc(u.to):''}</small><details class="ops-sop-details"><summary>View step-by-step SOP</summary><div class="ops-sop-intro">Follow these steps in order. Ask your TL/SME if anything is unclear.</div><ol class="ops-sop-steps">${opsSopStepsHTML(u.sop||u.sopInstructions||'')}</ol>${u.tag?`<p><b>Operational tag:</b> ${esc(u.tag)}</p>`:''}${u.reject?`<p><b>Rejection reason:</b> ${esc(u.reject)}</p>`:''}${u.important?`<p><b>Important:</b> ${esc(u.important)}</p>`:''}</details></article>`).join('');pop.querySelector('.fallback-popup-close').onclick=()=>pop.hidden=true};
  el.querySelectorAll('.fallback-update-marker').forEach(m=>{const g=groups.get(m.dataset.city.toLowerCase().replace(/[^a-z0-9]/g,''));m.addEventListener('click',()=>g&&open(g));m.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g&&open(g)}})});
  const status=document.getElementById('mapStatus');if(status)status.textContent=`SCHEMATIC MAP · ${groups.size} CITY UPDATE INDICATOR${groups.size===1?'':'S'}`;
 }
@@ -630,7 +1068,10 @@ function initIndiaMap(){
  const el=document.getElementById('indiaMap');if(!el)return;if(!window.L){renderNoApiMap('Leaflet unavailable');return}
  if(opsMap){opsMap.invalidateSize();return}
  opsMap=L.map(el,{zoomControl:true,scrollWheelZoom:true,preferCanvas:true}).setView([22.7,79.2],4);
- opsMap.createPane('publishedUpdatePane');opsMap.getPane('publishedUpdatePane').style.zIndex='850';opsMap.getPane('publishedUpdatePane').style.pointerEvents='auto';
+ opsMap.createPane('publishedUpdatePane');opsMap.getPane('publishedUpdatePane').style.zIndex='640';opsMap.getPane('publishedUpdatePane').style.pointerEvents='auto';
+ // Keep selected update popups above every marker, label, tooltip and district layer.
+ if(opsMap.getPane('popupPane'))opsMap.getPane('popupPane').style.zIndex='1100';
+ if(opsMap.getPane('tooltipPane'))opsMap.getPane('tooltipPane').style.zIndex='700';
  L.control.scale({imperial:false,metric:true,maxWidth:130}).addTo(opsMap);
  opsMarkers=L.layerGroup().addTo(opsMap);
  renderOpsUpdateMarkers();
@@ -667,7 +1108,19 @@ function renderOpsUpdateMarkers(){
  try{
   if(!opsMap.hasLayer(opsMarkers))opsMarkers.addTo(opsMap);
   opsMarkers.clearLayers();
-  const source=Array.isArray(updates)?updates:[];
+  const allSource=Array.isArray(updates)?updates:[];
+  const isHighImpact=u=>/high impact|severe|major|critical|high priority|emergency|major disruption/i.test([u.impact,u.severity,u.priority,u.title,u.summary,u.reason,u.type,u.tag].filter(Boolean).join(' '));
+  const isRoadblock=u=>/roadblock|barricad|road closure|traffic diversion|strike|blocked road/i.test([u.title,u.summary,u.reason,u.type,u.tag,u.reject].filter(Boolean).join(' '));
+  const isWeather=u=>/weather|rain|flood|waterlog|storm|cyclone|wind|thunder|heavy shower/i.test([u.title,u.summary,u.reason,u.type,u.tag,u.reject].filter(Boolean).join(' '));
+  const source=allSource.filter(u=>{
+   const state=stateOf(u), blob=[u.impact,u.severity,u.priority,u.title,u.summary,u.reason,u.type,u.tag,u.reject].filter(Boolean).join(' ');
+   if(opsMapUpdateFilter==='active')return state==='active';
+   if(opsMapUpdateFilter==='upcoming')return state==='upcoming';
+   if(opsMapUpdateFilter==='high')return isHighImpact(u);
+   if(opsMapUpdateFilter==='roadblock')return isRoadblock(u);
+   if(opsMapUpdateFilter==='weather')return isWeather(u);
+   return true;
+  });
   const groups=new Map();
   source.forEach(u=>{
    const city=String(u.city||u.affectedCity||u.targetCity||u.location||'').trim();
@@ -692,7 +1145,7 @@ function renderOpsUpdateMarkers(){
    shown++;
   });
   if(status){
-   status.textContent=shown+' CITY UPDATE INDICATOR'+(shown===1?'':'S')+' SHOWN'+(missing.length?' · COORDINATES NEEDED: '+missing.join(', '):'');
+   status.textContent=shown+' '+(opsMapUpdateFilter==='all'?'CITY UPDATE INDICATOR'+(shown===1?'':'S')+' SHOWN':({active:'ACTIVE CITY',upcoming:'UPCOMING CITY',high:'HIGH-IMPACT CITY',roadblock:'ROADBLOCK CITY',weather:'WEATHER-ALERT CITY'}[opsMapUpdateFilter]||'CITY')+' FILTERED')+(missing.length?' · COORDINATES NEEDED: '+missing.join(', '):'');
    status.style.color=missing.length?'#a65a14':'#a94b0b';
   }
   console.info('[Roadblock Ops] Map indicators rendered:',shown,'updates:',source.length,'locations without coordinates:',missing);
@@ -701,18 +1154,43 @@ function renderOpsUpdateMarkers(){
   if(status)status.textContent='MAP INDICATOR ERROR — '+String(err.message||err);
  }
 }
+function opsSopStepsHTML(raw){
+ const source=String(raw||'').trim();
+ if(!source)return '<li>Follow the published update and contact your TL/SME if any instruction is unclear.</li>';
+ // Prefer existing numbered/bulleted lines. If a single paragraph was supplied, split it into readable sentence-sized steps.
+ let lines=source.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ if(lines.length===1){
+   const numbered=lines[0].split(/(?=(?:^|\s)(?:step\s*)?\d{1,2}[.) :-]+)/i).map(x=>x.trim()).filter(Boolean);
+   if(numbered.length>1)lines=numbered;
+   else {const sentences=lines[0].split(/(?<=[.!?])\s+(?=[A-Z0-9])/).map(x=>x.trim()).filter(Boolean);if(sentences.length>1)lines=sentences;}
+ }
+ return lines.map(line=>'<li>'+esc(line.replace(/^(?:(?:step\s*)?\d{1,2}[.) :-]+|[-•*]+\s*)/i,'').trim())+'</li>').join('');
+}
 function showOpsCityPopup(city,records,marker){
- const content=records.map(u=>'<article class="ops-popup-update"><div class="ops-popup-meta">'+esc(u.type||'Operational update')+' · '+esc(u.from||'Date not specified')+(u.to?' – '+esc(u.to):'')+'</div><h4>'+esc(u.title||u.city+' update')+'</h4><p>'+esc(u.summary||u.reason||'See SOP for instructions.')+'</p>'+(u.areas?'<p><b>Affected areas:</b> '+esc(u.areas)+'</p>':'')+'<details><summary>View SOP and handling instructions</summary><p>'+esc(u.sop||'No SOP supplied.')+'</p>'+(u.tag?'<p><b>Tag:</b> '+esc(u.tag)+'</p>':'')+(u.reject?'<p><b>Rejection reason:</b> '+esc(u.reject)+'</p>':'')+(u.important?'<p><b>Important:</b> '+esc(u.important)+'</p>':'')+'</details></article>').join('');
- marker.bindPopup('<div class="ops-city-popup"><h3>'+esc(city)+' · Updates</h3>'+content+'</div>',{maxWidth:340,minWidth:250,maxHeight:360}).openPopup();
+ const content=records.map(u=>'<article class="ops-popup-update"><div class="ops-popup-meta">'+esc(u.type||'Operational update')+' · '+esc(u.from||'Date not specified')+(u.to?' – '+esc(u.to):'')+'</div><h4>'+esc(u.title||u.city+' update')+'</h4><p>'+esc(u.summary||u.reason||'See SOP for instructions.')+'</p>'+(u.areas?'<p><b>Affected areas:</b> '+esc(u.areas)+'</p>':'')+'<details class="ops-sop-details"><summary>View step-by-step SOP</summary><div class="ops-sop-intro">Follow these steps in order. If a step is unclear, pause and contact your TL/SME before taking action.</div><ol class="ops-sop-steps">'+opsSopStepsHTML(u.sop||u.sopInstructions||'')+'</ol>'+(u.tag?'<p><b>Operational tag:</b> '+esc(u.tag)+'</p>':'')+(u.reject?'<p><b>Rejection reason:</b> '+esc(u.reject)+'</p>':'')+(u.important?'<p class="ops-sop-important"><b>Important:</b> '+esc(u.important)+'</p>':'')+'</details></article>').join('');
+ const popup=marker.getPopup();
+ if(popup){popup.setContent('<div class="ops-city-popup"><h3>'+esc(city)+' · Updates</h3>'+content+'</div>');popup.options.maxWidth=390;popup.options.minWidth=280;popup.options.autoPan=true;popup.options.keepInView=true;popup.options.autoPanPaddingTopLeft=[36,36];popup.options.autoPanPaddingBottomRight=[36,36];marker.openPopup();}
+ else marker.bindPopup('<div class="ops-city-popup"><h3>'+esc(city)+' · Updates</h3>'+content+'</div>',{maxWidth:390,minWidth:280,autoPan:true,keepInView:true,closeButton:true,autoPanPaddingTopLeft:[36,36],autoPanPaddingBottomRight:[36,36]}).openPopup();
+ // If a popup opens close to the map edge, pan it into the visible map area after Leaflet lays it out.
+ setTimeout(()=>{if(marker.isPopupOpen&&marker.isPopupOpen()){const el=marker.getPopup().getElement();if(el)el.style.zIndex='1100';}},80);
 }
 function searchIndiaMap(q){q=String(q||'').trim().toLowerCase();if(!q||!opsMap)return;const city=Object.keys(OPS_CITY_COORDS).find(n=>n.toLowerCase()===q)||Object.keys(OPS_CITY_COORDS).find(n=>n.toLowerCase().includes(q));if(city){const c=OPS_CITY_COORDS[city];opsMap.setView(c,8);const m=opsMarkers.getLayers().find(x=>x.getLatLng().distanceTo(L.latLng(c))<1000);if(m)m.fire('click');return}if(opsDistricts){let found=null;opsDistricts.eachLayer(l=>{if(!found&&JSON.stringify(l.feature.properties||{}).toLowerCase().includes(q))found=l});if(found){opsMap.fitBounds(found.getBounds(),{padding:[20,20]});found.openTooltip()}}}
 function filterMapSearch(q){searchIndiaMap(q)}
+function setMapUpdateFilter(mode,button){
+ opsMapUpdateFilter=mode||'all';
+ document.querySelectorAll('.map-filter-tab').forEach(el=>{const active=el===button;el.classList.toggle('active',active);el.setAttribute('aria-pressed',active?'true':'false')});
+ renderOpsUpdateMarkers();
+ const map=document.getElementById('indiaMap');if(map){map.classList.remove('map-filter-flash');void map.offsetWidth;map.classList.add('map-filter-flash');setTimeout(()=>map.classList.remove('map-filter-flash'),650)}
+}
 function changeMapMode(v){const m=document.getElementById('mapLayerMode');if(m)m.value=v;if(opsDistricts){if(v==='updates'){opsMap.removeLayer(opsDistricts);[opsDistrictLabels,opsStateLabels].forEach(x=>x&&opsMap.removeLayer(x))}else{opsMap.addLayer(opsDistricts);const z=opsMap.getZoom();if(z<5.5&&opsStateLabels)opsMap.addLayer(opsStateLabels);if(z>=5.5&&z<7&&opsDistrictLabels)opsMap.addLayer(opsDistrictLabels)}}}
 function resetIndiaMap(){if(opsMap&&opsDistricts){const b=opsDistricts.getBounds();if(b.isValid())opsMap.fitBounds(b,{padding:[22,22]});else opsMap.setView([22.7,79.2],4);setTimeout(()=>opsMap.setZoom(Math.min(opsMap.getZoom(),4.5)),80)}}
 function setupReferenceMap(){initIndiaMap()}
 // Always initialize the map after the page loads. Previously this retry only ran while the status text contained LOADING, so the map could remain an empty blue panel forever.
-window.addEventListener('load',()=>{setTimeout(()=>{try{initIndiaMap();if(opsMap){opsMap.invalidateSize();renderOpsUpdateMarkers()}else if(!window.L){renderNoApiMap('Leaflet library unavailable; showing built-in map')} }catch(err){console.error('[Roadblock Ops] Map startup failed:',err);try{renderNoApiMap(err&&err.message||'Map startup failed')}catch(fallbackErr){console.error('[Roadblock Ops] Built-in map fallback failed:',fallbackErr)}}},250)})
+window.addEventListener('load',()=>{setTimeout(()=>{try{initIndiaMap();if(opsMap){opsMap.invalidateSize();renderOpsUpdateMarkers()}else if(!window.L){renderNoApiMap('Leaflet library unavailable; showing built-in map')} }catch(err){console.error('[Roadblock Ops] Map startup failed:',err);try{renderNoApiMap(err&&err.message||'Map startup failed')}catch(fallbackErr){console.error('[Roadblock Ops] Built-in map fallback failed:',fallbackErr)} }installLiveTickerRotation();},250)})
 
+function jumpToLiveMap(){const map=document.getElementById('indiaMap');if(map){map.scrollIntoView({behavior:'smooth',block:'center'});map.classList.add('live-map-focus');setTimeout(()=>map.classList.remove('live-map-focus'),1600)}else{toast('Live map is not available yet.')}}
+function jumpToCityUpdates(activeOnly){const section=document.getElementById('citySection');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});if(activeOnly){const filter=document.getElementById('statusFilter')||document.getElementById('stateFilter');if(filter){filter.value='active';filter.dispatchEvent(new Event('change',{bubbles:true}))}}}
+function installLiveTickerRotation(){if(window.__opsTickerTimer)clearInterval(window.__opsTickerTimer);let index=0;window.__opsTickerTimer=setInterval(()=>{const el=document.getElementById('heroLiveTicker');if(!el)return;const rows=(Array.isArray(updates)?updates:[]).slice().sort((a,b)=>String(b.publishedAt||'').localeCompare(String(a.publishedAt||'')));const messages=rows.length?rows.map(u=>{const state=typeof stateLabel==='function'?stateLabel(stateOf(u)):'';return [u.city||'City update',u.title||u.summary||u.type||'Operational update',state].filter(Boolean).join(' · ')}):['No published updates yet · monitoring ready','Live city updates will appear here after publishing','Select Explore live map to inspect operational coverage'];const next=messages[index%messages.length];index++;el.style.opacity='.25';setTimeout(()=>{if(el.isConnected){el.textContent=next;el.style.opacity='1'}},180)},5200)}
 function refreshHeroPulse(){
  const citySet=new Set(updates.map(u=>String(u.city||'').trim()).filter(Boolean));
  const active=updates.filter(u=>stateOf(u)==='active').length;
@@ -790,9 +1268,8 @@ installCreatorButterflies();
 
 </script>
 
-<div id="abhiCreatorMark" aria-label="Creator and Admin Abhijith Prasad">
-  <span class="abhiCreatorRole">✧ CREATOR &amp; ADMIN ✧</span>
-  <span class="abhiCreatorName">Abhijith Prasad <b>✦</b></span>
+<div id="abhiCreatorMark" aria-label="Abhijith Prasad">
+  <span class="abhiCreatorName">Abhijith Prasad</span>
 </div>
 <div id="abhiButterflyPopup" role="status">✨ A little magic from Abhijith!<small>Creator &amp; Admin · Roadblock Ops Command</small></div>
 <div id="abhiButterflyLayer" aria-hidden="true"></div>
@@ -811,7 +1288,6 @@ installCreatorButterflies();
   function launch(){
    if(running)return;
    running=true;
-   popup.classList.add('abhiShown');
    layer.replaceChildren();
    const box=mark.getBoundingClientRect();
    const originX=Math.max(65,Math.min(innerWidth-65,box.left+box.width*.5));
@@ -834,20 +1310,228 @@ installCreatorButterflies();
    }
    clearTimeout(hideTimer);
    hideTimer=setTimeout(function(){
-    popup.classList.remove('abhiShown');
     layer.replaceChildren();
     running=false;
    },3200);
   }
   mark.addEventListener('pointerenter',launch);
   mark.addEventListener('mouseenter',launch);
-  mark.addEventListener('click',launch);
-  mark.addEventListener('touchstart',launch,{passive:true});
-  // Automatic one-time preview confirms the effect is present when the page opens.
-  setTimeout(launch,1800);
+  // Effects are activated only while the pointer is over the watermark.
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initAbhiButterflies);
  else initAbhiButterflies();
+})();
+</script>
+
+
+<style id="abhi-borderless-watermark-final">
+/* Borderless signature watermark: text only, no badge/panel. */
+#abhiCreatorMark{
+  position:fixed!important;right:24px!important;bottom:18px!important;z-index:2147483000!important;
+  display:block!important;width:max-content!important;max-width:calc(100vw - 28px)!important;
+  padding:0!important;margin:0!important;gap:0!important;align-items:initial!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  filter:none!important;opacity:1!important;visibility:visible!important;overflow:visible!important;
+  cursor:pointer!important;pointer-events:auto!important;
+}
+#abhiCreatorMark .abhiCreatorRole{display:none!important}
+#abhiCreatorMark .abhiCreatorName{
+  display:block!important;font-family:'Brush Script MT','Segoe Script',cursive!important;
+  font-size:clamp(20px,2.1vw,29px)!important;font-weight:700!important;line-height:1.2!important;
+  letter-spacing:.01em!important;color:#ffd84f!important;-webkit-text-stroke:.25px #fff1a6!important;
+  text-shadow:0 0 2px #fff0a3,0 0 8px #ffca28,0 0 18px #e9a90b,1px 2px 2px #000!important;
+}
+#abhiCreatorMark .abhiCreatorName b{display:none!important}
+/* Butterfly layer stays above the page, never blocks controls, and flutters in bright gold. */
+#abhiButterflyLayer{position:fixed!important;inset:0!important;z-index:2147483002!important;overflow:hidden!important;pointer-events:none!important}
+#abhiButterflyPopup{display:none!important}
+.abhiButterfly{position:absolute!important;display:block!important;pointer-events:none!important;opacity:0;filter:drop-shadow(0 0 7px #ffca3a)!important;animation:abhiFlight var(--abhiDuration,2.6s) cubic-bezier(.18,.65,.3,1) forwards!important;will-change:transform,opacity}
+.abhiButterfly svg{display:block!important;overflow:visible!important;transform-origin:50% 50%;animation:abhiWing .19s ease-in-out infinite alternate!important}
+@keyframes abhiFlight{0%{opacity:0;transform:translate(0,0) scale(.35) rotate(0)}12%{opacity:1}70%{opacity:1}100%{opacity:0;transform:translate(var(--abhiDx),var(--abhiDy)) scale(1.1) rotate(var(--abhiRot))}}
+@keyframes abhiWing{from{transform:scaleX(.55) rotateY(0)}to{transform:scaleX(1.12) rotateY(40deg)}}
+@media(max-width:650px){#abhiCreatorMark{right:12px!important;bottom:12px!important;transform:none!important}#abhiCreatorMark .abhiCreatorName{font-size:20px!important}}
+@media(prefers-reduced-motion:reduce){.abhiButterfly svg{animation:none!important}}
+</style>
+
+
+<style id="abhi-final-gold-signature-polish">
+/* Final watermark treatment: signature only, no pill, card, border or popup. */
+#creatorToast,#abhiButterflyPopup,.creator-hover-card{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;border:0!important;box-shadow:none!important;background:transparent!important}
+#abhiCreatorMark{
+ position:fixed!important;right:24px!important;bottom:18px!important;z-index:2147483000!important;
+ display:block!important;width:max-content!important;max-width:calc(100vw - 32px)!important;
+ padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;
+ filter:none!important;overflow:visible!important;white-space:nowrap!important;cursor:pointer!important;
+ animation:abhiSignatureFloat 4.8s ease-in-out infinite!important;
+}
+#abhiCreatorMark .abhiCreatorName{
+ display:block!important;font-family:'Brush Script MT','Segoe Script','URW Chancery L',cursive!important;
+ font-size:clamp(23px,2.3vw,34px)!important;font-weight:800!important;line-height:1.25!important;
+ letter-spacing:.005em!important;color:#ffd43b!important;-webkit-text-fill-color:transparent!important;
+ background:linear-gradient(110deg,#b87908 0%,#ffe989 18%,#ffc928 35%,#fff5b0 48%,#e6a400 61%,#ffdf59 78%,#fff1a1 100%)!important;
+ background-size:240% 100%!important;background-clip:text!important;-webkit-background-clip:text!important;
+ -webkit-text-stroke:.35px #ffe9a0!important;
+ text-shadow:0 1px 1px #4b3208,0 0 5px #ffdc54,0 0 13px #ffb800a8,0 0 25px #ffb80065!important;
+ animation:abhiGoldShine 3.6s linear infinite!important;
+}
+#abhiCreatorMark .abhiCreatorRole{display:none!important}
+#abhiButterflyLayer{position:fixed!important;inset:0!important;z-index:2147483002!important;overflow:hidden!important;pointer-events:none!important}
+.abhiButterfly{filter:drop-shadow(0 0 5px #ffca3a) drop-shadow(0 0 12px #ffc52c88)!important}
+@keyframes abhiGoldShine{0%{background-position:100% 0;text-shadow:0 1px 1px #4b3208,0 0 4px #ffdc54,0 0 10px #ffb80070}50%{text-shadow:0 1px 1px #4b3208,0 0 9px #fff2a2,0 0 22px #ffc928,0 0 34px #ffb8008a}100%{background-position:-140% 0;text-shadow:0 1px 1px #4b3208,0 0 4px #ffdc54,0 0 10px #ffb80070}}
+@keyframes abhiSignatureFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media(max-width:650px){#abhiCreatorMark{right:12px!important;bottom:12px!important}#abhiCreatorMark .abhiCreatorName{font-size:22px!important}}
+@media(prefers-reduced-motion:reduce){#abhiCreatorMark,#abhiCreatorMark .abhiCreatorName{animation:none!important}.abhiButterfly svg{animation:none!important}}
+</style>
+<script id="abhi-periodic-butterfly-flourish">
+/* No periodic triggers: butterfly animation is hover-only. */
+</script>
+
+
+<style id="abhi-reference-style-popup-and-watermark">
+/* Match the supplied reference: a compact dark-gold creator toast above a signature badge. */
+#abhiCreatorMark{
+ position:fixed!important;right:18px!important;bottom:14px!important;z-index:2147483000!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ gap:4px!important;width:max-content!important;max-width:calc(100vw - 32px)!important;
+ padding:8px 15px 9px!important;border:1px solid rgba(255,202,63,.78)!important;border-radius:15px!important;
+ background:linear-gradient(145deg,rgba(25,27,31,.97),rgba(43,37,24,.97))!important;
+ box-shadow:0 8px 24px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,242,190,.08)!important;
+ backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;
+ animation:abhiSignatureFloat 4.8s ease-in-out infinite!important;
+}
+#abhiCreatorMark:before{
+ content:'✦  CREATOR & ADMIN  ✦';display:block!important;white-space:nowrap!important;
+ color:#f6d986!important;font:800 9px/1.2 Arial,sans-serif!important;letter-spacing:1.8px!important;
+ text-shadow:0 0 7px rgba(255,202,63,.35)!important;
+}
+#abhiCreatorMark .abhiCreatorName{
+ display:block!important;white-space:nowrap!important;font-family:'Brush Script MT','Segoe Script','URW Chancery L',cursive!important;
+ font-size:clamp(20px,2vw,27px)!important;font-weight:800!important;line-height:1.1!important;
+ letter-spacing:.005em!important;color:#ffd84a!important;-webkit-text-fill-color:transparent!important;
+ background:linear-gradient(110deg,#c18713 0%,#fff0a0 20%,#ffc928 38%,#fff8c5 50%,#e6a400 66%,#ffe36a 82%,#fff1ad 100%)!important;
+ background-size:240% 100%!important;background-clip:text!important;-webkit-background-clip:text!important;
+ -webkit-text-stroke:.3px #ffe9a0!important;
+ text-shadow:0 1px 1px #4b3208,0 0 5px #ffdc54,0 0 13px #ffb800a8,0 0 25px #ffb80065!important;
+ animation:abhiGoldShine 3.6s linear infinite!important;
+}
+#abhiCreatorMark:after{content:'✦';position:absolute!important;right:10px!important;bottom:10px!important;color:#fff0a0!important;font-size:12px!important;text-shadow:0 0 8px #ffd447!important;pointer-events:none!important}
+#abhiButterflyPopup{
+ display:none!important;position:fixed!important;right:18px!important;bottom:84px!important;z-index:2147483001!important;
+ width:max-content!important;max-width:min(320px,calc(100vw - 32px))!important;box-sizing:border-box!important;
+ padding:12px 15px 11px!important;border:1px solid #d9a936!important;border-radius:14px!important;
+ background:linear-gradient(145deg,rgba(28,30,34,.98),rgba(64,49,23,.98))!important;
+ color:#ffe9a3!important;font:800 13px/1.35 Arial,sans-serif!important;letter-spacing:.1px!important;
+ box-shadow:0 10px 28px rgba(0,0,0,.38),0 0 18px rgba(255,194,46,.12)!important;
+ white-space:normal!important;overflow-wrap:anywhere!important;opacity:0;transform:translateY(8px);transition:opacity .24s ease,transform .24s ease!important;
+}
+#abhiButterflyPopup small{display:block!important;margin-top:4px!important;color:#f0dfb2!important;font:600 10px/1.35 Arial,sans-serif!important;letter-spacing:0!important}
+#abhiButterflyPopup.abhiShown{display:block!important;visibility:visible!important;opacity:1!important;transform:translateY(0)!important}
+#abhiButterflyLayer{position:fixed!important;inset:0!important;z-index:2147483002!important;overflow:hidden!important;pointer-events:none!important}
+.abhiButterfly{filter:drop-shadow(0 0 6px #ffca3a) drop-shadow(0 0 12px #ffc52c88)!important}
+@media(max-width:650px){
+ #abhiCreatorMark{right:10px!important;bottom:10px!important;padding:7px 12px!important}
+ #abhiCreatorMark .abhiCreatorName{font-size:21px!important}
+ #abhiButterflyPopup{right:10px!important;bottom:78px!important;max-width:calc(100vw - 20px)!important}
+}
+@media(prefers-reduced-motion:reduce){#abhiCreatorMark,#abhiCreatorMark .abhiCreatorName{animation:none!important}#abhiButterflyPopup{transition:none!important}.abhiButterfly svg{animation:none!important}}
+</style>
+<script id="abhi-reference-popup-trigger">
+(function(){
+ function setup(){
+  const mark=document.getElementById('abhiCreatorMark');
+  const popup=document.getElementById('abhiButterflyPopup');
+  if(!mark||!popup||mark.dataset.hoverPopup==='1')return;
+  mark.dataset.hoverPopup='1';
+  let hideTimer;
+  const show=()=>{clearTimeout(hideTimer);popup.classList.add('abhiShown');};
+  const scheduleHide=()=>{clearTimeout(hideTimer);hideTimer=setTimeout(()=>popup.classList.remove('abhiShown'),180);};
+  mark.addEventListener('pointerenter',show);
+  mark.addEventListener('pointerleave',scheduleHide);
+  popup.addEventListener('pointerenter',show);
+  popup.addEventListener('pointerleave',scheduleHide);
+  // No popup on page load, click, or keyboard focus; hover is the requested trigger.
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
+})();
+</script>
+
+<style id="abhi-final-borderless-professional-type">
+/* Final refinement: remove the watermark frame and use clean professional typography. */
+#abhiCreatorMark{
+  border:0!important; outline:0!important; border-radius:0!important;
+  background:transparent!important; box-shadow:none!important;
+  backdrop-filter:none!important; -webkit-backdrop-filter:none!important;
+  padding:0!important; gap:5px!important; overflow:visible!important;
+}
+#abhiCreatorMark:before{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:10px!important; font-weight:750!important; letter-spacing:1.5px!important;
+}
+#abhiCreatorMark .abhiCreatorName{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:clamp(20px,2vw,27px)!important; font-weight:800!important;
+  letter-spacing:-.035em!important; line-height:1.18!important;
+  -webkit-text-stroke:0!important;
+}
+#abhiCreatorMark:after{right:-13px!important;bottom:3px!important}
+/* Keep the reference-style creator popup framed and legible, but use professional UI typography. */
+#abhiButterflyPopup{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:13px!important; font-weight:650!important;
+}
+#abhiButterflyPopup small{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:11px!important; font-weight:500!important;
+}
+</style>
+
+<style id="abhi-compact-hover-only-final">
+#abhiCreatorMark{right:18px!important;bottom:12px!important;padding:0!important;margin:0!important;gap:3px!important;width:max-content!important;max-width:calc(100vw - 28px)!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;transform:none!important;animation:none!important;cursor:pointer!important;white-space:nowrap!important}
+#abhiCreatorMark:before{font-size:8px!important;letter-spacing:1.1px!important;line-height:1.15!important}
+#abhiCreatorMark .abhiCreatorName{font-size:clamp(15px,1.35vw,19px)!important;line-height:1.15!important;letter-spacing:-.025em!important}
+#abhiCreatorMark:after{right:-9px!important;bottom:0!important;font-size:9px!important}
+#abhiButterflyPopup{right:18px!important;bottom:48px!important;width:max-content!important;max-width:min(280px,calc(100vw - 28px))!important;padding:9px 12px!important;font-size:12px!important;display:block!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;transform:translateY(5px)!important;transition:opacity .18s ease,transform .18s ease,visibility .18s ease!important}
+#abhiButterflyPopup.abhiShown{visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:translateY(0)!important}
+#abhiButterflyPopup small{font-size:10px!important}
+@media(max-width:650px){#abhiCreatorMark{right:10px!important;bottom:9px!important}#abhiCreatorMark .abhiCreatorName{font-size:16px!important}#abhiButterflyPopup{right:10px!important;bottom:42px!important;max-width:calc(100vw - 20px)!important}}
+</style>
+<style id="practical-map-filters-gold-fixed">
+/* Practical map filters: compact tabs, bright gold accents, readable contrast */
+.map-title h3{display:flex!important;align-items:center;gap:8px!important;flex-wrap:wrap}
+.map-title-tabicon{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:8px;background:linear-gradient(145deg,#ffe58a,#c58a18);color:#242016;font-size:16px;box-shadow:0 0 16px #e7b83b35}
+.map-title-shine{color:#ffd447!important;font-size:19px!important;text-shadow:0 0 8px #ffd447,0 0 18px #d99a1c;animation:mapShinePulse 2.2s ease-in-out infinite;display:inline-block}
+@keyframes mapShinePulse{0%,100%{opacity:.75;transform:scale(.95) rotate(0)}50%{opacity:1;transform:scale(1.13) rotate(12deg)}}
+.map-toolbar-enhanced{display:grid!important;grid-template-columns:minmax(220px,1fr) auto;align-items:center!important;gap:10px!important}
+.map-toolbar-enhanced #mapSearch{width:100%;min-width:0!important;flex:initial!important}
+.map-filter-tabs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;grid-column:1/-1;padding:5px;border:1px solid #514630;border-radius:12px;background:#171a1f}
+.map-filter-tab{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:8px;padding:8px 11px;background:transparent;color:#d8dee6;font-size:11px;font-weight:750;white-space:nowrap;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
+.map-filter-tab span{font-size:13px;color:#f1c64f}
+.map-filter-tab:hover{border-color:#8c6c27;background:#29251b;color:#fff5d4;transform:translateY(-1px)}
+.map-filter-tab.active{background:linear-gradient(120deg,#ffe58a,#e5b638 65%,#c58b1b);color:#211a0b;border-color:#ffe18a;box-shadow:0 3px 12px #e4b33425,inset 0 1px 0 #fff4c4}
+.map-filter-tab.active span{color:#31230b}
+.map-reset-btn{justify-self:end;white-space:nowrap}
+@media(max-width:780px){.map-toolbar-enhanced{grid-template-columns:1fr!important}.map-filter-tabs{grid-column:1!important}.map-filter-tab{flex:1 1 auto;padding:8px 9px}.map-reset-btn{justify-self:stretch;width:100%}}
+
+.map-filter-flash{animation:mapFilterFlash .6s ease-out}@keyframes mapFilterFlash{0%{box-shadow:inset 0 0 0 2px #ffd447,0 0 24px #ffd44735}100%{box-shadow:inset 0 0 0 0 transparent,0 0 0 transparent}}
+</style>
+
+<script id="livePulseInteractions">
+(function(){
+  function startPulseClock(){
+    const clock=document.getElementById('heroLiveClock');
+    if(!clock)return;
+    const tick=()=>{const now=new Date();clock.textContent=now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});clock.title='Your device local time';};
+    tick(); if(window.__heroPulseClock)clearInterval(window.__heroPulseClock);window.__heroPulseClock=setInterval(tick,1000);
+  }
+  function wirePulseControls(){
+    const toggle=document.getElementById('pulseMotionToggle');const widget=document.querySelector('.hero-live-widget');const main=document.querySelector('.hero-main');
+    if(toggle&&widget&&!toggle.dataset.wired){toggle.dataset.wired='1';toggle.addEventListener('click',()=>{const paused=!widget.classList.contains('motion-paused');widget.classList.toggle('motion-paused',paused);if(main)main.classList.toggle('motion-paused',paused);toggle.setAttribute('aria-pressed',String(paused));toggle.innerHTML=paused?'<span>▶</span> Resume effects':'<span>Ⅱ</span> Pause effects';toggle.title=paused?'Resume decorative animations':'Pause decorative animations';});}
+    const map=document.querySelector('.hero-mini-map');if(map&&!map.dataset.tipWired){map.dataset.tipWired='1';map.addEventListener('mouseenter',()=>{map.setAttribute('aria-label','Explore live map — click to open the full map');});map.addEventListener('mouseleave',()=>{map.setAttribute('aria-label','Explore the live India operations map');});}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{startPulseClock();wirePulseControls();});else{startPulseClock();wirePulseControls();}
+  window.addEventListener('load',wirePulseControls);
 })();
 </script>
 
