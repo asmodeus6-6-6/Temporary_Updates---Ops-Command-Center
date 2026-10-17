@@ -824,6 +824,7 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
 </aside>
 <header class="topbar">
  <div class="brand"><div class="brandmark">M</div><div><div class="brandname" style="font-size:15px;letter-spacing:-.025em">Roadblock &amp; Weather</div><div class="brandsub">Disruption Ops Command</div></div></div>
+ <div class="ztp-broadcast" id="ztpBroadcast" role="button" tabindex="0" title="Open ZTP escalation briefing" onclick="openEscalationBriefing()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openEscalationBriefing()}"><span class="ztp-live-pill"><i></i> ZTP LIVE</span><div class="ztp-marquee-window"><div class="ztp-marquee-track" id="ztpMarqueeTrack"><span>Loading escalation briefing…</span></div></div></div>
  <div class="topactions"><div class="status"><span class="pulse"></span><span id="liveLabel">Updates board</span></div><button class="btn" id="agentHomeBtn" onclick="showAgent()">Agent view</button><button class="btn primary" id="adminEntryBtn" onclick="showAdminLogin()">⌘ Command Center</button></div>
 </header>
 <main class="layout">
@@ -899,6 +900,24 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
      <div class="form-group"><label for="emailFile">Or upload email file (.txt, .eml)</label><input id="emailFile" type="file" accept=".txt,.eml,text/plain,message/rfc822" onchange="loadEmailFile(event)"></div>
      <div class="form-group" style="justify-content:end"><button class="btn primary" type="button" onclick="parseEmailToForm()">Extract details into fields ↓</button></div>
     </div><div class="admin-note">Local rule-based extraction for this prototype. Verify complex emails against the source.</div></div>
+   <div class="form-card escalation-admin-card" id="escalationMailIntake" style="margin-bottom:18px">
+    <div class="escalation-admin-heading"><div><div class="eyebrow" style="color:#f0bf45">ZTP · QUALITY & COMPLIANCE</div><h3 style="margin:4px 0">Escalation Mail · Extract & Track</h3><div class="panel-sub">Paste or upload an escalation email. Extract the key facts, add a practical learning point, then save it to the site’s escalation briefing.</div></div><span class="escalation-shield">⚠</span></div>
+    <div class="form-grid" style="margin-top:14px">
+     <div class="form-group full"><label for="escalationRawMail">Escalation email content</label><textarea id="escalationRawMail" style="min-height:145px" placeholder="Paste the escalation / fatal observation email here…"></textarea></div>
+     <div class="form-group"><label for="escalationMailFile">Or upload .txt / .eml</label><input id="escalationMailFile" type="file" accept=".txt,.eml,text/plain,message/rfc822" onchange="loadEscalationMailFile(event)"></div>
+     <div class="form-group" style="justify-content:end"><button class="btn" type="button" onclick="extractEscalationMail()">Extract email details ↓</button></div>
+     <div class="form-group"><label for="escalationDate">Date</label><input id="escalationDate" type="date"></div>
+     <div class="form-group"><label for="escalationCity">City / location</label><input id="escalationCity" placeholder="City or operating location"></div>
+     <div class="form-group"><label for="escalationAgent">Agent / advisor</label><input id="escalationAgent" placeholder="Agent name or email"></div>
+     <div class="form-group"><label for="escalationOrder">Order / case ID</label><input id="escalationOrder" placeholder="Order ID or ticket number"></div>
+     <div class="form-group full"><label for="escalationSubject">Escalation subject</label><input id="escalationSubject" placeholder="Fatal observation / escalation title"></div>
+     <div class="form-group full"><label for="escalationIssue">Observation / process miss</label><textarea id="escalationIssue" placeholder="What happened? What process was missed?"></textarea></div>
+     <div class="form-group full"><label for="escalationLesson">Learning lesson / required behaviour</label><textarea id="escalationLesson" placeholder="1. Verify the correct SOP and help section.&#10;2. Select the correct tag and cancellation bucket.&#10;3. Explain the resolution before disconnecting.&#10;4. Escalate to TL/SME if unsure."></textarea></div>
+     <div class="form-group full"><label for="escalationAction">Required corrective action / warning</label><textarea id="escalationAction" placeholder="Documented feedback, acknowledgement, coaching or further action required."></textarea></div>
+     <div class="form-group full" style="display:flex;flex-direction:row;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" onclick="saveEscalationMail()">＋ Save escalation to ZTP broadcast</button><button class="btn" type="button" onclick="clearEscalationForm()">Clear fields</button><button class="btn" type="button" onclick="exportEscalationsCsv()">Export escalation log</button></div>
+    </div><div class="admin-note">Email extraction is rule-based. Review every extracted field before saving. Records are stored in this browser unless a shared escalation database is configured.</div>
+    <div class="escalation-records-head"><strong>Saved escalation records</strong><span id="escalationAdminCount">0 records</span></div><div id="escalationAdminList" class="escalation-admin-list"></div>
+   </div>
    <div class="integration-card" id="mailDataTools">
     <h3><span aria-hidden="true">✦</span> Mail Details · Data Analysis</h3>
     <div class="panel-sub">Export only structured operational email details—dates, city/district/state, reason, impact, tags and SOP—not the full dashboard or unrelated UI data.</div>
@@ -937,6 +956,7 @@ input:focus,select:focus,textarea:focus{border-color:#ffd447!important;box-shado
 </main>
 </div>
 <div class="modal-backdrop" id="cityModal" onclick="if(event.target===this)closeCityModal()"><div class="modal"><div class="modal-head"><div><div class="eyebrow">City operations brief</div><h2 id="modalCityName">City updates</h2><p id="modalCitySub">Effective windows and mandatory SOPs</p></div><button class="close" onclick="closeCityModal()" aria-label="Close">×</button></div><div class="modal-body" id="modalContent"></div></div></div>
+<div class="ztp-popup-overlay" id="ztpPopupOverlay" aria-hidden="true" onclick="if(event.target===this)closeEscalationBriefing()"><section class="ztp-popup" role="dialog" aria-modal="true" aria-labelledby="ztpPopupTitle"><button type="button" class="ztp-popup-close" onclick="closeEscalationBriefing()" aria-label="Close escalation briefing">×</button><div class="ztp-popup-topline"><span class="ztp-live-pill"><i></i> ZTP ESCALATION WARNING</span><span class="ztp-warning-label">PROCESS COMPLIANCE</span></div><div class="ztp-popup-title-row"><div><div class="ztp-popup-eyebrow">SHIFT START · READ BEFORE HANDLING CALLS</div><h2 id="ztpPopupTitle">Agent Error → Required Action</h2><p>See who was responsible, what went wrong, and what must happen differently next time.</p></div><div class="ztp-count-orb"><strong id="ztpEscalationCount">0</strong><span>ESCALATIONS</span></div></div><div class="ztp-lesson-banner"><strong>⚠ THE RULE</strong><span>Never guess. Follow the Help Section and SOP, choose the correct tag/bucket, explain the resolution before disconnecting, and contact your TL/SME if unsure.</span></div><div id="ztpPopupRecords" class="ztp-popup-records"></div><div class="ztp-popup-footer"><span>Know the miss. Apply the correct process on the next call.</span><div><button class="btn" type="button" onclick="skipEscalationBriefing()">Skip for now</button><button class="btn primary" type="button" onclick="closeEscalationBriefing()">Acknowledge & Continue</button></div></div></section></div>
 <div class="toast" id="toast"></div>
 <script>
 const STORAGE_KEY='mailshift_ops_updates_v3';
@@ -1791,6 +1811,134 @@ installCreatorButterflies();
 @media(prefers-reduced-motion:reduce){.map-card:before,.map-card:after,#indiaMap:before,#indiaMap:after{animation:none!important}}
 </style>
 
+
+<style id="ztp-escalation-broadcast-styles">
+ .topbar{gap:16px!important}.ztp-broadcast{flex:1 1 420px;min-width:260px;max-width:760px;min-height:48px;display:flex;align-items:center;gap:13px;padding:0 15px;border:1px solid rgba(255,190,44,.7);border-left:4px solid #ef4545;border-radius:11px;background:linear-gradient(100deg,rgba(146,26,26,.3),rgba(19,24,32,.96) 38%,rgba(255,190,44,.13));box-shadow:inset 0 0 22px rgba(255,194,49,.09),0 0 16px rgba(239,69,69,.08);cursor:pointer;overflow:hidden}
+.ztp-live-pill{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;color:#ffdc78;font-size:11px;font-weight:950;letter-spacing:.08em}.ztp-live-pill i{width:7px;height:7px;border-radius:50%;background:#3de2a0;box-shadow:0 0 0 3px rgba(61,226,160,.13),0 0 10px rgba(61,226,160,.8);animation:ztpPulse 1.5s ease-in-out infinite}.ztp-marquee-window{flex:1;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}.ztp-marquee-track{display:flex;align-items:center;gap:52px;width:max-content;white-space:nowrap;color:#fff7e6;font-size:14px;font-weight:800;text-shadow:0 0 12px rgba(255,191,56,.16);animation:ztpMarquee 34s linear infinite}.ztp-marquee-track span{display:inline-block}.ztp-broadcast:hover .ztp-marquee-track,.ztp-broadcast:focus-visible .ztp-marquee-track{animation-play-state:paused}.ztp-broadcast:focus-visible{outline:2px solid #ffd85c;outline-offset:2px}
+.ztp-popup-overlay{position:fixed;inset:0;z-index:2147483600;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(4,7,11,.78);backdrop-filter:blur(8px)}.ztp-popup-overlay.is-open{display:flex;animation:ztpFade .18s ease-out}.ztp-popup{position:relative;width:min(760px,calc(100vw - 28px));max-height:min(88vh,850px);overflow:hidden;display:flex;flex-direction:column;border:1px solid #d8a832;border-top:3px solid #ef4545;border-radius:18px;color:#f7f3e8;background:radial-gradient(ellipse at 100% 0%,rgba(205,151,35,.17),transparent 42%),linear-gradient(145deg,#24262b,#14181e 70%);box-shadow:0 28px 100px rgba(0,0,0,.72),0 0 0 1px rgba(239,69,69,.14),0 0 35px rgba(239,184,51,.12)}.ztp-popup-close{position:absolute;right:13px;top:13px;z-index:5;width:38px;height:38px;border:1px solid #79622f;border-radius:11px;background:#2b2b27;color:#ffe18a;font-size:25px;cursor:pointer}.ztp-popup-close:hover{background:#f1bd35;color:#1b1c20}.ztp-popup-topline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 62px 14px 22px;border-bottom:1px solid rgba(225,180,69,.2)}.ztp-warning-label{font-size:10px;letter-spacing:.13em;color:#ff7777;font-weight:950}.ztp-popup-title-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px 24px 18px}.ztp-popup-eyebrow{font-size:9px;letter-spacing:.16em;font-weight:900;color:#eac45b}.ztp-popup-title-row h2{margin:7px 0 6px;font-size:clamp(21px,3vw,29px);line-height:1.2;color:#fff8e9}.ztp-popup-title-row p{margin:0;color:#c5ccd5;font-size:13px;line-height:1.55}.ztp-count-orb{flex:0 0 94px;width:94px;height:94px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,203,69,.75);background:radial-gradient(circle,#59441b,#29251c 70%);box-shadow:0 0 0 6px rgba(255,201,61,.04),0 0 28px rgba(255,191,40,.13)}.ztp-count-orb strong{font-size:31px;color:#ffdc67;line-height:1}.ztp-count-orb span{margin-top:6px;font-size:8px;letter-spacing:.12em;font-weight:900;color:#f4dca0}.ztp-lesson-banner{margin:0 24px 15px;padding:13px 15px;display:grid;grid-template-columns:160px 1fr;gap:12px;border:1px solid rgba(239,69,69,.6);border-left:5px solid #ef4545;border-radius:10px;background:linear-gradient(100deg,rgba(133,24,24,.28),rgba(117,57,26,.14));font-size:13px;line-height:1.6;color:#fff0df}.ztp-lesson-banner strong{color:#ffbd69;font-size:10px;letter-spacing:.08em}.ztp-popup-records{overflow:auto;min-height:70px;max-height:42vh;overscroll-behavior:contain;padding:0 24px 15px;display:grid;gap:10px}.ztp-record-card{padding:15px 16px;border:1px solid rgba(224,171,55,.52);border-left:4px solid #ef4545;border-radius:12px;background:linear-gradient(120deg,rgba(122,29,29,.16),rgba(255,255,255,.025))}.ztp-record-card h3{margin:0 0 10px;color:#ffd875;font-size:16px;line-height:1.4}.ztp-record-meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:8px;color:#aeb8c4;font-size:10px}.ztp-record-card p{margin:7px 0;color:#f2f3f5;font-size:13px;line-height:1.6;overflow-wrap:anywhere}.ztp-record-card p b{color:#ffca63}.ztp-record-card .ztp-record-wrong{padding:10px 11px;border-radius:8px;border:1px solid rgba(239,69,69,.28);background:rgba(150,32,32,.19);color:#fff0ef}.ztp-record-card .ztp-record-action{padding:10px 11px;border-radius:8px;border:1px solid rgba(255,198,63,.23);background:rgba(255,198,63,.08)}.ztp-record-card .ztp-record-lesson{padding:8px 10px;margin-top:8px;border-radius:8px;background:rgba(255,202,70,.08);color:#ffe6a2}.ztp-empty-state{padding:18px;border:1px dashed #64552f;border-radius:12px;color:#d7dbe2;font-size:12px;line-height:1.6}.ztp-popup-footer{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 22px;border-top:1px solid #363b42;background:rgba(0,0,0,.15);color:#b8c0cb;font-size:10px}.ztp-popup-footer>div{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.ztp-popup-footer .btn{white-space:nowrap}.escalation-admin-heading{display:flex;justify-content:space-between;gap:14px;align-items:center}.escalation-shield{width:45px;height:45px;display:grid;place-items:center;border:1px solid #b88a28;border-radius:13px;color:#ffdb68;background:rgba(235,183,48,.1);font-size:24px}.escalation-records-head{display:flex;justify-content:space-between;gap:10px;margin-top:20px;padding-top:12px;border-top:1px solid var(--line,#ddd);font-size:12px}.escalation-records-head span{color:var(--muted)}.escalation-admin-list{display:grid;gap:8px;margin-top:10px}.escalation-admin-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:11px;border:1px solid var(--line,#ddd);border-radius:10px}.escalation-admin-item strong{display:block;font-size:12px}.escalation-admin-item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.escalation-admin-item button{flex:0 0 auto}
+@keyframes ztpPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.82)}}@keyframes ztpMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes ztpFade{from{opacity:0}to{opacity:1}}
+@media(max-width:900px){.topbar{flex-wrap:wrap!important}.ztp-broadcast{order:3;flex:1 1 100%;max-width:none;min-width:0}.topactions{margin-left:auto}.ztp-popup-title-row{align-items:flex-start}.ztp-popup-records{max-height:38vh}}
+@media(max-width:560px){.ztp-broadcast{min-height:46px;padding:7px 10px;gap:8px}.ztp-live-pill{font-size:9px}.ztp-marquee-track{font-size:12px}.ztp-popup-overlay{padding:8px}.ztp-popup{width:calc(100vw - 16px);max-height:94vh}.ztp-popup-topline{padding:14px 52px 12px 14px}.ztp-popup-title-row{padding:16px 14px;gap:10px}.ztp-count-orb{flex-basis:68px;width:68px;height:68px}.ztp-count-orb strong{font-size:24px}.ztp-count-orb span{font-size:7px}.ztp-lesson-banner{grid-template-columns:1fr;gap:5px;margin:0 14px 12px;padding:10px}.ztp-popup-records{padding:0 14px 12px;max-height:40vh}.ztp-popup-footer{align-items:flex-start;flex-direction:column;padding:12px 14px}.ztp-popup-footer>div{width:100%;justify-content:stretch}.ztp-popup-footer .btn{flex:1}.escalation-admin-item{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.ztp-marquee-track,.ztp-live-pill i{animation:none!important}}
+</style>
+<script id="ztp-escalation-broadcast-script">
+(function(){
+ const KEY='mailshift_ztp_escalations_v1';let escalationItems=[];let lastFocus=null;
+ const $=id=>document.getElementById(id);
+ const escHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');escalationItems=Array.isArray(a)?a:[]}catch(e){escalationItems=[]}renderAdmin();renderTicker();}
+ function persist(){try{localStorage.setItem(KEY,JSON.stringify(escalationItems))}catch(e){if(typeof toast==='function')toast('Could not save escalation log in this browser.')}renderAdmin();renderTicker();renderPopup();}
+ function dateFmt(s){if(!s)return 'Date not captured';const d=new Date(s);return isNaN(d)?s:d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
+ function field(id){return $(id)?.value?.trim()||''}
+ function set(id,v){if($(id))$(id).value=v||''}
+ function readRawFile(e){const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{set('escalationRawMail',String(r.result||'').replace(/\r/g,''));extractEscalationMail()};r.readAsText(f)}
+ window.loadEscalationMailFile=readRawFile;
+ let pendingActionTargets=[];
+ function normalizeActionLabel(s){
+  const t=String(s||'').replace(/\s+/g,' ').trim();
+  if(/\bCAP\s*3\b/i.test(t))return 'Final Warning · CAP 3';
+  if(/\bfinal\s+warning\b/i.test(t))return 'Final Warning';
+  if(/\bZTP\b/i.test(t))return 'ZTP';
+  if(/\bCAP\s*2\b/i.test(t))return 'CAP 2';
+  if(/\bCAP\s*1\b/i.test(t))return 'CAP 1';
+  if(/\bwarning\b/i.test(t))return 'Warning';
+  return t.replace(/\bto\s*$/i,'').trim()||'Corrective Action';
+ }
+ function actionSection(raw){
+  const normalized=String(raw||'').replace(/\[([^\]]+)\]\(mailto:[^)]+\)/gi,'$1').replace(/\*\*/g,'').replace(/&#x20;/gi,' ');
+  const m=normalized.match(/(?:^|\n)\s*Action\s*Taken\s*:?[ \t]*([\s\S]*)/i);
+  if(!m)return '';
+  return m[1].split(/\n\s*(?:Regards|Thanks|Best\s+regards|Sincerely|Agent\s+Fault)\s*:?/i)[0].trim();
+ }
+ function extractActionTargets(raw){
+  const section=actionSection(raw);if(!section)return [];
+  const email='[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}';
+  const re=new RegExp('((?:final\\s+warning|warning|ZTP|CAP\\s*3|CAP\\s*2|CAP\\s*1|coaching|feedback)(?:\\s*\\(\\s*CAP\\s*3\\s*\\))?)\\s+(?:to|for)\\s+(?:the\\s+)?agent\\s+('+email+')','ig');
+  const out=[];let m;
+  while((m=re.exec(section))){const label=normalizeActionLabel(m[1]);const agent=m[2];if(!out.some(x=>x.agent.toLowerCase()===agent.toLowerCase()&&x.actionLabel===label))out.push({agent,actionLabel:label,actionText:m[0].replace(/\s+/g,' ').trim()});}
+  // Also support a compact form such as "ZTP - agent@domain.com" or "CAP 3: agent@domain.com".
+  if(!out.length){const r2=new RegExp('(final\\s+warning|ZTP|CAP\\s*3|CAP\\s*2|CAP\\s*1|warning|coaching|feedback)\\s*(?:[-:–]\\s*)('+email+')','ig');while((m=r2.exec(section)))out.push({agent:m[2],actionLabel:normalizeActionLabel(m[1]),actionText:m[0].replace(/\s+/g,' ').trim()});}
+  return out;
+ }
+ function inferIssueForAgent(raw,agent){
+  const clean=raw.replace(/\[([^\]]+)\]\(mailto:[^)]+\)/gi,'$1').replace(/\*\*/g,'').replace(/&#x20;/gi,' ').replace(/\\\n/g,'\n');
+  const idx=clean.toLowerCase().indexOf(String(agent||'').toLowerCase());
+  if(idx<0)return '';
+  const context=clean.slice(idx,Math.min(clean.length,idx+850));
+  const nextEmail=context.search(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  const segment=(nextEmail>0?context.slice(0,nextEmail):context).replace(/\n+/g,' ').replace(/\s+/g,' ').trim();
+  const sentences=segment.match(/[^.!?]+[.!?]?/g)||[segment];
+  const useful=sentences.map(x=>x.trim()).filter(Boolean).filter(x=>!/^\s*(?:mailto:)?[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\s*$/i.test(x));
+  const result=useful.slice(0,3).join(' ').replace(/^[:;,.\s-]+/,'');
+  return result.length>500?result.slice(0,497)+'…':result;
+ }
+ window.extractEscalationMail=function(){const raw=field('escalationRawMail');if(!raw){if(typeof toast==='function')toast('Paste or upload an escalation email first.');return}
+  const lines=raw.replace(/\r/g,'').split(/\n+/).map(x=>x.trim()).filter(Boolean);const pick=(re)=>{const m=raw.match(re);return m?(m[1]||m[0]).trim().replace(/^[:\-\s]+/,''):''};
+  const order=pick(/(?:Order\s*ID|case\s*id|ticket\s*(?:id|no|number)?|reference\s*(?:id|no)?)\s*[:#\-]?\s*([A-Z0-9-]{6,})/i);
+  const dateRaw=pick(/(?:Order\s*Date|Observation\s*Date|Incident\s*Date|Date)\s*:\s*([^\n]+)/i);let date='';if(dateRaw){const d=new Date(dateRaw.replace(/\s*\|\s*.*/,''));if(!isNaN(d))date=d.toISOString().slice(0,10)}
+  const city=pick(/(?:city|location|site)\s*:\s*([^\n]+)/i);
+  const fault=pick(/Agent\s*Fault\s*:\s*([^\n]+)/i);
+  const targets=extractActionTargets(raw);pendingActionTargets=targets;
+  const contextMatch=raw.match(/(?:Case\s*Context)\s*:?\s*([\s\S]*?)(?=\n\s*Agent\s*Fault\s*:|\n\s*Action\s*Taken\s*:|$)/i);
+  const context=(contextMatch?contextMatch[1]:'').replace(/\\\n/g,' ').replace(/\n+/g,' ').replace(/\s+/g,' ').trim();
+  let subject='',agent='',issue='',action='';
+  if(targets.length){const t=targets[0];subject=t.actionLabel;agent=t.agent;issue=inferIssueForAgent(raw,t.agent)||context||'Review the case context and confirm the exact process miss before publishing.';action=t.actionText+(targets.length>1?' (This email contains '+targets.length+' separate agent/action assignments; saving will create one record per assignment.)':'');}
+  else {
+   subject=pick(/(?:subject|subj)\s*:\s*([^\n]+)/i)||lines.find(x=>/fatal|escalat|observation|non.?compliance|process miss|ZTP|CAP\s*3/i.test(x))||'Escalation observation';
+   agent=pick(/(?:agent at fault|faulty agent|agent|advisor|employee|associate|login\s*id|email\s*id)\s*:\s*([^\n]+)/i)||'';
+   const actionRaw=actionSection(raw);action=actionRaw||pick(/(?:corrective\s*action|action\s*required|next\s*steps|warning|feedback)\s*:\s*([^\n]+)/i)||'Action not clearly specified in the source email. Review before saving.';
+   issue=context||pick(/(?:observation|issue|concern|reason|fatal\s*observation|actual\s*concern|remarks?)\s*:\s*([\s\S]*?)(?=\n\s*(?:Agent\s*Fault|Action\s*Taken)\s*:|$)/i)||'';
+  }
+  const lesson='Follow the applicable SOP and Help Section on every call. Verify the correct location, tag and cancellation bucket; explain the resolution clearly before disconnecting. If the correct action is uncertain, contact the TL/SME before proceeding.';
+  set('escalationSubject',subject);set('escalationAgent',agent);set('escalationOrder',order);set('escalationCity',city);set('escalationDate',date||new Date().toISOString().slice(0,10));set('escalationIssue',issue);set('escalationLesson',lesson);set('escalationAction',action);
+  if(typeof toast==='function')toast(targets.length>1?('Extracted '+targets.length+' agent/action assignments. Saving will create separate records for each action. Review before saving.'):targets.length===1?'Extracted the agent and action from the Action Taken section. Review before saving.':'Details extracted. No explicit agent/action pair was found; verify fields manually before saving.');};
+ window.saveEscalationMail=function(){const subject=field('escalationSubject');const issue=field('escalationIssue');if(!subject&&!issue){if(typeof toast==='function')toast('Extract an email or enter an observation before saving.');return}
+  const raw=field('escalationRawMail');const targets=extractActionTargets(raw);const base={date:field('escalationDate')||new Date().toISOString().slice(0,10),city:field('escalationCity'),orderId:field('escalationOrder'),issue:issue||'Observation details not provided.',lesson:field('escalationLesson')||'Follow the applicable SOP and Help Section, verify the correct tag/bucket, and clearly communicate the resolution before disconnecting.',createdAt:new Date().toISOString()};
+  const batch=targets.length?targets:[{agent:field('escalationAgent'),actionLabel:subject||'Corrective Action',actionText:field('escalationAction')||'Action not specified; administrator review required.'}];
+  batch.forEach((t,idx)=>{const specificIssue=targets.length?inferIssueForAgent(raw,t.agent)||base.issue:base.issue;escalationItems.unshift({...base,id:'ztp-'+Date.now().toString(36)+'-'+idx+'-'+Math.random().toString(36).slice(2,7),agent:t.agent||base.agent,subject:t.actionLabel||subject||'Escalation observation',issue:specificIssue,action:t.actionText||field('escalationAction')||'Action not specified; administrator review required.'});});pendingActionTargets=[];persist();if(typeof toast==='function')toast(batch.length>1?('Saved '+batch.length+' separate agent/action records to the ZTP briefing and broadcast.'):'Escalation saved to the ZTP briefing and broadcast.');closeEscalationBriefing();};
+ window.clearEscalationForm=function(){['escalationRawMail','escalationDate','escalationCity','escalationAgent','escalationOrder','escalationSubject','escalationIssue','escalationLesson','escalationAction'].forEach(id=>set(id,''));if($('escalationMailFile'))$('escalationMailFile').value=''};
+ function renderAdmin(){const count=$('escalationAdminCount'),list=$('escalationAdminList');if(count)count.textContent=escalationItems.length+' record'+(escalationItems.length===1?'':'s');if(!list)return;list.innerHTML=escalationItems.length?escalationItems.map(x=>`<div class="escalation-admin-item"><div><strong>${escHtml(x.subject)}</strong><small>${escHtml(dateFmt(x.date))} · ${escHtml(x.city||'Location not specified')} · ${escHtml(x.agent||'Agent not specified')} · ${escHtml(x.orderId||'No case ID')}</small></div><button class="btn" type="button" onclick="deleteEscalationMail('${escHtml(x.id)}')">Remove</button></div>`).join(''):'<div class="admin-note">No escalation emails saved yet. Add one above to include it in the ZTP briefing.</div>'}
+ window.deleteEscalationMail=function(id){escalationItems=escalationItems.filter(x=>x.id!==id);persist();if(typeof toast==='function')toast('Escalation removed from this browser log.')};
+ window.exportEscalationsCsv=function(){if(!escalationItems.length){if(typeof toast==='function')toast('No escalation records to export.');return}const cols=['date','city','agent','orderId','subject','issue','lesson','action'];const csv=[cols,...escalationItems.map(x=>cols.map(k=>x[k]||''))].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='ZTP_Escalation_Log_'+new Date().toISOString().slice(0,10)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+ function renderPopup(){
+  const count=$('ztpEscalationCount'),list=$('ztpPopupRecords');
+  if(count)count.textContent=escalationItems.length;
+  if(!list)return;
+  if(!escalationItems.length){
+   list.innerHTML='<div class="ztp-empty-state ztp-empty-modern"><div class="ztp-empty-icon">✓</div><div><strong>No escalation cases have been logged yet</strong><p>This briefing will show real case details when an escalation email is imported. No agent or action is being flagged right now.</p><div class="ztp-empty-steps"><span><b>1</b> Check the Help Section</span><span><b>2</b> Confirm the correct tag/bucket</span><span><b>3</b> Explain the resolution before disconnecting</span></div></div></div>';
+   return;
+  }
+  list.innerHTML=escalationItems.slice(0,8).map((x,i)=>{
+   const action=String(x.subject||'Corrective Action');
+   const actionClass=/CAP\s*3|final warning/i.test(action)?'critical':/ZTP/i.test(action)?'ztp':'standard';
+   return `<article class="ztp-record-card ztp-record-modern ${actionClass}">
+    <div class="ztp-case-top"><div class="ztp-case-number">CASE ${String(i+1).padStart(2,'0')}</div><div class="ztp-action-headline"><span class="ztp-action-kicker">ACTION REQUIRED</span><strong>${escHtml(action)}</strong></div></div>
+    <div class="ztp-agent-focus"><span>AGENT ACCOUNTABLE</span><strong>${escHtml(x.agent||'Not identified in source email')}</strong><small>${escHtml(x.city||'Location not specified')} · Order/Case ${escHtml(x.orderId||'not provided')} · ${escHtml(dateFmt(x.date))}</small></div>
+    <div class="ztp-lesson-grid">
+     <section class="ztp-lesson-block ztp-error-block"><div class="ztp-block-label"><i>!</i> WHAT WENT WRONG</div><p>${escHtml(x.issue||'The source email does not clearly state the process miss. Verify the original email before delivering feedback.')}</p></section>
+     <section class="ztp-lesson-block ztp-action-block"><div class="ztp-block-label"><i>→</i> ACTION TAKEN / REQUIRED</div><p>${escHtml(x.action||'Action not specified in the source email. Confirm with the escalation owner.')}</p></section>
+    </div>
+    <section class="ztp-next-time"><div class="ztp-block-label"><i>✓</i> NEXT TIME, DO THIS</div><p>${escHtml(x.lesson||'Follow the current SOP and Help Section, verify the correct tag/bucket, provide a clear resolution, and contact the TL/SME whenever uncertain.')}</p></section>
+   </article>`;
+  }).join('')+(escalationItems.length>8?`<div class="ztp-empty-state">Showing the latest 8 of ${escalationItems.length} cases. Open Command Center for the full escalation log.</div>`:'');
+ }
+ function renderTicker(){const el=$('ztpMarqueeTrack');if(!el)return;const entries=escalationItems.length?escalationItems.slice(0,12).map(x=>`<span class="ztp-ticker-case"><b class="ztp-ticker-action">ACTION: ${escHtml(x.subject||'Corrective Action')}</b><b class="ztp-ticker-agent">AGENT: ${escHtml(x.agent||'Agent not identified')}</b><b class="ztp-ticker-reason">REASON: ${escHtml(x.issue||'Review case details')}</b><b class="ztp-ticker-taken">TAKEN: ${escHtml(x.action||'Follow the approved process')}</b></span>`):['<span class="ztp-ticker-case"><b class="ztp-ticker-action">ZTP LIVE</b><b class="ztp-ticker-reason">Follow the SOP and Help Section on every call.</b></span>','<span class="ztp-ticker-case"><b class="ztp-ticker-action">PREVENT REPEAT ERRORS</b><b class="ztp-ticker-reason">Verify tags and cancellation buckets before submitting.</b></span>','<span class="ztp-ticker-case"><b class="ztp-ticker-action">CALL RESOLUTION</b><b class="ztp-ticker-reason">Explain the resolution clearly before disconnecting.</b></span>'];el.innerHTML=[...entries,...entries].join('');}
+ window.openEscalationBriefing=function(){lastFocus=document.activeElement;renderPopup();const o=$('ztpPopupOverlay');if(o){o.classList.add('is-open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}};
+ window.closeEscalationBriefing=function(){const o=$('ztpPopupOverlay');if(o){o.classList.remove('is-open');o.setAttribute('aria-hidden','true')}document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus()};window.skipEscalationBriefing=function(){window.closeEscalationBriefing()};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('ztpPopupOverlay')?.classList.contains('is-open')){e.preventDefault();window.closeEscalationBriefing()}});
+ document.addEventListener('DOMContentLoaded',()=>{load();setTimeout(()=>{if($('ztpPopupOverlay'))window.openEscalationBriefing()},900)});
+ window.addEventListener('storage',e=>{if(e.key===KEY)load()});
+})();
+</script>
+
+
+<style id="ztp-action-focused-extraction-styles">
+.ztp-action-headline{display:flex;flex-direction:column;gap:5px;margin:-2px 0 12px;padding:12px 14px;border-left:5px solid #ef4444;border-radius:10px;background:linear-gradient(100deg,rgba(151,26,26,.28),rgba(220,164,38,.12));box-shadow:inset 0 0 0 1px rgba(255,198,66,.22)}
+.ztp-action-kicker{font-size:10px;font-weight:950;letter-spacing:.14em;color:#ff8d82}.ztp-action-headline strong{font-size:clamp(18px,2.3vw,25px);line-height:1.2;color:#ffd76b;text-transform:uppercase;text-shadow:0 0 16px rgba(255,187,47,.18)}
+.ztp-agent-focus{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;padding:11px 14px;border:1px solid rgba(255,76,76,.52);border-radius:10px;background:rgba(95,18,20,.25)}.ztp-agent-focus span{font-size:9px;font-weight:900;letter-spacing:.12em;color:#ffaaa3}.ztp-agent-focus strong{font-size:clamp(15px,1.9vw,19px);line-height:1.3;color:#fff;font-weight:900;overflow-wrap:anywhere}
+.ztp-record-wrong{border-left:4px solid #ef4444!important;background:rgba(120,25,27,.18)!important}.ztp-record-action{border-left:4px solid #f2bd36!important;background:rgba(186,133,23,.13)!important}.ztp-broadcast{min-height:58px!important;max-width:900px!important;border-left-width:5px!important}.ztp-marquee-track{font-size:15px!important;font-weight:900!important}.ztp-marquee-track span{padding:7px 0}.ztp-popup-records{scrollbar-gutter:stable}.escalation-admin-item strong{color:#b77913}
+@media(max-width:560px){.ztp-action-headline strong{font-size:18px}.ztp-agent-focus strong{font-size:15px}.ztp-marquee-track{font-size:13px!important}}
+</style>
 </body>
 </html>
 
@@ -1901,3 +2049,50 @@ body.ops-dialog-open{overflow:hidden!important}
 }
 </style>
 
+
+<style id="ztp-broadcast-blended-header-fix">
+/* Let the broadcast sit naturally inside the header: no enclosing card or border. */
+.topbar .ztp-broadcast{
+  flex:1 1 520px!important;min-width:260px!important;max-width:980px!important;min-height:54px!important;
+  padding:0 8px!important;gap:16px!important;border:0!important;border-left:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;outline-offset:3px;
+}
+.topbar .ztp-broadcast:hover{background:linear-gradient(90deg,transparent,rgba(255,195,48,.055),transparent)!important}
+.topbar .ztp-broadcast .ztp-live-pill{font-size:11px!important;color:#ffda72!important;flex:0 0 auto}
+.topbar .ztp-marquee-window{flex:1 1 auto!important;min-width:0!important;mask-image:linear-gradient(90deg,transparent,#000 2%,#000 98%,transparent)!important}
+.topbar .ztp-marquee-track{align-items:center!important;gap:42px!important;font-size:13px!important;font-weight:700!important;color:#f8f4e9!important;text-shadow:none!important}
+.ztp-ticker-case{display:inline-flex!important;align-items:center!important;gap:10px!important;padding:7px 0!important;white-space:nowrap!important}
+.ztp-ticker-case b{display:inline-block!important;font-size:12px!important;line-height:1.25!important;white-space:nowrap!important}
+.ztp-ticker-action{color:#ffd45a!important;font-weight:950!important;letter-spacing:.035em!important}
+.ztp-ticker-agent{color:#fff!important;font-weight:850!important}
+.ztp-ticker-reason{color:#ff9a8f!important;font-weight:800!important}
+.ztp-ticker-taken{color:#f2c96a!important;font-weight:800!important}
+@media(max-width:900px){.topbar .ztp-broadcast{order:3!important;flex:1 1 100%!important;max-width:none!important;min-height:48px!important;padding:4px 0!important;border-top:1px solid rgba(255,198,63,.16)!important;border-bottom:1px solid rgba(255,198,63,.12)!important}}
+@media(max-width:560px){.topbar .ztp-broadcast{gap:8px!important}.topbar .ztp-broadcast .ztp-live-pill{font-size:9px!important}.topbar .ztp-marquee-track{font-size:12px!important}.ztp-ticker-case{gap:7px!important}.ztp-ticker-case b{font-size:11px!important}}
+</style>
+
+<style id="ztp-learning-popup-redesign-v2">
+/* Clear, teachable case layout: one obvious reading order and less decorative noise. */
+.ztp-popup{width:min(860px,calc(100vw - 28px))!important;max-height:min(90vh,900px)!important;border:1px solid rgba(238,185,52,.72)!important;border-top:4px solid #f04444!important;border-radius:18px!important;background:linear-gradient(145deg,#1d2229 0%,#15191f 72%)!important;box-shadow:0 28px 100px #000b,0 0 42px #f0b82b14!important}
+.ztp-popup-topline{padding:14px 62px 12px 22px!important;background:linear-gradient(90deg,#481d20aa,transparent 70%)!important}
+.ztp-popup-title-row{padding:17px 24px 15px!important;align-items:center!important}
+.ztp-popup-title-row h2{font-size:clamp(23px,3vw,31px)!important;letter-spacing:-.035em!important}
+.ztp-popup-title-row p{font-size:14px!important;color:#d1d7df!important}
+.ztp-count-orb{width:76px!important;height:76px!important;flex-basis:76px!important}
+.ztp-count-orb strong{font-size:27px!important}
+.ztp-lesson-banner{grid-template-columns:125px 1fr!important;margin:0 24px 13px!important;padding:11px 14px!important;background:linear-gradient(100deg,#7f20253b,#b77c1920)!important}
+.ztp-lesson-banner span{color:#f1f2f5!important;font-size:12px!important;line-height:1.5!important}
+.ztp-popup-records{max-height:48vh!important;min-height:110px!important;padding:0 24px 18px!important;gap:14px!important}
+.ztp-record-modern{padding:16px!important;border:1px solid #454c56!important;border-left:4px solid #eab83e!important;background:linear-gradient(130deg,#20262e,#181d23)!important;box-shadow:0 8px 22px #0003!important}
+.ztp-record-modern.critical{border-left-color:#ff4545!important}.ztp-record-modern.ztp{border-left-color:#f0bd36!important}
+.ztp-case-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}.ztp-case-number{flex:0 0 auto;padding:6px 8px;border-radius:6px;background:#303640;color:#c7ced8;font-size:10px;font-weight:900;letter-spacing:.08em}
+.ztp-record-modern .ztp-action-headline{flex:1;min-width:0;margin:0!important;padding:9px 12px!important;border:1px solid #9e343b!important;border-left:4px solid #ff4d4d!important;background:linear-gradient(90deg,#68272b70,#302329)!important}
+.ztp-record-modern .ztp-action-kicker{color:#ff9c92!important;font-size:10px!important}.ztp-record-modern .ztp-action-headline strong{font-size:clamp(17px,2.2vw,23px)!important;color:#ffd56b!important}
+.ztp-record-modern .ztp-agent-focus{margin:0 0 12px!important;padding:11px 13px!important;border:1px solid #5a4a28!important;border-left:4px solid #eab83e!important;background:#2a271f!important}
+.ztp-record-modern .ztp-agent-focus span{color:#eac96e!important;font-size:10px!important}.ztp-record-modern .ztp-agent-focus strong{font-size:clamp(16px,2vw,20px)!important;color:#fff!important}.ztp-record-modern .ztp-agent-focus small{font-size:11px;color:#c1c9d3;line-height:1.5;overflow-wrap:anywhere}
+.ztp-lesson-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ztp-lesson-block,.ztp-next-time{min-width:0;padding:12px 13px;border-radius:10px}.ztp-error-block{border:1px solid #8f373b;background:#401f24}.ztp-action-block{border:1px solid #8d702f;background:#332b1b}.ztp-block-label{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:950;letter-spacing:.08em;color:#ff9d94}.ztp-action-block .ztp-block-label,.ztp-next-time .ztp-block-label{color:#f5cf65}.ztp-block-label i{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#a72f35;color:white;font-style:normal;font-size:12px}.ztp-action-block .ztp-block-label i,.ztp-next-time .ztp-block-label i{background:#8b6a20;color:#fff2be}
+.ztp-lesson-block p,.ztp-next-time p{margin:8px 0 0!important;color:#f4f5f7!important;font-size:13px!important;line-height:1.6!important;overflow-wrap:anywhere}.ztp-next-time{margin-top:10px;border:1px solid #3c6759;background:#172b27}.ztp-next-time .ztp-block-label{color:#8ce0bd}.ztp-next-time .ztp-block-label i{background:#24745a;color:#e5fff5}
+.ztp-empty-modern{display:flex;align-items:flex-start;gap:15px;padding:20px!important;border:1px solid #3c6657!important;border-left:4px solid #39bd8a!important;background:linear-gradient(120deg,#18342d,#1b2228)!important}.ztp-empty-icon{flex:0 0 38px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#225e49;color:#9af0c9;font-size:22px;font-weight:900}.ztp-empty-modern strong{font-size:15px;color:#f4f8f6}.ztp-empty-modern p{margin:6px 0 12px;color:#cbd8d4;font-size:12px;line-height:1.55}.ztp-empty-steps{display:flex;flex-wrap:wrap;gap:7px}.ztp-empty-steps span{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid #43524d;border-radius:8px;background:#182522;color:#e8f1ed;font-size:11px}.ztp-empty-steps b{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#c99a2d;color:#17191d}
+.ztp-popup-footer{padding:12px 22px!important}.ztp-popup-footer>span{font-size:11px!important;color:#d0d5dc!important}.ztp-popup-footer .btn.primary{background:linear-gradient(110deg,#ffe17a,#f4b900)!important;color:#19170e!important;font-weight:900!important;box-shadow:0 5px 18px #f2b90024!important}
+@media(max-width:620px){.ztp-popup-title-row{padding:15px!important}.ztp-count-orb{display:none!important}.ztp-lesson-banner{grid-template-columns:1fr!important;margin:0 14px 12px!important}.ztp-popup-records{padding:0 14px 14px!important;max-height:48vh!important}.ztp-case-top{align-items:stretch;flex-direction:column;gap:7px}.ztp-case-number{align-self:flex-start}.ztp-lesson-grid{grid-template-columns:1fr}.ztp-empty-steps{flex-direction:column}.ztp-popup-footer{gap:10px!important}}
+</style>
