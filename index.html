@@ -1320,23 +1320,32 @@ function showAdminDashboard(){
 
 
 
-const OPS_CITY_COORDS={"Delhi":[28.6139,77.209],"New Delhi":[28.6139,77.209],"Mumbai":[19.076,72.8777],"Kolkata":[22.5726,88.3639],"Hyderabad":[17.385,78.4867],"Bengaluru":[12.9716,77.5946],"Bangalore":[12.9716,77.5946],"Chennai":[13.0827,80.2707],"Pune":[18.5204,73.8567],"Ahmedabad":[23.0225,72.5714],"Jaipur":[26.9124,75.7873],"Lucknow":[26.8467,80.9462],"Coimbatore":[11.0168,76.9558],"Kochi":[9.9312,76.2673],"Ernakulam":[9.9816,76.2999],"Kozhikode":[11.2588,75.7804],"Calicut":[11.2588,75.7804],"Thrissur":[10.5276,76.2144],"Alappuzha":[9.4981,76.3388],"Cherthala":[9.684,76.3355],"Thiruvananthapuram":[8.5241,76.9366],"Trivandrum":[8.5241,76.9366],"Kollam":[8.8932,76.6141],"Palakkad":[10.7867,76.6548],"Kannur":[11.8745,75.3704],"Kasaragod":[12.4996,74.9869],"Kottayam":[9.5916,76.5222],"Pathanamthitta":[9.2648,76.787],"Malappuram":[11.051,76.0711],"Vijayawada":[16.5062,80.648],"Visakhapatnam":[17.6868,83.2185],"Nagpur":[21.1458,79.0882],"Indore":[22.7196,75.8577],"Bhopal":[23.2599,77.4126],"Patna":[25.5941,85.1376],"Ranchi":[23.3441,85.3096],"Bhubaneswar":[20.2961,85.8245],"Guwahati":[26.1445,91.7362],"Chandigarh":[30.7333,76.7794],"Amritsar":[31.634,74.8723],"Ludhiana":[30.901,75.8573],"Dehradun":[30.3165,78.0322],"Srinagar":[34.0837,74.7973],"Jammu":[32.7266,74.857],"Raipur":[21.2514,81.6296],"Gurugram":[28.4595,77.0266],"Noida":[28.5355,77.391],"Faridabad":[28.4089,77.3178],"Surat":[21.1702,72.8311],"Vadodara":[22.3072,73.1812],"Rajkot":[22.3039,70.8022],"Jodhpur":[26.2389,73.0243],"Udaipur":[24.5854,73.7125],"Agra":[27.1767,78.0081],"Varanasi":[25.3176,82.9739],"Kanpur":[26.4499,80.3319],"Prayagraj":[25.4358,81.8463],"Meerut":[28.9845,77.7064],"Howrah":[22.5958,88.2636],"Siliguri":[26.7271,88.3953],"Madurai":[9.9252,78.1198],"Tiruchirappalli":[10.7905,78.7047],"Salem":[11.6643,78.146],"Erode":[11.341,77.7172],"Tiruppur":[11.1085,77.3411],"Mysuru":[12.2958,76.6394],"Mangalore":[12.9141,74.856],"Hubballi":[15.3647,75.124],"Warangal":[17.9689,79.5941],"Jabalpur":[23.1815,79.9864],"Jubbulpore":[23.1815,79.9864],"Jalpaiguri":[26.5215,88.7196],"Kullu":[31.9579,77.1095],"Kulu":[31.9579,77.1095],"Jalpaiguri, West Bengal":[26.5215,88.7196],"Kullu, Himachal Pradesh":[31.9579,77.1095]};
+const OPS_CITY_COORDS={"Delhi":[28.6139,77.209],"New Delhi":[28.6139,77.209],"Mumbai":[19.076,72.8777],"Kolkata":[22.5726,88.3639],"Hyderabad":[17.385,78.4867],"Bengaluru":[12.9716,77.5946],"Bangalore":[12.9716,77.5946],"Chennai":[13.0827,80.2707],"Pune":[18.5204,73.8567],"Ahmedabad":[23.0225,72.5714],"Jaipur":[26.9124,75.7873],"Lucknow":[26.8467,80.9462],"Coimbatore":[11.0168,76.9558],"Kochi":[9.9312,76.2673],"Ernakulam":[9.9816,76.2999],"Kozhikode":[11.2588,75.7804],"Calicut":[11.2588,75.7804],"Thrissur":[10.5276,76.2144],"Alappuzha":[9.4981,76.3388],"Cherthala":[9.684,76.3355],"Thiruvananthapuram":[8.5241,76.9366],"Trivandrum":[8.5241,76.9366],"Kollam":[8.8932,76.6141],"Palakkad":[10.7867,76.6548],"Kannur":[11.8745,75.3704],"Kasaragod":[12.4996,74.9869],"Kottayam":[9.5916,76.5222],"Pathanamthitta":[9.2648,76.787],"Malappuram":[11.051,76.0711],"Vijayawada":[16.5062,80.648],"Visakhapatnam":[17.6868,83.2185],"Nagpur":[21.1458,79.0882],"Indore":[22.7196,75.8577],"Bhopal":[23.2599,77.4126],"Patna":[25.5941,85.1376],"Ranchi":[23.3441,85.3096],"Bhubaneswar":[20.2961,85.8245],"Guwahati":[26.1445,91.7362],"Chandigarh":[30.7333,76.7794],"Amritsar":[31.634,74.8723],"Ludhiana":[30.901,75.8573],"Dehradun":[30.3165,78.0322],"Srinagar":[34.0837,74.7973],"Jammu":[32.7266,74.857],"Raipur":[21.2514,81.6296],"Gurugram":[28.4595,77.0266],"Noida":[28.5355,77.391],"Faridabad":[28.4089,77.3178],"Surat":[21.1702,72.8311],"Vadodara":[22.3072,73.1812],"Rajkot":[22.3039,70.8022],"Jodhpur":[26.2389,73.0243],"Udaipur":[24.5854,73.7125],"Agra":[27.1767,78.0081],"Varanasi":[25.3176,82.9739],"Kanpur":[26.4499,80.3319],"Prayagraj":[25.4358,81.8463],"Meerut":[28.9845,77.7064],"Howrah":[22.5958,88.2636],"Siliguri":[26.7271,88.3953],"Madurai":[9.9252,78.1198],"Tiruchirappalli":[10.7905,78.7047],"Salem":[11.6643,78.146],"Erode":[11.341,77.7172],"Tiruppur":[11.1085,77.3411],"Mysuru":[12.2958,76.6394],"Mangalore":[12.9141,74.856],"Hubballi":[15.3647,75.124],"Warangal":[17.9689,79.5941],"Jabalpur":[23.1815,79.9864],"Jubbulpore":[23.1815,79.9864],"Jalpaiguri":[26.5215,88.7196],"Kullu":[31.9579,77.1095],"Kulu":[31.9579,77.1095],"Jalpaiguri, West Bengal":[26.5215,88.7196],"Kullu, Himachal Pradesh":[31.9579,77.1095],"Bihar":[25.9,85.5],"Jharkhand":[23.6,85.5],"West Bengal":[23.5,87.7],"Uttar Pradesh":[27.0,80.5],"Madhya Pradesh":[23.5,78.5],"Rajasthan":[26.7,73.8],"Gujarat":[22.7,71.8],"Maharashtra":[19.5,75.5],"Odisha":[20.5,84.5],"Orissa":[20.5,84.5],"Chhattisgarh":[21.3,82.0],"Assam":[26.0,92.8],"Tamil Nadu":[11.0,78.4],"Karnataka":[15.0,76.0],"Telangana":[17.9,79.2],"Andhra Pradesh":[16.2,80.8],"Punjab":[31.0,75.3],"Haryana":[29.2,76.2],"Uttarakhand":[30.1,79.0],"Himachal Pradesh":[31.8,77.2],"Goa":[15.4,74.0],"Sikkim":[27.5,88.5],"Arunachal Pradesh":[28.2,94.5],"Nagaland":[26.1,94.3],"Manipur":[24.7,93.9],"Mizoram":[23.2,92.8],"Tripura":[23.8,91.6],"Meghalaya":[25.5,91.3],"Puducherry":[11.9416,79.8083],"Pondicherry":[11.9416,79.8083]};
 let opsMap=null,opsDistricts=null,opsMarkers=null,opsRouteLines=null,opsDistrictLabels=null,opsStateLabels=null,opsCityLabels=null;
 let opsMapUpdateFilter="all";
 function opsName(f){const p=f.properties||{};return p.district||p.DISTRICT||p.dtname||p.NAME_2||p.name||p.NAME||p.Dist_Name||p.st_nm||p.ST_NM||'Administrative boundary'}
 function opsStyle(f){const n=opsName(f).toLowerCase();const hit=updates.some(u=>(String(u.areas||'')+' '+String(u.city||'')).toLowerCase().includes(n)&&n.length>2);const pal=['#34404b','#3d4853','#46515b','#394752','#4a535d','#303d48','#505861','#3a454f'];let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return{color:hit?'#ffd56a':'#d6bd83',weight:hit?1.8:1.1,opacity:1,fillColor:hit?'#c87924':pal[h%pal.length],fillOpacity:hit?.94:.9}}
+function opsNormPlace(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(city|district|urban|rural|municipality|municipal corporation)\b/g,'').replace(/[^a-z0-9]/g,'')}
 function opsCoords(city){
- const raw=String(city||'').trim();
- if(!raw)return null;
+ const raw=String(city||'').trim();if(!raw)return null;
  if(OPS_CITY_COORDS[raw])return OPS_CITY_COORDS[raw];
- const norm=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/\\b(city|district|urban|rural)\\b/g,'').replace(/[^a-z0-9]/g,'');
- const target=norm(raw);
- const key=Object.keys(OPS_CITY_COORDS).find(x=>norm(x)===target);
- if(key)return OPS_CITY_COORDS[key];
- // Accept a city followed by district/state metadata (e.g. "Coimbatore, Tamil Nadu").
- const first=raw.split(/[,(|/]/)[0].trim();
- const key2=Object.keys(OPS_CITY_COORDS).find(x=>norm(x)===norm(first));
- return key2?OPS_CITY_COORDS[key2]:null;
+ const target=opsNormPlace(raw),key=Object.keys(OPS_CITY_COORDS).find(x=>opsNormPlace(x)===target);if(key)return OPS_CITY_COORDS[key];
+ // Accept common imported forms like "Town, District, State".
+ const parts=raw.split(/[,;|/]+/).map(x=>x.trim()).filter(Boolean);
+ for(const part of parts){const k=Object.keys(OPS_CITY_COORDS).find(x=>opsNormPlace(x)===opsNormPlace(part));if(k)return OPS_CITY_COORDS[k]}
+ // Match district names against the actual loaded India district boundaries.
+ if(opsDistricts){let match=null;opsDistricts.eachLayer(layer=>{if(match)return;const props=layer.feature&&layer.feature.properties||{};const names=[opsName(layer.feature),props.NAME_2,props.DISTRICT,props.district,props.dtname,props.name,props.NAME].filter(Boolean);if(names.some(n=>opsNormPlace(n)===target))match=layer});if(match){const c=match.getBounds().getCenter();return[c.lat,c.lng]}}
+ const stateCoords={'Bihar':[25.9,85.5],'Jharkhand':[23.6,85.5],'West Bengal':[23.5,87.7],'Uttar Pradesh':[27.0,80.5],'Madhya Pradesh':[23.5,78.5],'Rajasthan':[26.7,73.8],'Gujarat':[22.7,71.8],'Maharashtra':[19.5,75.5],'Odisha':[20.5,84.5],'Orissa':[20.5,84.5],'Chhattisgarh':[21.3,82.0],'Assam':[26.0,92.8],'Kerala':[10.4,76.2],'Tamil Nadu':[11.0,78.4],'Karnataka':[15.0,76.0],'Telangana':[17.9,79.2],'Andhra Pradesh':[16.2,80.8],'Punjab':[31.0,75.3],'Haryana':[29.2,76.2],'Uttarakhand':[30.1,79.0],'Himachal Pradesh':[31.8,77.2],'Goa':[15.4,74.0],'Sikkim':[27.5,88.5],'Arunachal Pradesh':[28.2,94.5],'Nagaland':[26.1,94.3],'Manipur':[24.7,93.9],'Mizoram':[23.2,92.8],'Tripura':[23.8,91.6],'Meghalaya':[25.5,91.3],'Jammu and Kashmir':[33.7,76.0],'Jammu & Kashmir':[33.7,76.0],'Ladakh':[34.2,78.3],'Puducherry':[11.9416,79.8083],'Pondicherry':[11.9416,79.8083],'Andaman and Nicobar Islands':[11.7401,92.6586],'Chandigarh':[30.7333,76.7794],'Delhi NCR':[28.6139,77.209]};
+ const state=Object.keys(stateCoords).find(x=>opsNormPlace(x)===target);if(state)return stateCoords[state];return null;
+}
+function opsExtractLocations(u){
+ const candidates=[];
+ const add=value=>{if(!value)return;const v=String(value).replace(/\([^)]*\)/g,' ').trim();if(!v)return;v.split(/\s*(?:,|;|\||\/|\band\b|&)\s*/i).forEach(piece=>{const clean=piece.replace(/^[-•\s]+|[-•\s]+$/g,'').replace(/^(?:district of|district|city of|town of)\s+/i,'').trim();if(clean.length>1&&clean.length<90&&!/^(?:india|all states|various locations|affected areas|all affected areas|nearby areas|not specified|not available|n\/a|multiple locations)$/i.test(clean))candidates.push(clean)})};
+ // City fields may contain multiple named cities or states in one string.
+ [u.city,u.affectedCity,u.targetCity,u.location,u.district].forEach(add);
+ // Include explicitly named affected areas so towns/districts aren't lost when the primary city is broad.
+ if(u.areas)add(u.areas);
+ const out=new Map();candidates.forEach(name=>{const key=opsNormPlace(name);if(key&&!out.has(key))out.set(key,name)});return [...out.values()];
 }
 let fallbackMapZoom=1;
 function renderNoApiMap(reason){
@@ -1344,7 +1353,7 @@ function renderNoApiMap(reason){
  const W=900,H=650, bounds={minLon:67,maxLon:98,minLat:6,maxLat:38};
  const xy=([lat,lon])=>[40+(lon-bounds.minLon)/(bounds.maxLon-bounds.minLon)*(W-80),25+(bounds.maxLat-lat)/(bounds.maxLat-bounds.minLat)*(H-55)];
  const outline=[[35,74],[33,74],[31,77],[30,80],[28,82],[27,88],[25,94],[22,97],[20,93],[18,88],[16,84],[13,80],[9,77],[7,75],[10,73],[14,72],[18,70],[22,69],[25,68],[29,70],[32,72]].map(xy).map(p=>p.join(',')).join(' ');
- const source=Array.isArray(updates)?updates:[];const groups=new Map();source.forEach(u=>{const c=String(u.city||u.affectedCity||u.targetCity||u.location||'').trim();if(c){const k=c.toLowerCase().replace(/[^a-z0-9]/g,'');if(!groups.has(k))groups.set(k,{city:c,records:[]});groups.get(k).records.push(u)}});
+ const source=Array.isArray(updates)?updates:[];const groups=new Map();source.forEach(u=>{opsExtractLocations(u).forEach(c=>{const k=opsNormPlace(c);if(k){if(!groups.has(k))groups.set(k,{city:c,records:[]});if(!groups.get(k).records.includes(u))groups.get(k).records.push(u)}})});
  const labels=Object.entries(OPS_CITY_COORDS).filter(([n])=>!['New Delhi','Bangalore','Calicut','Trivandrum','Jubbulpore','Kulu'].includes(n)).map(([name,coord])=>{const [x,y]=xy(coord);return `<text x="${x+6}" y="${y-4}" class="fallback-city-label">${esc(name)}</text>`}).join('');
  const markers=[...groups.values()].map(g=>{const c=opsCoords(g.city);if(!c)return '';const [x,y]=xy(c);return `<g class="fallback-update-marker" role="button" tabindex="0" data-city="${esc(g.city)}" transform="translate(${x} ${y})"><circle r="10" class="fallback-pulse"/><circle r="5.5" class="fallback-dot"/><text x="12" y="-9">${esc(g.city)}${g.records.length>1?' · '+g.records.length:''}</text></g>`}).join('');
  el.innerHTML=`<div class="fallback-map-shell"><div class="fallback-map-controls"><button type="button" data-z="in" aria-label="Zoom in">＋</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset">Reset</button></div><svg id="fallbackIndiaSvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Interactive schematic India map with city labels and update indicators"><defs><pattern id="fallbackGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#b6d5df" stroke-width=".7"/></pattern></defs><rect width="100%" height="100%" fill="#dceef4"/><rect width="100%" height="100%" fill="url(#fallbackGrid)"/><g id="fallbackMapGroup"><polygon points="${outline}" fill="#e8d7a9" stroke="#ae9b6c" stroke-width="2.5"/><path d="M240 150 L310 235 L390 210 L450 280 L550 245 M300 310 L420 350 L510 330 L600 390 M220 420 L350 430 L440 480 L520 530 M500 150 L530 230 L610 270 L680 300" fill="none" stroke="#c4b27f" stroke-width="1.4" stroke-dasharray="5 4"/>${labels}${markers}</g></svg><div class="fallback-map-note">Schematic India view · city positions are approximate · update markers are interactive. Geographic boundary service unavailable.</div><div id="fallbackMapPopup" class="fallback-map-popup" hidden></div></div>`;
@@ -1439,11 +1448,8 @@ function renderOpsUpdateMarkers(){
   });
   const groups=new Map();
   source.forEach(u=>{
-   const city=String(u.city||u.affectedCity||u.targetCity||u.location||'').trim();
-   if(!city)return;
-   const key=city.toLowerCase().replace(/[^a-z0-9]/g,'');
-   if(!groups.has(key))groups.set(key,{city,records:[]});
-   groups.get(key).records.push(u);
+   const places=opsExtractLocations(u);if(!places.length)return;
+   places.forEach(city=>{const key=opsNormPlace(city);if(!key)return;if(!groups.has(key))groups.set(key,{city,records:[]});if(!groups.get(key).records.includes(u))groups.get(key).records.push(u)});
   });
   let shown=0,missing=[],routePoints=[];
   groups.forEach(g=>{
@@ -1468,7 +1474,7 @@ function renderOpsUpdateMarkers(){
   }
   const mapEl=document.getElementById('indiaMap');if(mapEl)mapEl.classList.add('ops-map-live-glow');
   if(status){
-   status.textContent=shown+' '+(opsMapUpdateFilter==='all'?'CITY UPDATE INDICATOR'+(shown===1?'':'S')+' SHOWN':({active:'ACTIVE CITY',upcoming:'UPCOMING CITY',high:'HIGH-IMPACT CITY',roadblock:'ROADBLOCK CITY',weather:'WEATHER-ALERT CITY'}[opsMapUpdateFilter]||'CITY')+' FILTERED')+(missing.length?' · COORDINATES NEEDED: '+missing.join(', '):'');
+   status.textContent=shown+' LOCATION INDICATOR'+(shown===1?'':'S')+' SHOWN · '+source.length+' PUBLISHED UPDATES'+(opsMapUpdateFilter==='all'?'':' · '+({active:'ACTIVE',upcoming:'UPCOMING',high:'HIGH-IMPACT',roadblock:'ROADBLOCK',weather:'WEATHER-ALERT'}[opsMapUpdateFilter]||'FILTERED'))+(missing.length?' · STILL NEED LOCATION MATCH: '+missing.join(', '):'');
    status.style.color=missing.length?'#a65a14':'#a94b0b';
   }
   console.info('[Roadblock Ops] Map indicators rendered:',shown,'updates:',source.length,'locations without coordinates:',missing);
